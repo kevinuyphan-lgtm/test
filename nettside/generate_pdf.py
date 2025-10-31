@@ -1,0 +1,166 @@
+from fpdf import FPDF
+from io import BytesIO
+import os
+
+class Klientens_firma:
+    def __init__(self, firmanavn, firmaadresse, orgnr, referanse):
+        self.firmanavn = firmanavn
+        self.firmaadresse = firmaadresse
+        self.orgnr = orgnr
+        self.referanse = referanse
+
+class Produkt:
+    def __init__(self, navn, antall, pris):
+        self.navn = navn
+        self.antall = int(antall) if antall else 0
+        self.pris = float(pris) if pris else 0.0
+        self.sum = self.antall * self.pris
+
+class Vårt_firma:
+    def __init__(self, navn, addresse, navn_på_bank, orgnr, telefon, IBAN, swift_bic, vår_referanse, KID):
+        self.navn = navn
+        self.addresse = addresse
+        self.navn_på_bank = navn_på_bank
+        self.orgnr = orgnr
+        self.telefon = telefon
+        self.iban = IBAN
+        self.swift_bic = swift_bic
+        self.vår_referanse = vår_referanse
+        self.kid = KID
+
+def generate_invoice_pdf(invoice_data):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_auto_page_break(auto=True, margin=15)
+
+    # --- Logo ---
+    try:
+        pdf.image("/Users/bruker/Desktop/tester/nettside/static/bilder/placeholder.jpeg", x=15, y=10, w=40)
+    except RuntimeError:
+        pass
+
+    pdf.set_y(60)
+    pdf.line(25, pdf.get_y(), 185, pdf.get_y())  # linje under logo
+    pdf.ln(10)
+
+    # --- Klientinfo og fakturadato ---
+    klient = Klientens_firma(
+        invoice_data.get("firmanavn"),
+        invoice_data.get("firmaadresse"),
+        invoice_data.get("orgnr"),
+        invoice_data.get("referanse")
+    )
+
+    fakturadato = invoice_data.get("invoice_date")
+    forfallsdato = invoice_data.get("due_date")
+
+    pdf.set_font("Arial", "", 12)
+    pdf.cell(90, 7, f"Fakturert til:", ln=False)
+    pdf.cell(0, 7, f"Fakturadato: {fakturadato}", ln=True, align="R")
+    pdf.set_font("Arial", "B", 12)
+    pdf.cell(90, 7, f"{klient.firmanavn}", ln=False)
+    pdf.cell(0, 7, f"Forfallsdato: {forfallsdato}", ln=True, align="R")
+    pdf.set_font("Arial", "", 12)
+    pdf.cell(90, 7, f"{klient.firmaadresse}", ln=False)
+    pdf.cell(0, 7, f"Org.nr.: {klient.orgnr}", ln=True, align="R")
+    pdf.cell(90, 7, f"Deres ref.: {klient.referanse}", ln=True)
+
+    pdf.ln(10)
+
+
+#   sdgifhsd98fshdfosd---------
+
+# --- Håndter fakturanummer ---
+    filnavn = "/Users/bruker/Desktop/tester/nettside/templates/faktura_nummer.txt"
+
+    # Opprett fil hvis den ikke finnes
+    if not os.path.exists(filnavn):
+        with open(filnavn, "w") as f:
+            f.write("1000")  # startnummer
+
+    # Les nummer
+    with open(filnavn, "r") as f:
+        fakturanummer = int(f.read().strip())
+
+    # Oppdater nummer +1 for neste faktura
+    with open(filnavn, "w") as f:
+        f.write(str(fakturanummer + 1))
+
+    # Bruk nummeret
+    pdf.set_font("Arial", "B", 20)
+    pdf.cell(0, 15, f"Fakturanr. {fakturanummer}", ln=True, align="C")
+
+
+    # --- Fakturanummer ---
+    pdf.set_font("Arial", "", 12)
+    pdf.ln(5)
+    pdf.line(25, pdf.get_y(), 185, pdf.get_y())
+    pdf.ln(5)
+
+    # --- Produkttabell ---
+    pdf.set_font("Arial", "B", 12)
+    pdf.cell(90, 7, "Beskrivelse")
+    pdf.cell(30, 7, "Antall", 0, 0, "C")
+    pdf.cell(30, 7, "Pris", 0, 0, "R")
+    pdf.cell(0, 7, "Sum", 0, 1, "R")
+    pdf.set_font("Arial", "", 12)
+
+    total = 0
+    produkter = invoice_data.get("produkter", [])
+    for p in produkter:
+        produkt = Produkt(p["navn"], p["antall"], p["pris"])
+        pdf.cell(90, 7, produkt.navn)
+        pdf.cell(30, 7, str(produkt.antall), 0, 0, "C")
+        pdf.cell(30, 7, f"{produkt.pris:.2f}", 0, 0, "R")
+        pdf.cell(0, 7, f"{produkt.sum:.2f}", 0, 1, "R")
+        total += produkt.sum
+
+    pdf.ln(5)
+    mva = total * 0.25
+    total_sum = total + mva
+
+    pdf.set_font("Arial", "", 12)
+    pdf.cell(0, 7, f"Sum: {total:.2f}", 0, 1, "R")
+    pdf.cell(0, 7, f"MVA (25%): {mva:.2f}", 0, 1, "R")
+    pdf.set_font("Arial", "B", 12)
+    pdf.cell(0, 7, f"Sum å betale: {total_sum:.2f}", 0, 1, "R")
+    pdf.ln(5)
+    pdf.line(25, pdf.get_y(), 185, pdf.get_y())
+    pdf.ln(5)
+
+    # --- Avsenderinfo ---
+# --- Avsenderinfo (3 kolonner) ---
+    vf_data = invoice_data.get("vårt_firma", {})
+    vf = Vårt_firma(
+        vf_data.get("navn", "KIT Consult AS"),
+        vf_data.get("addresse", "Vollebekkveien 2L, 0598 Oslo"),
+        vf_data.get("navn_på_bank", "DNB"),
+        vf_data.get("orgnr", "999888777"),
+        vf_data.get("telefon", "+47 455 61 585"),
+        vf_data.get("IBAN", "123 123 123"),
+        vf_data.get("swift_bic", "DNBANOKKXXX"),
+        vf_data.get("vår_referanse", "Kevin"),
+        vf_data.get("KID", "123456789")
+    )
+    
+    pdf.set_font("Arial", "B", 12)
+    pdf.cell(60, 7, vf.navn, ln=False)                  # Venstre kolonne
+    pdf.cell(60, 7, vf.addresse, ln=False, align="L")   # Midtkolonne (justert litt mot venstre)
+    pdf.cell(0, 7, vf.navn_på_bank, ln=True, align="R") # Høyre kolonne (banknavn)
+
+    pdf.set_font("Arial", "", 12)
+    pdf.cell(60, 7, f"Org.nr: {vf.orgnr}", ln=False)           # Venstre kolonne
+    pdf.cell(60, 7, f"Tlf: {vf.telefon}", ln=False, align="L") # Midtkolonne
+    pdf.cell(0, 7, f"IBAN: {vf.iban}", ln=True, align="R")     # Høyre kolonne
+
+    pdf.cell(0, 7, f"Foretaksregisteret", ln=False, align="L") # Høyre
+    pdf.cell(60, 7, "", ln=False, align="L")                    # Midtkolonne toms
+    pdf.cell(0, 7, f"SWIFT/BIC: {vf.swift_bic}", ln=True, align="R") # Høyre kolonne
+
+    pdf.cell(0, 7, f"Vår ref.: {vf.vår_referanse}", ln=False, align="L") # Høyre
+    pdf.cell(60, 7, "", ln=False, align="L")                    # Midtkolonne toms
+    pdf.cell(0, 7, f"KID: {vf.kid}", ln=True, align="R") # Høyre kolonne
+
+    # --- Returner som BytesIO ---
+    pdf_output = pdf.output(dest="S").encode("latin1")
+    return BytesIO(pdf_output)

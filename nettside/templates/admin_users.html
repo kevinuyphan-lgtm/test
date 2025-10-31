@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block head %}
+  <title>Admin - Users</title>
+{% endblock %}
+
+{% block body %}
+<h1>Admin: Brukere</h1>
+
+<p style="color:darkred;">Advarsel: Side viser password_hash (ALDRI eksponer dette offentlig). Bruk kun i sikkert miljø.</p>
+
+{% if test_result %}
+    <div style="margin:10px 0; padding:10px; border:1px solid #ccc;">
+        <p>Testet passord for: <strong>{{ test_result.email }}</strong></p>
+        <p>Passord som ble tastet: <em>{{ test_result.tested_password }}</em></p>
+        <p>Resultat: 
+            {% if test_result.matches %}
+                <span style="color:green;">MATCH ✅</span>
+            {% else %}
+                <span style="color:red;">FEIL ❌</span>
+            {% endif %}
+        </p>
+    </div>
+{% endif %}
+
+
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr><th>ID</th><th>Navn</th><th>Epost</th><th>Password Hash</th></tr>
+  </thead>
+  <tbody>
+    {% for u in users %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.navn }}</td>
+        <td>{{ u.email }}</td>
+        <td style="font-family:monospace;">{{ u.password_hash }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<hr>
+
+<h2>Verifiser passord (test et plaintext mot valgt bruker)</h2>
+<form action="{{ url_for('admin_verify') }}" method="POST">
+  <label for="user_id">Velg bruker:</label>
+  <select name="user_id" id="user_id" required>
+    <option value="">-- velg --</option>
+    {% for u in users %}
+      <option value="{{ u.id }}">{{ u.email }} (id: {{ u.id }})</option>
+    {% endfor %}
+  </select>
+
+  <label for="password_to_test">Plaintext passord å teste:</label>
+  <input type="password" name="password_to_test" id="password_to_test" required>
+
+  <button type="submit">Test passord</button>
+</form>
+
+<a href="{{ url_for('index') }}">Tilbake</a>
+{% endblock %}

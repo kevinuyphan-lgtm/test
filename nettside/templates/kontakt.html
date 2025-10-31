@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Kontakt</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style_kontakt.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <form class="feedback-form">
+        <label for="info">Din tilbakemelding</label>
+        <textarea id="info" name="info" placeholder="Skriv tilbakemelding her..."></textarea>
+
+        <label for="navn">Navn</label>
+        <input type="text" id="navn" name="navn" placeholder="Ditt navn" required>
+
+        <label for="nummer">Telefonnummer</label>
+        <input type="tel" id="nummer" name="nummer" placeholder="Ditt telefonnummer" required>
+
+        <input type="submit" value="Send" class="submit-btn">
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Dine fakturaer</title>
+{% endblock %}
+
+{% block body %}
+<h2>Dine lagrede fakturaer</h2>
+
+{% if fakturaer %}
+<ul>
+    {% for f in fakturaer %}
+        <li>
+            {{ f.filnavn }} -
+            <a href="{{ url_for('download_faktura', faktura_id=f.id) }}">Last ned</a>
+        </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Du har ingen fakturaer enda.</p>
+{% endif %}
+
+<a href="{{ url_for('tjenester') }}">Tilbake til tjenester</a>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Hjem</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style_index.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="start">
+    <h1 class="start-head">Hei, testing aaaa a a a aaaaa aaaa</h1>
+    <div class="start-video">
+        <video width="500" height="500" autoplay muted>
+            <source src="{{ url_for('static', filename='video/movie.mp4') }}" type="video/mp4">
+            <source src="{{ url_for('static', filename='video/movie.ogg') }}" type="video/ogg">
+        </video>
+    </div>
+    <h3 class="start-body">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt dolores a consectetur maxime doloribus aspernatur numquam voluptatibus.
+    </h3>
+</div>
+
+<div class="next">
+    <h1>Testing next slide page</h1>
+</div>
+
+{% if session.user_id %}
+    <p>Logget inn som <strong>{{ session.user_name }}</strong></p>
+    <a href="/logout">Logg ut</a>
+{% else %}
+    <a href="/login">Logg inn</a>
+{% endif %}
+
+
+{% endblock %}

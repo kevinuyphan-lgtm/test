@@ -1,0 +1,33 @@
+.TEST {
+    font-size: 32px;
+}
+
+.start {
+    background-image: linear-gradient(to top, white, #d9daed);
+    padding-bottom: 25%;
+}
+
+.start-head {
+    padding-left: 25px;
+    padding-top: 25px;
+    margin-bottom: -25%;
+    font-size: 64px;
+    max-width: 50%;
+}
+
+.start-body {
+    padding-left: 25px;
+    margin-top: -20%;
+    font-size: 16px;
+    max-width: 50%;
+}
+
+.start-video {
+    padding-top: 150px;
+    padding-left: 60%;
+}
+
+.next {
+    background-color: white;
+    padding-top: 50%;
+}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Mine Fakturaer</h1>
+<ul>
+{% for f in fakturaer %}
+    <li>
+        {{ f.filnavn }} — 
+        <a href="{{ url_for('download_faktura', faktura_id=f.id) }}">Last ned</a>
+    </li>
+{% endfor %}
+</ul>
+{% endblock %}
