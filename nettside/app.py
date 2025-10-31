@@ -187,6 +187,15 @@ def admin_verify():
 # -------------------------------
 # ROUTES: SERVICES & INVOICES
 # -------------------------------
+@app.route("/om-oss")
+def om_oss():
+    return render_template("om-oss.html")
+
+@app.route("/kontakt")
+def kontakt():
+    return render_template("kontakt.html")
+
+
 @app.route("/tjenester")
 def tjenester():
     if not current_user():
