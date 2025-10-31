@@ -19,7 +19,7 @@ os.makedirs(PDF_FOLDER, exist_ok=True)
 # -------------------------------
 # APP CONFIG
 # -------------------------------
-app = Flask(__name__, instance_path=INSTANCE_PATH)
+app = Flask(__name__, template_folder="nettside/templates", static_folder="nettside/static")
 app.secret_key = "super_secret_key"  # Må settes før serializer
 
 # Admin
@@ -317,4 +317,6 @@ def index():
 # RUN APP
 # -------------------------------
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Kjør Flask direkte fra terminal
+    port = int(os.environ.get("PORT", 5001))  # Bruk 5000 lokalt
+    app.run(host="0.0.0.0", port=port, debug=True)
