@@ -135,7 +135,7 @@ body {
 
 /* === 3. SKILLE === */
 .skille {
-  height: 150px;
+  margin: 100px;
   background-color: #d9daed;
   width: 100%;
 }

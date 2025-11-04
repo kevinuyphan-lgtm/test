@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Kundeliste</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_tjenester.css') }}">
+    <script src="/static/javascript/kundeliste-java.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="sidebar">
+  <ul class="sidebar-links">
+    <li class="sidebar-item">
+      <button class="dropdown-btn active">+ Ny faktura</button>
+    </li>
+
+    <li class="sidebar-item">
+      <button class="dropdown-btn">📄 Faktura</button>
+      <div class="dropdown-content">
+        <a href="{{ url_for('fakturaer') }}">Ubetalte</a>
+        <a href="#">Sendte</a>
+      </div>
+    </li>
+
+    <li class="sidebar-item">
+  <button class="dropdown-btn">👥 Kunder</button>
+  <div class="dropdown-content">
+    <a href="{{ url_for('kundeliste') }}">Alle kunder</a>
+    <a href="{{ url_for('ny_kunde') }}">Ny kunde</a>
+  </div>
+    </li>
+
+    <li><a href="#">📦 Produkter</a></li>
+    <li><a href="#">📊 Rapporter</a></li>
+    <li><a href="#">💲 Transaksjoner</a></li>
+
+        <li class="sidebar-item">
+        <button class="dropdown-btn">📄 Faktura</button>
+        <div class="dropdown-content">
+            <a href="/mine-filer">Mine fakturaer</a>  <!-- <-- link to personal files -->
+            <a href="#">Sendte</a>
+        </div>
+        </li>
+  </ul>
+</div>
+
+<div class="container">
+
+    <h1>Kundeliste</h1>
+
+    {% if kunder|length == 0 %}
+        <p>Du har ikke registrert noen kunder ennå.</p>
+    {% else %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Navn</th>
+                <th>E-post</th>
+                <th>Telefon</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for kunde in kunder %}
+            <tr>
+                <td>{{ kunde.navn }}</td>
+                <td>{{ kunde.epost }}</td>
+                <td>{{ kunde.telefon }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+</div>
+
+{% endblock %}

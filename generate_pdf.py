@@ -34,65 +34,59 @@ def generate_invoice_pdf(invoice_data):
     pdf.set_auto_page_break(auto=True, margin=15)
 
     # --- Logo ---
-    try:
-        pdf.image("/Users/bruker/Desktop/tester/nettside/static/bilder/placeholder.jpeg", x=15, y=10, w=40)
-    except RuntimeError:
-        pass
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    image_path = os.path.join(BASE_DIR, "nettside", "static", "bilder", "placeholder.jpeg")
+    if os.path.exists(image_path):
+        pdf.image(image_path, x=15, y=10, w=40)
+    else:
+        print("Advarsel: bilde ikke funnet ->", image_path)
 
     pdf.set_y(60)
     pdf.line(25, pdf.get_y(), 185, pdf.get_y())  # linje under logo
     pdf.ln(10)
 
-    # --- Klientinfo og fakturadato ---
+    # --- Klientinfo ---
     klient = Klientens_firma(
-        invoice_data.get("firmanavn"),
-        invoice_data.get("firmaadresse"),
-        invoice_data.get("orgnr"),
-        invoice_data.get("referanse")
+        invoice_data.get("firmanavn", ""),
+        invoice_data.get("firmaadresse", ""),
+        invoice_data.get("orgnr", ""),
+        invoice_data.get("referanse", "")
     )
 
-    fakturadato = invoice_data.get("invoice_date")
-    forfallsdato = invoice_data.get("due_date")
+    fakturadato = invoice_data.get("invoice_date", "")
+    forfallsdato = invoice_data.get("due_date", "")
 
     pdf.set_font("Arial", "", 12)
-    pdf.cell(90, 7, f"Fakturert til:", ln=False)
+    pdf.cell(90, 7, "Fakturert til:", ln=False)
     pdf.cell(0, 7, f"Fakturadato: {fakturadato}", ln=True, align="R")
     pdf.set_font("Arial", "B", 12)
-    pdf.cell(90, 7, f"{klient.firmanavn}", ln=False)
+    pdf.cell(90, 7, klient.firmanavn, ln=False)
     pdf.cell(0, 7, f"Forfallsdato: {forfallsdato}", ln=True, align="R")
     pdf.set_font("Arial", "", 12)
-    pdf.cell(90, 7, f"{klient.firmaadresse}", ln=False)
+    pdf.cell(90, 7, klient.firmaadresse, ln=False)
     pdf.cell(0, 7, f"Org.nr.: {klient.orgnr}", ln=True, align="R")
     pdf.cell(90, 7, f"Deres ref.: {klient.referanse}", ln=True)
 
     pdf.ln(10)
 
+    # --- Fakturanummer ---
+    templates_dir = os.path.join(BASE_DIR, "invoice_data")
+    filnavn = os.path.join(templates_dir, "last_invoice_number.txt")
+    os.makedirs(templates_dir, exist_ok=True)
 
-#   sdgifhsd98fshdfosd---------
-
-# --- Håndter fakturanummer ---
-    filnavn = "/Users/bruker/Desktop/tester/nettside/templates/faktura_nummer.txt"
-
-    # Opprett fil hvis den ikke finnes
     if not os.path.exists(filnavn):
         with open(filnavn, "w") as f:
             f.write("1000")  # startnummer
 
-    # Les nummer
     with open(filnavn, "r") as f:
         fakturanummer = int(f.read().strip())
 
-    # Oppdater nummer +1 for neste faktura
     with open(filnavn, "w") as f:
         f.write(str(fakturanummer + 1))
 
-    # Bruk nummeret
     pdf.set_font("Arial", "B", 20)
     pdf.cell(0, 15, f"Fakturanr. {fakturanummer}", ln=True, align="C")
 
-
-    # --- Fakturanummer ---
-    pdf.set_font("Arial", "", 12)
     pdf.ln(5)
     pdf.line(25, pdf.get_y(), 185, pdf.get_y())
     pdf.ln(5)
@@ -106,8 +100,7 @@ def generate_invoice_pdf(invoice_data):
     pdf.set_font("Arial", "", 12)
 
     total = 0
-    produkter = invoice_data.get("produkter", [])
-    for p in produkter:
+    for p in invoice_data.get("produkter", []):
         produkt = Produkt(p["navn"], p["antall"], p["pris"])
         pdf.cell(90, 7, produkt.navn)
         pdf.cell(30, 7, str(produkt.antall), 0, 0, "C")
@@ -128,8 +121,7 @@ def generate_invoice_pdf(invoice_data):
     pdf.line(25, pdf.get_y(), 185, pdf.get_y())
     pdf.ln(5)
 
-    # --- Avsenderinfo ---
-# --- Avsenderinfo (3 kolonner) ---
+    # --- Vårt firma info ---
     vf_data = invoice_data.get("vårt_firma", {})
     vf = Vårt_firma(
         vf_data.get("navn", "KIT Consult AS"),
@@ -142,25 +134,22 @@ def generate_invoice_pdf(invoice_data):
         vf_data.get("vår_referanse", "Kevin"),
         vf_data.get("KID", "123456789")
     )
-    
+
     pdf.set_font("Arial", "B", 12)
-    pdf.cell(60, 7, vf.navn, ln=False)                  # Venstre kolonne
-    pdf.cell(60, 7, vf.addresse, ln=False, align="L")   # Midtkolonne (justert litt mot venstre)
-    pdf.cell(0, 7, vf.navn_på_bank, ln=True, align="R") # Høyre kolonne (banknavn)
+    pdf.cell(60, 7, vf.navn, ln=False)
+    pdf.cell(60, 7, vf.addresse, ln=False, align="L")
+    pdf.cell(0, 7, vf.navn_på_bank, ln=True, align="R")
 
     pdf.set_font("Arial", "", 12)
-    pdf.cell(60, 7, f"Org.nr: {vf.orgnr}", ln=False)           # Venstre kolonne
-    pdf.cell(60, 7, f"Tlf: {vf.telefon}", ln=False, align="L") # Midtkolonne
-    pdf.cell(0, 7, f"IBAN: {vf.iban}", ln=True, align="R")     # Høyre kolonne
+    pdf.cell(60, 7, f"Org.nr: {vf.orgnr}", ln=False)
+    pdf.cell(60, 7, f"Tlf: {vf.telefon}", ln=False, align="L")
+    pdf.cell(0, 7, f"IBAN: {vf.iban}", ln=True, align="R")
+    pdf.cell(0, 7, "Foretaksregisteret", ln=False, align="L")
+    pdf.cell(60, 7, "", ln=False, align="L")
+    pdf.cell(0, 7, f"SWIFT/BIC: {vf.swift_bic}", ln=True, align="R")
+    pdf.cell(0, 7, f"Vår ref.: {vf.vår_referanse}", ln=False, align="L")
+    pdf.cell(60, 7, "", ln=False, align="L")
+    pdf.cell(0, 7, f"KID: {vf.kid}", ln=True, align="R")
 
-    pdf.cell(0, 7, f"Foretaksregisteret", ln=False, align="L") # Høyre
-    pdf.cell(60, 7, "", ln=False, align="L")                    # Midtkolonne toms
-    pdf.cell(0, 7, f"SWIFT/BIC: {vf.swift_bic}", ln=True, align="R") # Høyre kolonne
-
-    pdf.cell(0, 7, f"Vår ref.: {vf.vår_referanse}", ln=False, align="L") # Høyre
-    pdf.cell(60, 7, "", ln=False, align="L")                    # Midtkolonne toms
-    pdf.cell(0, 7, f"KID: {vf.kid}", ln=True, align="R") # Høyre kolonne
-
-    # --- Returner som BytesIO ---
-    pdf_output = pdf.output(dest="S").encode("latin1")
+    pdf_output = pdf.output(dest="S").encode("latin-1")
     return BytesIO(pdf_output)

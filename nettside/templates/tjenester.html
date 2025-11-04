@@ -23,11 +23,11 @@
     </li>
 
     <li class="sidebar-item">
-      <button class="dropdown-btn">👥 Kunder</button>
-      <div class="dropdown-content">
-        <a href="#">Alle kunder</a>
-        <a href="#">Ny kunde</a>
-      </div>
+  <button class="dropdown-btn">👥 Kunder</button>
+  <div class="dropdown-content">
+    <a href="{{ url_for('kundeliste') }}">Alle kunder</a>
+    <a href="{{ url_for('ny_kunde') }}">Ny kunde</a>
+  </div>
     </li>
 
     <li><a href="#">📦 Produkter</a></li>
