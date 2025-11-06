@@ -5,6 +5,43 @@
 {% endblock %}
 
 {% block body %}
+
+<div class="sidebar">
+  <ul class="sidebar-links">
+    <li class="sidebar-item">
+        <a class="dropdown-btn active" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
+    </li>
+
+    <li class="sidebar-item">
+      <button class="dropdown-btn">📄 Faktura</button>
+      <div class="dropdown-content">
+        <a href="{{ url_for('fakturaer') }}">Ubetalte</a>
+        <a href="#">Sendte</a>
+      </div>
+    </li>
+
+    <li class="sidebar-item">
+  <button class="dropdown-btn">👥 Kunder</button>
+  <div class="dropdown-content">
+    <a href="{{ url_for('kundeliste') }}">Alle kunder</a>
+    <a href="{{ url_for('ny_kunde') }}">Ny kunde</a>
+  </div>
+    </li>
+
+    <li><a href="#">📦 Produkter</a></li>
+    <li><a href="#">📊 Rapporter</a></li>
+    <li><a href="#">💲 Transaksjoner</a></li>
+
+        <li class="sidebar-item">
+        <button class="dropdown-btn">📄 Faktura</button>
+        <div class="dropdown-content">
+            <a href="/mine-filer">Mine fakturaer</a>  <!-- <-- link to personal files -->
+            <a href="#">Sendte</a>
+        </div>
+        </li>
+  </ul>
+</div>
+
 <h2>Dine lagrede fakturaer</h2>
 
 {% if fakturaer %}
@@ -21,5 +58,4 @@
 <p>Du har ingen fakturaer enda.</p>
 {% endif %}
 
-<a href="{{ url_for('tjenester') }}">Tilbake til tjenester</a>
 {% endblock %}
