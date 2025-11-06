@@ -41,37 +41,28 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 // DUE DATE OG SÅNT ----------------------------------------------------------------------
+    // Dynamisk forfallsdato
+    const invoiceDateInput = document.getElementById('invoice_date');
+    const forfallsDagerInput = document.getElementById('forfalls_dager');
+    const dueDateDisplay = document.getElementById('due_date_display');
+    const dueDateHidden = document.getElementById('due_date');
 
-const kundeSelect = document.getElementById('kunde_select');
-kundeSelect.addEventListener('change', function() {
-    const selected = kundeSelect.options[kundeSelect.selectedIndex];
-    document.getElementById('firmanavn').value = selected.value || '';
-    document.getElementById('firmaadresse').value = selected.dataset.adresse || '';
-    document.getElementById('orgnr').value = selected.dataset.orgnr || '';
-    document.getElementById('referanse').value = selected.dataset.referanse || '';
-});
+    function updateDueDate() {
+        const invoiceDate = new Date(invoiceDateInput.value);
+        const days = parseInt(forfallsDagerInput.value) || 0;
+        if (!isNaN(invoiceDate.getTime())) {
+            invoiceDate.setDate(invoiceDate.getDate() + days);
+            const yyyy = invoiceDate.getFullYear();
+            const mm = String(invoiceDate.getMonth() + 1).padStart(2, '0');
+            const dd = String(invoiceDate.getDate()).padStart(2, '0');
+            const formattedDate = `${yyyy}-${mm}-${dd}`;
+            dueDateDisplay.value = formattedDate;
+            dueDateHidden.value = formattedDate;
+        } else {
+            dueDateDisplay.value = '';
+            dueDateHidden.value = '';
+        }
+    }
 
-// --- Sett dagens dato som fakturadato ---
-const invoiceDateInput = document.getElementById('invoice_date');
-const today = new Date().toISOString().split('T')[0];
-invoiceDateInput.value = today;
-invoiceDateInput.min = today;
-
-// --- Oppdater forfallsdato basert på antall dager ---
-const dueDateInput = document.getElementById('due_date');
-const forfallsSelect = document.getElementById('forfalls_dager');
-
-function updateDueDate() {
-    const days = parseInt(forfallsSelect.value, 10);
-    const invoiceDate = new Date(invoiceDateInput.value);
-    const dueDate = new Date(invoiceDate);
-    dueDate.setDate(dueDate.getDate() + days);
-    dueDateInput.value = dueDate.toISOString().split('T')[0];
-}
-
-// Init
-updateDueDate();
-
-// Event listeners
-invoiceDateInput.addEventListener('change', updateDueDate);
-forfallsSelect.addEventListener('change', updateDueDate);
+    invoiceDateInput.addEventListener('change', updateDueDate);
+    forfallsDagerInput.addEventListener('input', updateDueDate);
