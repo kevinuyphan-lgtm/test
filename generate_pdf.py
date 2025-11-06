@@ -42,7 +42,7 @@ def generate_invoice_pdf(invoice_data):
         print("Advarsel: bilde ikke funnet ->", image_path)
 
     pdf.set_y(60)
-    pdf.line(25, pdf.get_y(), 185, pdf.get_y())  # linje under logo
+    pdf.line(25, pdf.get_y(), 185, pdf.get_y())
     pdf.ln(10)
 
     # --- Klientinfo ---
@@ -55,6 +55,12 @@ def generate_invoice_pdf(invoice_data):
 
     fakturadato = invoice_data.get("invoice_date", "")
     forfallsdato = invoice_data.get("due_date", "")
+
+    # Sørg for at fakturadato og forfallsdato alltid er strenger
+    if hasattr(fakturadato, "strftime"):
+        fakturadato = fakturadato.strftime("%Y-%m-%d")
+    if hasattr(forfallsdato, "strftime"):
+        forfallsdato = forfallsdato.strftime("%Y-%m-%d")
 
     pdf.set_font("Arial", "", 12)
     pdf.cell(90, 7, "Fakturert til:", ln=False)
@@ -76,7 +82,7 @@ def generate_invoice_pdf(invoice_data):
 
     if not os.path.exists(filnavn):
         with open(filnavn, "w") as f:
-            f.write("1000")  # startnummer
+            f.write("1000")
 
     with open(filnavn, "r") as f:
         fakturanummer = int(f.read().strip())
