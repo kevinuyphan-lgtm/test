@@ -28,7 +28,31 @@ app.secret_key = "super_secret_key"
 
 ADMIN_EMAILS = {"kevinuyphan3@gmail.com"}
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL").replace("postgres://", "postgresql://", 1)
+# --- DATABASE CONFIG ---
+db_url = os.environ.get("DATABASE_URL")
+
+if db_url:
+    # Render Postgres fix
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+else:
+    # Local fallback SQLite
+    db_url = 'sqlite:///' + os.path.join(INSTANCE_PATH, 'fakturaer.db')
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# --------------------------------------------
+
+db_url = os.environ.get("DATABASE_URL")
+
+if db_url:
+    # Render/Postgres
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+else:
+    # Lokal database
+    db_url = 'sqlite:///' + os.path.join(INSTANCE_PATH, 'fakturaer.db')
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
