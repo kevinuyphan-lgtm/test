@@ -42,26 +42,36 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // DUE DATE OG SÅNT ----------------------------------------------------------------------
 
-document.addEventListener("DOMContentLoaded", function () {
-    const invoiceDateInput = document.getElementById("invoice_date");
-    const dueDaysSelect = document.getElementById("due_days");
-    const dueDateInput = document.getElementById("due_date");
-
-    function updateDueDate() {
-        const invoiceDate = new Date(invoiceDateInput.value);
-        const days = parseInt(dueDaysSelect.value);
-        const dueDate = new Date(invoiceDate);
-        dueDate.setDate(invoiceDate.getDate() + days);
-        const yyyy = dueDate.getFullYear();
-        const mm = String(dueDate.getMonth() + 1).padStart(2, "0");
-        const dd = String(dueDate.getDate()).padStart(2, "0");
-        dueDateInput.value = `${yyyy}-${mm}-${dd}`;
-    }
-
-    invoiceDateInput.addEventListener("change", updateDueDate);
-    dueDaysSelect.addEventListener("change", updateDueDate);
-
-    // Initial update
-    updateDueDate();
+const kundeSelect = document.getElementById('kunde_select');
+kundeSelect.addEventListener('change', function() {
+    const selected = kundeSelect.options[kundeSelect.selectedIndex];
+    document.getElementById('firmanavn').value = selected.value || '';
+    document.getElementById('firmaadresse').value = selected.dataset.adresse || '';
+    document.getElementById('orgnr').value = selected.dataset.orgnr || '';
+    document.getElementById('referanse').value = selected.dataset.referanse || '';
 });
 
+// --- Sett dagens dato som fakturadato ---
+const invoiceDateInput = document.getElementById('invoice_date');
+const today = new Date().toISOString().split('T')[0];
+invoiceDateInput.value = today;
+invoiceDateInput.min = today;
+
+// --- Oppdater forfallsdato basert på antall dager ---
+const dueDateInput = document.getElementById('due_date');
+const forfallsSelect = document.getElementById('forfalls_dager');
+
+function updateDueDate() {
+    const days = parseInt(forfallsSelect.value, 10);
+    const invoiceDate = new Date(invoiceDateInput.value);
+    const dueDate = new Date(invoiceDate);
+    dueDate.setDate(dueDate.getDate() + days);
+    dueDateInput.value = dueDate.toISOString().split('T')[0];
+}
+
+// Init
+updateDueDate();
+
+// Event listeners
+invoiceDateInput.addEventListener('change', updateDueDate);
+forfallsSelect.addEventListener('change', updateDueDate);
