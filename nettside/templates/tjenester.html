@@ -7,13 +7,12 @@
 {% endblock %}
 {% block body %}
 
-
+{% block body %}
 <div class="sidebar">
   <ul class="sidebar-links">
     <li class="sidebar-item">
       <button class="dropdown-btn active">+ Ny faktura</button>
     </li>
-
     <li class="sidebar-item">
       <button class="dropdown-btn">📄 Faktura</button>
       <div class="dropdown-content">
@@ -21,43 +20,38 @@
         <a href="#">Sendte</a>
       </div>
     </li>
-
     <li class="sidebar-item">
-  <button class="dropdown-btn">👥 Kunder</button>
-  <div class="dropdown-content">
-    <a href="{{ url_for('kundeliste') }}">Alle kunder</a>
-    <a href="{{ url_for('ny_kunde') }}">Ny kunde</a>
-  </div>
+      <button class="dropdown-btn">👥 Kunder</button>
+      <div class="dropdown-content">
+        <a href="{{ url_for('kundeliste') }}">Alle kunder</a>
+        <a href="{{ url_for('ny_kunde') }}">Ny kunde</a>
+      </div>
     </li>
-
     <li><a href="#">📦 Produkter</a></li>
     <li><a href="#">📊 Rapporter</a></li>
     <li><a href="#">💲 Transaksjoner</a></li>
-
-        <li class="sidebar-item">
-        <button class="dropdown-btn">📄 Faktura</button>
-        <div class="dropdown-content">
-            <a href="/mine-filer">Mine fakturaer</a>  <!-- <-- link to personal files -->
-            <a href="#">Sendte</a>
-        </div>
-        </li>
   </ul>
 </div>
 
-
 <div class="container">
     <h1>Fyll ut faktura informasjon</h1>
-    
+
     <form action="/generate-invoice" method="POST" id="pdfForm">
         <h3 class="spacing">Mottaker</h3>
+
         <div class="form-group">
-            <label for="firmanavn">Firmanavn:</label>
-            <input type="text" id="firmanavn" name="firmanavn" placeholder="Kundens firmanavn" required list="kunde-list">
-            <datalist id="kunde-list">
-        {% for kunde in kunder %}
-            <option value="{{ kunde.navn }}"></option>
-        {% endfor %}
-            </datalist>
+            <label for="kunde_select">Velg eksisterende kunde:</label>
+            <select id="kunde_select" name="kunde_select">
+                <option value="">-- Velg kunde --</option>
+                {% for kunde in kunder %}
+                    <option value="{{ kunde.navn }}" data-adresse="{{ kunde.adresse }}" data-orgnr="{{ kunde.orgnr }}" data-referanse="{{ kunde.referanse }}">{{ kunde.navn }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="firmanavn">Firmanavn (ny eller valgt):</label>
+            <input type="text" id="firmanavn" name="firmanavn" placeholder="Kundens firmanavn" required>
         </div>
         <div class="form-group">
             <label for="firmaadresse">Adresse:</label>
@@ -77,17 +71,23 @@
         <h3 class="spacing">Fakturadetaljer</h3>
         <div class="form-group">
             <label for="invoice_date">Fakturadato:</label>
-            <input type="date" id="invoice_date" name="invoice_date" value="{{ current_date }}" min="{{ current_date }}">
+            <input type="date" id="invoice_date" name="invoice_date" required>
         </div>
+
         <div class="form-group">
-            <label for="due_days">Forfallsdato (antall dager fra fakturadato):</label>
-            <select id="due_days" name="due_days">
-                <option value="7" selected>7 dager</option>
+            <label for="forfalls_dager">Velg antall dager til forfall:</label>
+            <select id="forfalls_dager">
+                <option value="7">7 dager</option>
                 <option value="14">14 dager</option>
                 <option value="30">30 dager</option>
             </select>
         </div>
-        
+
+        <div class="form-group">
+            <label for="due_date">Forfallsdato:</label>
+            <input type="date" id="due_date" name="due_date" required readonly>
+        </div>
+
         <hr>
 
         <h3 class="spacing">Produkter</h3>
