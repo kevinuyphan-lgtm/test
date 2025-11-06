@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style_tjenester.css') }}">
     <script src="/static/javascript/tjenester-java.js"></script>
 {% endblock %}
+
 {% block body %}
 <div class="sidebar">
   <ul class="sidebar-links">
@@ -38,18 +39,13 @@
         <h3 class="spacing">Mottaker</h3>
 
         <div class="form-group">
-            <label for="kunde_select">Velg eksisterende kunde:</label>
-            <select id="kunde_select" name="kunde_select">
-                <option value="">-- Velg kunde --</option>
+            <label for="firmanavn">Firmanavn (ny eller velg eksisterende):</label>
+            <input list="kunder_list" id="firmanavn" name="firmanavn" placeholder="Kundens firmanavn" required>
+            <datalist id="kunder_list">
                 {% for kunde in kunder %}
-                    <option value="{{ kunde.navn }}" data-adresse="{{ kunde.adresse }}" data-orgnr="{{ kunde.orgnr }}" data-referanse="{{ kunde.referanse }}">{{ kunde.navn }}</option>
+                    <option value="{{ kunde.navn }}" data-adresse="{{ kunde.adresse }}" data-orgnr="{{ kunde.orgnr }}" data-referanse="{{ kunde.referanse }}"></option>
                 {% endfor %}
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="firmanavn">Firmanavn (ny eller valgt):</label>
-            <input type="text" id="firmanavn" name="firmanavn" placeholder="Kundens firmanavn" required>
+            </datalist>
         </div>
         <div class="form-group">
             <label for="firmaadresse">Adresse:</label>
@@ -73,17 +69,14 @@
         </div>
 
         <div class="form-group">
-            <label for="forfalls_dager">Velg antall dager til forfall:</label>
-            <select id="forfalls_dager">
-                <option value="7">7 dager</option>
-                <option value="14">14 dager</option>
-                <option value="30">30 dager</option>
-            </select>
+            <label for="forfalls_dager">Antall dager til forfall:</label>
+            <input type="number" id="forfalls_dager" min="1" value="7">
         </div>
 
         <div class="form-group">
-            <label for="due_date">Forfallsdato:</label>
-            <input type="date" id="due_date" name="due_date" required readonly>
+            <label>Forfallsdato:</label>
+            <input type="text" id="due_date_display" readonly>
+            <input type="hidden" id="due_date" name="due_date">
         </div>
 
         <hr>
