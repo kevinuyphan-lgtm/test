@@ -5,6 +5,7 @@ from datetime import datetime
 import os
 from generate_pdf import generate_invoice_pdf
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
+from datetime import datetime, timedelta
 
 # -------------------------------
 # BASE PATHS
@@ -164,12 +165,6 @@ def logout():
 # -------------------------------
 # ROUTES: SERVICES
 # -------------------------------
-@app.route("/tjenester")
-def tjenester():
-    if not current_user():
-        flash("Du må logge inn for å få tilgang til tjenester", "error")
-        return redirect(url_for("login"))
-    return render_template("tjenester.html")
 
 @app.route("/om-oss")
 def om_oss():
@@ -179,9 +174,21 @@ def om_oss():
 def kontakt():
     return render_template("kontakt.html")
 
+@app.route("/tjenester")
+def tjenester():
+    user = current_user()
+    if not user:
+        flash("Du må logge inn for å få tilgang til tjenester", "error")
+        return redirect(url_for("login"))
+
+    # Hent tidligere kunder for dropdown
+    kunder = Kunde.query.filter_by(user_id=user.id).all()
+    return render_template("tjenester.html", kunder=kunder)
+
 # -------------------------------
 # ROUTES: INVOICES
 # -------------------------------
+
 @app.route("/generate-invoice", methods=["POST"])
 def generate_invoice():
     user = current_user()
@@ -193,14 +200,28 @@ def generate_invoice():
     user.faktura_teller += 1
     db.session.commit()
 
+    # Fakturadato
+    invoice_date_str = request.form.get("invoice_date")
+    if invoice_date_str:
+        invoice_date = datetime.strptime(invoice_date_str, "%Y-%m-%d").date()
+    else:
+        invoice_date = datetime.utcnow().date()
+
+    # Forfallsdato basert på antall dager
+    days_to_due = request.form.get("due_days")
+    if days_to_due and days_to_due.isdigit():
+        due_date = invoice_date + timedelta(days=int(days_to_due))
+    else:
+        due_date = invoice_date + timedelta(days=7)  # default 7 dager
+
     invoice_data = {
         "invoice_number": fakturanummer,
         "firmanavn": request.form.get("firmanavn"),
         "firmaadresse": request.form.get("firmaadresse"),
         "orgnr": request.form.get("orgnr"),
         "referanse": request.form.get("referanse"),
-        "invoice_date": request.form.get("invoice_date"),
-        "due_date": request.form.get("due_date"),
+        "invoice_date": invoice_date.strftime("%Y-%m-%d"),
+        "due_date": due_date.strftime("%Y-%m-%d"),
         "produkter": [
             {"navn": n, "antall": a, "pris": p}
             for n, a, p in zip(
