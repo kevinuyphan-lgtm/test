@@ -38,3 +38,30 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 });
+
+
+// DUE DATE OG SÅNT ----------------------------------------------------------------------
+
+document.addEventListener("DOMContentLoaded", function () {
+    const invoiceDateInput = document.getElementById("invoice_date");
+    const dueDaysSelect = document.getElementById("due_days");
+    const dueDateInput = document.getElementById("due_date");
+
+    function updateDueDate() {
+        const invoiceDate = new Date(invoiceDateInput.value);
+        const days = parseInt(dueDaysSelect.value);
+        const dueDate = new Date(invoiceDate);
+        dueDate.setDate(invoiceDate.getDate() + days);
+        const yyyy = dueDate.getFullYear();
+        const mm = String(dueDate.getMonth() + 1).padStart(2, "0");
+        const dd = String(dueDate.getDate()).padStart(2, "0");
+        dueDateInput.value = `${yyyy}-${mm}-${dd}`;
+    }
+
+    invoiceDateInput.addEventListener("change", updateDueDate);
+    dueDaysSelect.addEventListener("change", updateDueDate);
+
+    // Initial update
+    updateDueDate();
+});
+
