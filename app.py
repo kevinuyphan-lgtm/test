@@ -249,14 +249,14 @@ def generate_invoice():
     pdf_buffer.seek(0)
     return send_file(pdf_buffer, as_attachment=True, download_name=filename)
 
-@app.route("/fakturaer")
-def fakturaer():
+@app.route("/lagret_fakturaer")
+def lagret_fakturaer():
     user = current_user()
     if not user:
         flash("Du må logge inn for å se fakturaene dine", "error")
         return redirect(url_for("login"))
     bruker_fakturaer = Faktura.query.filter_by(user_id=user.id).all()
-    return render_template("fakturaer.html", fakturaer=bruker_fakturaer)
+    return render_template("lagret_fakturaer.html", fakturaer=bruker_fakturaer)
 
 @app.route("/kundeliste")
 def kundeliste():
