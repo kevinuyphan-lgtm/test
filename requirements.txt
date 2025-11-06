@@ -1,7 +1,7 @@
 Flask==2.3.2
 Flask-Bcrypt==1.0.1
 Flask-SQLAlchemy==3.0.5
-itsdangerous==2.1.0
+itsdangerous==2.1.2
 gunicorn==21.2.0
 
 reportlab==4.4.4
