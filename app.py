@@ -101,19 +101,6 @@ def verify_reset_token(token, max_age_seconds=3600):
         return None
 
 # -------------------------------
-# CREATE DB & TEST USER
-# -------------------------------
-with app.app_context():
-    db.create_all()
-    # Lag testbruker om den ikke finnes
-    if not Bruker.query.filter_by(email="test@localhost").first():
-        pw_hash = bcrypt.generate_password_hash("123456").decode("utf-8")
-        test_user = Bruker(navn="Test Bruker", email="test@localhost", password_hash=pw_hash)
-        db.session.add(test_user)
-        db.session.commit()
-        print("Testbruker opprettet: test@localhost / 123456")
-
-# -------------------------------
 # ROUTES: AUTH
 # -------------------------------
 @app.route("/")
