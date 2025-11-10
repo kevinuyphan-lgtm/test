@@ -44,21 +44,21 @@
 
     {% if fakturaer %}
     <table class="invoice-table">
-        <thead>
-            <tr>
-                <th>Fakturanavn</th>
-                <th>Handling</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for f in fakturaer %}
-            <tr>
-                <td>{{ f.filnavn }}</td>
-                <td><a class="download-btn" href="{{ url_for('download_faktura', faktura_id=f.id) }}">Last ned</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
+        <tr>
+            <th>Faktura</th>
+            <th>Opprettet</th>
+            <th>Handling</th>
+        </tr>
+    
+        {% for f in fakturaer %}
+        <tr>
+            <td>{{ f.filnavn }}</td>
+            <td>{{ f.dato.strftime("%d.%m.%Y kl. %H:%M") }}</td>
+            <td><a class="download-btn" href="{{ url_for('download_faktura', faktura_id=f.id) }}">⬇ Last ned</a></td>
+        </tr>
+        {% endfor %}
     </table>
+
     
     {% else %}
     <p class="empty-message">Du har ingen fakturaer enda.</p>
