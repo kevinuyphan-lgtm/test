@@ -3,6 +3,9 @@
     margin-left: 260px; /* Sørger for plass til sidebar */
     padding: 30px;
     max-width: 1000px; /* Tilpass bredde etter behov */
+    display: flex;
+    justify-content: center; /* Sentrer innhold horisontalt */
+    align-items: flex-start;
 }
 
 /* Kort-layout rundt tabellen */
@@ -12,6 +15,14 @@
     padding: 25px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     overflow-x: auto; /* Sikrer horisontal scroll hvis tabellen er bred */
+    width: 100%;
+    max-width: 900px; /* Begrens bredde på store skjermer */
+}
+
+/* Overskrift */
+.table-card h1 {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 /* ----------------------------------- TABELL STILER --------------------------------- */
@@ -49,6 +60,7 @@
     color: #777;
     font-style: italic;
     margin-top: 10px;
+    text-align: center;
 }
 
 /* Responsiv tabell for små skjermer */
