@@ -1,11 +1,12 @@
 /* ===== CONTAINER ===== */
 .container {
     display: flex;                 /* gjør container til flexbox */
-    justify-content: center;       /* sentrerer innhold horisontalt */
+    justify-content: center;       /* sentrerer horisontalt */
+    align-items: flex-start;       /* toppjusterer innholdet */
     padding: 30px;
-    margin-left: 260px;            /* plass til sidebar */
-    width: calc(100% - 260px);     /* fyller plassen ved siden av sidebar */
+    width: 100%;                   /* fyller hele bredden */
     box-sizing: border-box;
+    margin: 0 auto;                /* sentrerer container hvis nødvendig */
 }
 
 /* ===== OVERSKRIFT ===== */
@@ -22,7 +23,7 @@
     padding: 25px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.09);
     width: 100%;                   /* fyller containeren */
-    max-width: 600px;              /* begrenser maks bredde */
+    max-width: 600px;              /* maks bredde */
     box-sizing: border-box;
 }
 
@@ -64,8 +65,7 @@ form button:hover {
 /* ===== RESPONSIV ===== */
 @media (max-width: 768px) {
     .container {
-        margin-left: 0;            /* fjern sidebar margin på små skjermer */
-        width: 100%;               /* fyller hele bredden */
+        width: 100%;               /* fyller hele bredden på mobil */
         padding: 15px;
         justify-content: center;   /* holder kortet sentrert */
     }
