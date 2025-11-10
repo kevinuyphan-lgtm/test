@@ -208,11 +208,12 @@ def generate_invoice():
         invoice_date = datetime.utcnow().date()
 
     # Forfallsdato basert på antall dager
-    days_to_due = request.form.get("due_days")
+    days_to_due = request.form.get("forfalls_dager")
     if days_to_due and days_to_due.isdigit():
         due_date = invoice_date + timedelta(days=int(days_to_due))
     else:
-        due_date = invoice_date + timedelta(days=7)  # default 7 dager
+        due_date = invoice_date + timedelta(days=7)
+
 
     invoice_data = {
         "invoice_number": fakturanummer,
