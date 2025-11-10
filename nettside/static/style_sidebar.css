@@ -1,16 +1,16 @@
 /* ===== SIDEBAR ===== */
 .sidebar {
-  position: fixed;      /* holder sidebar på plass når man scroller */
-  top: 0;
-  left: 0;              /* helt til venstre */
-  width: 240px;
-  height: 100vh;        /* fyller hele høyden */
-  background-color: #fff;
-  border-right: 1px solid #ddd;
-  padding-top: 20px;
-  box-sizing: border-box;
-  z-index: 1000;        /* ligger over innhold */
+    position: absolute;
+    top: 10vh;           /* behold margin-top */
+    left: 0;             /* flytt sidebar helt til venstre */
+    width: 240px;
+    height: fit-content;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    padding-top: 20px;
+    box-sizing: border-box;
 }
+
 
 /* Fjern margin som tidligere dyttet den inn fra venstre */
 .sidebar-links {
