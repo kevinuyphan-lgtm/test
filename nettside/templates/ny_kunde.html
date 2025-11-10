@@ -8,7 +8,6 @@
 {% endblock %}
 
 {% block body %}
-
 <div class="sidebar">
   <ul class="sidebar-links">
 
@@ -16,19 +15,19 @@
       <a class="dropdown-btn" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
     </li>
 
-    <li class="sidebar-item open">
-      <button class="dropdown-btn active">📄 Faktura</button>
-      <div class="dropdown-content" style="display: flex;">
-        <a href="{{ url_for('lagret_fakturaer') }}" class="active">Ubetalte</a>
+    <li class="sidebar-item">
+      <button class="dropdown-btn">📄 Faktura</button>
+      <div class="dropdown-content">
+        <a href="{{ url_for('lagret_fakturaer') }}">Ubetalte</a>
         <a href="#">Sendte</a>
       </div>
     </li>
 
-    <li class="sidebar-item">
-      <button class="dropdown-btn">👥 Kunder</button>
-      <div class="dropdown-content">
+    <li class="sidebar-item open">
+      <button class="dropdown-btn active">👥 Kunder</button>
+      <div class="dropdown-content" style="display:flex;">
         <a href="{{ url_for('kundeliste') }}">Alle kunder</a>
-        <a href="{{ url_for('ny_kunde') }}">Ny kunde</a>
+        <a href="{{ url_for('ny_kunde') }}" class="active">Ny kunde</a>
       </div>
     </li>
 
@@ -38,6 +37,7 @@
 
   </ul>
 </div>
+
 
 
 
