@@ -1,0 +1,21 @@
+/* Faktura tabell */
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.07);
+}
+
+.invoice-table th,
+.invoice-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.invoice-table th {
+  background: #f4f4f4;
+  font-weight: bold;
+  text-align: left;
+}
