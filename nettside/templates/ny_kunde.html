@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style_kunder.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
     <script src="/static/javascript/sidebar-java.js"></script>
+
 {% endblock %}
 
 {% block body %}
@@ -23,11 +24,11 @@
       </div>
     </li>
 
-    <li class="sidebar-item">
-      <button class="dropdown-btn">👥 Kunder</button>
-      <div class="dropdown-content">
+    <li class="sidebar-item open">
+      <button class="dropdown-btn active">👥 Kunder</button>
+      <div class="dropdown-content" style="display: flex;">
         <a href="{{ url_for('kundeliste') }}">Alle kunder</a>
-        <a href="{{ url_for('ny_kunde') }}">Ny kunde</a>
+        <a href="{{ url_for('ny_kunde') }}" class="active">Ny kunde</a>
       </div>
     </li>
 
@@ -38,21 +39,27 @@
   </ul>
 </div>
 
-<h1>Registrer ny kunde</h1>
 
-<form method="POST">
-    <label>Navn:</label>
-    <input type="text" name="navn" required>
+<div class="container">
+    <h1>Registrer ny kunde</h1>
 
-    <label>Adresse:</label>
-    <input type="text" name="adresse" required>
+    <div class="card">
+        <form method="POST">
+            <label>Navn *</label>
+            <input type="text" name="navn" required>
 
-    <label>Org.nr:</label>
-    <input type="text" name="orgnr">
+            <label>Adresse *</label>
+            <input type="text" name="adresse" required>
 
-    <label>Referanse:</label>
-    <input type="text" name="referanse">
+            <label>Organisasjonsnummer</label>
+            <input type="text" name="orgnr">
 
-    <button type="submit">Lagre kunde</button>
-</form>
+            <label>Deres referanse</label>
+            <input type="text" name="referanse">
+
+            <button type="submit">Lagre kunde</button>
+        </form>
+    </div>
+</div>
+
 {% endblock %}
