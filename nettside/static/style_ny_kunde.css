@@ -8,7 +8,7 @@
 }
 
 /* ===== OVERSKRIFT ===== */
-h1 {
+.overskrift {
     margin-bottom: 20px;
     font-weight: 600;
     text-align: center;       /* sentrerer overskriften */
