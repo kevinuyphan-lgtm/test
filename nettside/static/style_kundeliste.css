@@ -1,10 +1,8 @@
 /* ===== CONTAINER FOR KUNDELISTE ===== */
 .container {
-    display: flex;                 
-    justify-content: center;       /* sentrerer innhold horisontalt */
+    max-width: 900px;       /* maks bredde på innholdet */
+    margin: 0 auto;         /* sentrerer containeren midt på skjermen */
     padding: 30px;
-    width: calc(100% - 260px);     /* tilgjengelig bredde ved siden av sidebar */
-    margin-left: 260px;            /* plass til sidebar */
     box-sizing: border-box;
 }
 
@@ -15,7 +13,6 @@
     padding: 25px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     width: 100%;
-    max-width: 900px;              /* begrenser hvor bred tabellen kan bli */
     box-sizing: border-box;
 }
 
@@ -30,9 +27,9 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 15px;
+    margin: 0 auto;        /* sentrerer tabellen i kortet */
 }
 
-/* Resten av tabellen */
 .data-table th, .invoice-table th {
     background: #f4f4f4;
     font-weight: bold;
@@ -63,10 +60,8 @@
 /* Responsivt for små skjermer */
 @media (max-width: 768px) {
     .container {
-        margin-left: 0;            
+        max-width: 100%;
         padding: 15px;
-        justify-content: center;
-        width: 100%;
     }
 
     .table-card {
