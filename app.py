@@ -212,7 +212,7 @@ def generate_invoice():
     if days_to_due and days_to_due.isdigit():
         due_date = invoice_date + timedelta(days=int(days_to_due))
     else:
-        due_date = invoice_date + timedelta(days=7)
+        due_date = invoice_date + timedelta(days=10)
 
 
     invoice_data = {
