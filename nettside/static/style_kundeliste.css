@@ -1,6 +1,6 @@
 /* ===== CONTAINER FOR KUNDELISTE ===== */
 .container {
-    max-width: 900px;       /* maks bredde på innholdet */
+    max-width: 700px;       /* redusert fra 900px for å unngå overlapping med sidebar */
     margin: 0 auto;         /* sentrerer containeren midt på skjermen */
     padding: 30px;
     box-sizing: border-box;
@@ -30,6 +30,7 @@
     margin: 0 auto;        /* sentrerer tabellen i kortet */
 }
 
+/* Resten av tabellen */
 .data-table th, .invoice-table th {
     background: #f4f4f4;
     font-weight: bold;
