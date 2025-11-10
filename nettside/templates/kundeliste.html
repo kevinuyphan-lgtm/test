@@ -3,6 +3,7 @@
 {% block head %}
     <title>Kundeliste</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_kundeliste.css') }}">
     <script src="/static/javascript/sidebar-java.js"></script>
 {% endblock %}
 
@@ -10,8 +11,9 @@
 
 <div class="sidebar">
   <ul class="sidebar-links">
+
     <li class="sidebar-item">
-        <a class="dropdown-btn active" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
+        <a class="dropdown-btn" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
     </li>
 
     <li class="sidebar-item">
@@ -22,56 +24,55 @@
       </div>
     </li>
 
-    <li class="sidebar-item">
-  <button class="dropdown-btn">👥 Kunder</button>
-  <div class="dropdown-content">
-    <a href="{{ url_for('kundeliste') }}">Alle kunder</a>
-    <a href="{{ url_for('ny_kunde') }}">Ny kunde</a>
-  </div>
+    <li class="sidebar-item open">
+      <button class="dropdown-btn active">👥 Kunder</button>
+      <div class="dropdown-content" style="display: flex;">
+        <a href="{{ url_for('kundeliste') }}" class="active">Alle kunder</a>
+        <a href="{{ url_for('ny_kunde') }}">Ny kunde</a>
+      </div>
     </li>
 
     <li><a href="#">📦 Produkter</a></li>
     <li><a href="#">📊 Rapporter</a></li>
     <li><a href="#">💲 Transaksjoner</a></li>
 
-        <li class="sidebar-item">
-        <button class="dropdown-btn">📄 Faktura</button>
-        <div class="dropdown-content">
-            <a href="/mine-filer">Mine fakturaer</a>  <!-- <-- link to personal files -->
-            <a href="#">Sendte</a>
-        </div>
-        </li>
   </ul>
 </div>
 
-<div class="container">
 
+<div class="container">
     <h1>Kundeliste</h1>
 
-    {% if kunder|length == 0 %}
-        <p>Du har ikke registrert noen kunder ennå.</p>
-    {% else %}
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th>Navn</th>
-                <th>E-post</th>
-                <th>Telefon</th>
-            </tr>
-        </thead>
+    <div class="table-card">
 
-        <tbody>
-            {% for kunde in kunder %}
-            <tr>
-                <td>{{ kunde.navn }}</td>
-                <td>{{ kunde.epost }}</td>
-                <td>{{ kunde.telefon }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
+        {% if kunder|length == 0 %}
+            <p class="no-data">Du har ikke registrert noen kunder ennå.</p>
+        {% else %}
 
+        <table>
+            <thead>
+                <tr>
+                    <th>Navn</th>
+                    <th>Adresse</th>
+                    <th>Org.nr</th>
+                    <th>Referanse</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for kunde in kunder %}
+                <tr>
+                    <td>{{ kunde.navn }}</td>
+                    <td>{{ kunde.adresse }}</td>
+                    <td>{{ kunde.orgnr }}</td>
+                    <td>{{ kunde.referanse }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% endif %}
+    </div>
 </div>
 
 {% endblock %}
