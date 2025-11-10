@@ -3,7 +3,6 @@
     display: flex;                 /* gjør container til flexbox */
     justify-content: center;       /* sentrerer innhold horisontalt */
     padding: 30px;
-    margin-left: 260px;            /* plass til sidebar */
     max-width: calc(100% - 260px);/* maks bredde justert for sidebar */
     box-sizing: border-box;
 }
