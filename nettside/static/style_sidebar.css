@@ -1,7 +1,7 @@
 /* ===== SIDEBAR ===== */
 .sidebar {
     position: absolute;
-    top: 10vh;           /* behold margin-top */
+    top: 15vh;           /* behold margin-top */
     left: 0;             /* flytt sidebar helt til venstre */
     width: 240px;
     height: fit-content;
