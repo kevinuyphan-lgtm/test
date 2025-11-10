@@ -1,10 +1,22 @@
-/* ----------------------------------- CONTAINER & SIDE BAR ADJUSTMENT --------------------------------- */
+/* ===== SIDEBAR ===== */
+.sidebar {
+    position: fixed; /* låser sidebar til venstre */
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: 100vh; /* fyller hele høyden */
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+
+/* ===== HOVEDINNHOLD ===== */
 .container {
-    margin-left: 260px; /* behold plass til sidebar */
+    margin: 0 auto; /* sentrerer containeren i midten av skjermen */
     padding: 30px;
-    max-width: 1000px; /* Tilpass bredde etter behov */
-    /* Fjern flex-sentrering */
-    display: block;
+    max-width: 900px; /* tilpass bredden på innholdet */
+    margin-left: 260px; /* gir plass til sidebar */
 }
 
 /* Kort-layout rundt tabellen */
@@ -13,10 +25,7 @@
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-    overflow-x: auto;
     width: 100%;
-    max-width: 900px;
-    margin: 0 auto; /* Dette sentrerer kortet horisontalt */
 }
 
 /* Overskrift */
@@ -25,8 +34,7 @@
     margin-bottom: 20px;
 }
 
-
-/* ----------------------------------- TABELL STILER --------------------------------- */
+/* TABELL STILER */
 .data-table, .invoice-table {
     width: 100%;
     border-collapse: collapse;
@@ -34,7 +42,6 @@
     margin-top: 10px;
 }
 
-/* Header */
 .data-table th, .invoice-table th {
     background: #f4f4f4;
     font-weight: bold;
@@ -43,13 +50,11 @@
     border-bottom: 1px solid #ddd;
 }
 
-/* Rader */
 .data-table td, .invoice-table td {
     padding: 12px 15px;
     border-bottom: 1px solid #eee;
 }
 
-/* Hover-effekt */
 .data-table tr:hover, .invoice-table tr:hover {
     background-color: #f8f8f8;
     cursor: pointer;
@@ -64,16 +69,17 @@
     text-align: center;
 }
 
-/* Responsiv tabell for små skjermer */
+/* Responsiv */
 @media (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-right: none;
+    }
+
     .container {
         margin-left: 0;
         padding: 15px;
-    }
-    .table-card {
-        padding: 15px;
-    }
-    .data-table, .invoice-table {
-        font-size: 13px;
     }
 }
