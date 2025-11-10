@@ -122,3 +122,63 @@ button {
   margin-top: 2.5vh;
   margin-bottom: 2.5vh;
 }
+
+/* MER -------------------------------------------------- */
+
+.main-content {
+  margin-left: 260px;
+  padding: 40px;
+  min-height: 100vh;
+  background: #fafafa;
+}
+
+.page-title {
+  font-size: 28px;
+  margin-bottom: 25px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* Faktura tabell */
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.07);
+}
+
+.invoice-table th,
+.invoice-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.invoice-table th {
+  background: #f4f4f4;
+  font-weight: bold;
+  text-align: left;
+}
+
+/* Last ned knapp */
+.download-btn {
+  background: #004080;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.download-btn:hover {
+  background: #002e66;
+}
+
+/* Tom liste */
+.empty-message {
+  margin-top: 30px;
+  color: #777;
+  font-style: italic;
+  font-size: 16px;
+}
+
