@@ -1,11 +1,10 @@
 /* ----------------------------------- CONTAINER & SIDE BAR ADJUSTMENT --------------------------------- */
 .container {
-    margin-left: 260px; /* Sørger for plass til sidebar */
+    margin-left: 260px; /* behold plass til sidebar */
     padding: 30px;
     max-width: 1000px; /* Tilpass bredde etter behov */
-    display: flex;
-    justify-content: center; /* Sentrer innhold horisontalt */
-    align-items: flex-start;
+    /* Fjern flex-sentrering */
+    display: block;
 }
 
 /* Kort-layout rundt tabellen */
@@ -14,9 +13,10 @@
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-    overflow-x: auto; /* Sikrer horisontal scroll hvis tabellen er bred */
+    overflow-x: auto;
     width: 100%;
-    max-width: 900px; /* Begrens bredde på store skjermer */
+    max-width: 900px;
+    margin: 0 auto; /* Dette sentrerer kortet horisontalt */
 }
 
 /* Overskrift */
@@ -24,6 +24,7 @@
     text-align: center;
     margin-bottom: 20px;
 }
+
 
 /* ----------------------------------- TABELL STILER --------------------------------- */
 .data-table, .invoice-table {
