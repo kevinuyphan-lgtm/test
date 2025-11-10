@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block head %}
-<title>Ny kunde</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style_kunder.css') }}">
+    <title>Ny kunde</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_kunder.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
+    <script src="/static/javascript/sidebar-java.js"></script>
 {% endblock %}
 
 {% block body %}
