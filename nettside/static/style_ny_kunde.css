@@ -1,17 +1,18 @@
 /* ===== CONTAINER ===== */
 .container {
-    margin-left: 260px;       /* plass til sidebar */
+    display: flex;                 /* gjør container til flexbox */
+    justify-content: center;       /* sentrerer innhold horisontalt */
     padding: 30px;
-    max-width: 600px;         /* begrenset bredde på skjermen */
-    display: flex;
-    justify-content: center;  /* horisontalt sentrert */
+    margin-left: 260px;            /* plass til sidebar */
+    width: calc(100% - 260px);     /* fyller plassen ved siden av sidebar */
+    box-sizing: border-box;
 }
 
 /* ===== OVERSKRIFT ===== */
 .overskrift {
     margin-bottom: 20px;
     font-weight: 600;
-    text-align: center;       /* sentrerer overskriften */
+    text-align: center;            /* sentrerer overskriften */
 }
 
 /* ===== KORT / FORM ===== */
@@ -20,8 +21,9 @@
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.09);
-    width: 100%;              /* fyller containeren */
-    max-width: 600px;         /* begrenser maks bredde */
+    width: 100%;                   /* fyller containeren */
+    max-width: 600px;              /* begrenser maks bredde */
+    box-sizing: border-box;
 }
 
 /* ===== FORM ELEMENTER ===== */
@@ -62,8 +64,10 @@ form button:hover {
 /* ===== RESPONSIV ===== */
 @media (max-width: 768px) {
     .container {
-        margin-left: 0;        /* fjerner sidebar margin på små skjermer */
+        margin-left: 0;            /* fjern sidebar margin på små skjermer */
+        width: 100%;               /* fyller hele bredden */
         padding: 15px;
+        justify-content: center;   /* holder kortet sentrert */
     }
     .card {
         padding: 15px;
