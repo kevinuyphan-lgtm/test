@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Sendte</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
+    <script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}"></script>
+{% endblock %}
+{% block body %}
+
+<div class="sidebar">
+  <ul class="sidebar-links">
+
+    <li class="sidebar-item">
+        <a class="dropdown-btn" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
+    </li>
+
+    <li class="sidebar-item">
+      <button class="dropdown-btn">📄 Faktura</button>
+      <div class="dropdown-content">
+        <a href="{{ url_for('lagret_fakturaer') }}">Ubetalte</a>
+        <a href="#">Sendte</a>
+      </div>
+    </li>
+
+    <li class="sidebar-item open">
+      <button class="dropdown-btn active">👥 Kunder</button>
+      <div class="dropdown-content">
+        <a href="{{ url_for('kundeliste') }}" class="active">Alle kunder</a>
+        <a href="{{ url_for('ny_kunde') }}">Ny kunde</a>
+      </div>
+    </li>
+
+    <li><a href="#">📦 Produkter</a></li>
+    <li><a href="#">📊 Rapporter</a></li>
+    <li><a href="#">💲 Transaksjoner</a></li>
+
+  </ul>
+</div>
+
+{% endblock %}
