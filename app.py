@@ -257,8 +257,9 @@ def lagret_fakturaer():
     if not user:
         flash("Du må logge inn for å se fakturaene dine", "error")
         return redirect(url_for("login"))
-    bruker_fakturaer = Faktura.query.filter_by(user_id=user.id).all()
-    return render_template("lagret_fakturaer.html", fakturaer=bruker_fakturaer)
+
+    fakturaer = Faktura.query.filter_by(user_id=user.id, status="utkast").all()
+    return render_template("lagret_fakturaer.html", fakturaer=fakturaer)
 
 @app.route("/sendte")
 def sendte():
@@ -266,8 +267,10 @@ def sendte():
     if not user:
         flash("Du må logge inn for å se fakturaene dine", "error")
         return redirect(url_for("login"))
-    bruker_fakturaer = Faktura.query.filter_by(user_id=user.id).all()
-    return render_template("sendte.html", fakturaer=bruker_fakturaer)
+
+    fakturaer = Faktura.query.filter_by(user_id=user.id, status="sendt").all()
+    return render_template("sendte.html", fakturaer=fakturaer)
+
 
 @app.route("/kundeliste")
 def kundeliste():
