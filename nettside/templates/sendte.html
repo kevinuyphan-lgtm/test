@@ -30,7 +30,11 @@
             <td>{{ f.dato.strftime("%d.%m.%Y kl. %H:%M") }}</td>
             <td>
                 <a href="{{ url_for('download_faktura', faktura_id=f.id) }}">⬇ Last ned</a> |
-                <a href="{{ url_for('mark_betalt', faktura_id=f.id) }}">✅ Markér betalt</a>
+                {% if f.status != 'betalt' %}
+                  <a href="{{ url_for('mark_betalt', faktura_id=f.id) }}">✅ Markér betalt</a>
+                {% else %}
+                  <span>✅ Betalt {{ f.betalt_dato.strftime("%d.%m.%Y") }}</span>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
