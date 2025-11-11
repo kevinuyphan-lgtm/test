@@ -244,7 +244,7 @@ def generate_invoice():
     with open(filepath, "wb") as f:
         f.write(pdf_buffer.getbuffer())
 
-    faktura = Faktura(filnavn=filename, user_id=user.id)
+    faktura = Faktura(filnavn=filename, user_id=user.id, status="utkast")
     db.session.add(faktura)
     db.session.commit()
 
