@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Betalte fakturaer</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style_lagret_fakturaer.css') }}">
+<script src="/static/javascript/sidebar-java.js"></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="sidebar">
+  <ul class="sidebar-links">
+
+    <li class="sidebar-item">
+      <a class="dropdown-btn" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
+    </li>
+
+    <li class="sidebar-item open">
+      <button class="dropdown-btn active">📄 Faktura</button>
+      <div class="dropdown-content" style="display: flex;">
+        <a href="{{ url_for('lagret_fakturaer') }}">Ubetalte</a>
+        <a href="{{ url_for('sendte') }}">Sendte</a>
+        <a href="{{ url_for('betalt') }}" class="active">Betalte</a>
+      </div>
+    </li>
+
+    <li class="sidebar-item">
+      <button class="dropdown-btn">👥 Kunder</button>
+      <div class="dropdown-content">
+        <a href="{{ url_for('kundeliste') }}">Alle kunder</a>
+        <a href="{{ url_for('ny_kunde') }}">Ny kunde</a>
+      </div>
+    </li>
+
+    <li><a href="#">📦 Produkter</a></li>
+    <li><a href="#">📊 Rapporter</a></li>
+    <li><a href="#">💲 Transaksjoner</a></li>
+
+  </ul>
+</div>
+
+<div class="main-content">
+    <h1 class="page-title">Betalte fakturaer</h1>
+
+    {% if fakturaer %}
+    <table class="invoice-table">
+        <tr>
+            <th>Faktura</th>
+            <th>Sendt</th>
+            <th>Betalt</th>
+            <th>Handling</th>
+        </tr>
+
+        {% for f in fakturaer %}
+        <tr>
+            <td>{{ f.filnavn }}</td>
+            <td>{{ f.dato.strftime("%d.%m.%Y") }}</td>
+            <td>{{ f.betalt_dato.strftime("%d.%m.%Y") }}</td>
+            <td>
+                <a href="{{ url_for('download_faktura', faktura_id=f.id) }}">⬇ Last ned</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% else %}
+        <p class="empty-message">Ingen fakturaer er markert som betalt enda.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
