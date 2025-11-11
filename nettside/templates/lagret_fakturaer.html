@@ -56,7 +56,10 @@
         <tr>
             <td>{{ f.filnavn }}</td>
             <td>{{ f.dato.strftime("%d.%m.%Y kl. %H:%M") }}</td>
-            <td><a class="download-btn" href="{{ url_for('download_faktura', faktura_id=f.id) }}">⬇ Last ned</a></td>
+            <td>
+                <a href="{{ url_for('download_faktura', faktura_id=f.id) }}">⬇ Last ned</a>
+                <a href="{{ url_for('send_faktura', faktura_id=f.id) }}">✉ Send</a>
+            </td>
         </tr>
         {% endfor %}
     </table>
