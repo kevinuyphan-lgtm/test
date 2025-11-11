@@ -10,7 +10,33 @@
 {% block body %}
 
 <div class="sidebar">
-  {% include 'sidebar.html' %}   <!-- Hvis du har separat sidebar -->
+  <ul class="sidebar-links">
+
+    <li class="sidebar-item">
+      <a class="dropdown-btn" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
+    </li>
+
+    <li class="sidebar-item open">
+      <button class="dropdown-btn active">📄 Faktura</button>
+      <div class="dropdown-content" style="display: flex;">
+        <a href="{{ url_for('lagret_fakturaer') }}">Ubetalte</a>
+        <a href="{{ url_for('sendte') }}" class="active">Sendte</a>
+      </div>
+    </li>
+
+    <li class="sidebar-item">
+      <button class="dropdown-btn">👥 Kunder</button>
+      <div class="dropdown-content">
+        <a href="{{ url_for('kundeliste') }}">Alle kunder</a>
+        <a href="{{ url_for('ny_kunde') }}">Ny kunde</a>
+      </div>
+    </li>
+
+    <li><a href="#">📦 Produkter</a></li>
+    <li><a href="#">📊 Rapporter</a></li>
+    <li><a href="#">💲 Transaksjoner</a></li>
+
+  </ul>
 </div>
 
 <div class="main-content">
@@ -29,9 +55,12 @@
             <td>{{ f.filnavn }}</td>
             <td>{{ f.dato.strftime("%d.%m.%Y kl. %H:%M") }}</td>
             <td>
-                <a href="{{ url_for('download_faktura', faktura_id=f.id) }}">⬇ Last ned</a> |
+                <a href="{{ url_for('download_faktura', faktura_id=f.id) }}">⬇ Last ned</a>
                 {% if f.status != 'betalt' %}
-                  <a href="{{ url_for('mark_betalt', faktura_id=f.id) }}">✅ Markér betalt</a>
+                  <form method="GET" action="{{ url_for('mark_betalt', faktura_id=f.id) }}" 
+                        style="display:inline;">
+                      <button type="submit" class="send-btn">✅ Markér betalt</button>
+                  </form>
                 {% else %}
                   <span>✅ Betalt {{ f.betalt_dato.strftime("%d.%m.%Y") }}</span>
                 {% endif %}
