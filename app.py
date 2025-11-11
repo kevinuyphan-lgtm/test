@@ -271,6 +271,23 @@ def sendte():
     fakturaer = Faktura.query.filter_by(user_id=user.id, status="sendt").all()
     return render_template("sendte.html", fakturaer=fakturaer)
 
+@app.route("/send-faktura/<int:faktura_id>")
+def send_faktura(faktura_id):
+    user = current_user()
+    if not user:
+        flash("Du må logge inn", "error")
+        return redirect(url_for("login"))
+
+    faktura = Faktura.query.get_or_404(faktura_id)
+    if faktura.user_id != user.id:
+        flash("Ikke tilgang", "error")
+        return redirect(url_for("lagret_fakturaer"))
+
+    faktura.status = "sendt"
+    db.session.commit()
+    
+    flash("Faktura markert som SENDT ✅", "success")
+    return redirect(url_for("sendte"))
 
 @app.route("/kundeliste")
 def kundeliste():
