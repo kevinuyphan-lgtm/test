@@ -73,7 +73,8 @@ class Faktura(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filnavn = db.Column(db.String(100), nullable=False)
     dato = db.Column(db.DateTime, default=datetime.utcnow)
-    status = db.Column(db.String(20), default="utkast")  # <-- NYTT
+    status = db.Column(db.String(20), default="utkast")  # utkast → sendt → betalt
+    betalt_dato = db.Column(db.DateTime, nullable=True)   # når den faktisk ble betalt
     user_id = db.Column(db.Integer, db.ForeignKey('bruker.id'), nullable=False)
 
 # -------------------------------
