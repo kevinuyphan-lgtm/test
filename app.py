@@ -340,6 +340,16 @@ def ny_kunde():
 
     return render_template("ny_kunde.html")
 
+@app.route("/betalt")
+def betalt():
+    user = current_user()
+    if not user:
+        flash("Du må logge inn for å se betalte fakturaer", "error")
+        return redirect(url_for("login"))
+
+    fakturaer = Faktura.query.filter_by(user_id=user.id, status="betalt").all()
+    return render_template("betalt.html", fakturaer=fakturaer)
+
 
 @app.route("/download/<int:faktura_id>")
 def download_faktura(faktura_id):
