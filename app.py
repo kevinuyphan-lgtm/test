@@ -266,7 +266,7 @@ def lagret_fakturaer():
 def sendte():
     user = current_user()
     if not user:
-        flash("Du må logge inn for å se fakturaene dine", "error")
+        flash("Du må logge inn for å se sendte fakturaer", "error")
         return redirect(url_for("login"))
 
     fakturaer = Faktura.query.filter_by(user_id=user.id, status="sendt").all()
