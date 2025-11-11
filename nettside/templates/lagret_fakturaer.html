@@ -58,8 +58,11 @@
             <td>{{ f.dato.strftime("%d.%m.%Y kl. %H:%M") }}</td>
             <td>
                 <a href="{{ url_for('download_faktura', faktura_id=f.id) }}">⬇ Last ned</a>
-                <a href="{{ url_for('send_faktura', faktura_id=f.id) }}"
-                   onclick="return confirm('Er du sikker på at du vil sende fakturaen?');">✉ Send</a>
+                <form method="GET" action="{{ url_for('send_faktura', faktura_id=f.id) }}" 
+                      onsubmit="return confirm('Er du sikker på at du vil sende fakturaen?');" 
+                      style="display:inline;">
+                    <button type="submit" class="send-btn">✉ Send</button>
+                </form>
             </td>
         </tr>
         {% endfor %}
