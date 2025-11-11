@@ -289,6 +289,23 @@ def send_faktura(faktura_id):
     flash("Faktura markert som SENDT ✉️", "success")
     return redirect(url_for("sendte"))
 
+@app.route("/mark-betalt/<int:faktura_id>")
+def mark_betalt(faktura_id):
+    user = current_user()
+    if not user:
+        return redirect(url_for("login"))
+
+    faktura = Faktura.query.get_or_404(faktura_id)
+    if faktura.user_id != user.id:
+        flash("Ingen tilgang!", "error")
+        return redirect(url_for("sendte"))
+
+    faktura.status = "betalt"
+    faktura.betalt_dato = datetime.utcnow()
+    db.session.commit()
+
+    flash("Faktura markert som BETALT ✅", "success")
+    return redirect(url_for("sendte"))
 
 @app.route("/kundeliste")
 def kundeliste():
