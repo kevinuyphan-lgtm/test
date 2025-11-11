@@ -1,25 +1,28 @@
-/* ----------------------------------- CONTAINER & SIDE BAR ADJUSTMENT --------------------------------- */
+/* ===== CONTAINER: SENTRERT ===== */
 .container {
-    margin-left: 260px; /* Sørger for plass til sidebar */
+    max-width: 700px;       /* gjør innholdet smalere og penere */
+    margin: 0 auto;         /* SENTRERER alt i midten */
     padding: 30px;
-    max-width: 1000px; /* Tilpass bredde etter behov */
+    box-sizing: border-box;
 }
 
-/* Kort-layout rundt tabellen */
+/* ===== TABELL-KORT ===== */
 .table-card {
     background: white;
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-    overflow-x: auto; /* Sikrer horisontal scroll hvis tabellen er bred */
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
 }
 
-/* ----------------------------------- TABELL STILER --------------------------------- */
+/* ===== TABELL ===== */
 .data-table, .invoice-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 15px;
-    margin-top: 10px;
+    margin: 0 auto;   /* sentrerer tabellen helt faktisk */
 }
 
 /* Header */
@@ -31,30 +34,31 @@
     border-bottom: 1px solid #ddd;
 }
 
-/* Rader */
+/* Celler */
 .data-table td, .invoice-table td {
     padding: 12px 15px;
     border-bottom: 1px solid #eee;
 }
 
-/* Hover-effekt */
+/* Hover Effekt */
 .data-table tr:hover, .invoice-table tr:hover {
     background-color: #f8f8f8;
     cursor: pointer;
     transition: background 0.15s;
 }
 
-/* Ingen data */
+/* Ingen data melding */
 .no-data {
     color: #777;
     font-style: italic;
     margin-top: 10px;
+    text-align: center;
 }
 
-/* Responsiv tabell for små skjermer */
+/* ===== RESPONSIV ===== */
 @media (max-width: 768px) {
     .container {
-        margin-left: 0;
+        max-width: 100%;
         padding: 15px;
     }
     .table-card {
