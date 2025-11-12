@@ -273,3 +273,21 @@ body {
     text-align: center;
     margin-top: 1em;
 }
+
+/* === 0. FLEX LAYOUT FOR STICKY FOOTER === */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* hele skjermhøyden */
+}
+
+/* MAIN tar all tilgjengelig plass mellom navbar og footer */
+main {
+    flex: 1;
+}

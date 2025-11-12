@@ -6,6 +6,25 @@
     <link rel="stylesheet" href="/static/style_base.css">
     <script src="/static/javascript/base-java.js"></script>
     {% block head %}{% endblock %}
+
+    <style>
+        /* === FLEX LAYOUT FOR STICKY FOOTER === */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* hele skjermhøyden */
+        }
+
+        main {
+            flex: 1; /* tar all tilgjengelig plass mellom navbar og footer */
+        }
+    </style>
 </head>
 <body>
 
@@ -18,8 +37,6 @@
     </div>
   {% endif %}
 {% endwith %}
-
-<div style="height: 100px;"></div>
 
 <!-- 🚀 NY, REN NAVBAR -->
 <nav class="navbar">
@@ -71,10 +88,13 @@
 
 <div class="skille"></div>
 
-{% block body %}{% endblock %}
+<!-- MAIN INNHOLD STARTER HER -->
+<main>
+    {% block body %}{% endblock %}
+</main>
+<!-- MAIN INNHOLD SLUTTER HER -->
 
 <footer class="footer-bunn">
-
 <div id="grid-container">
   <div>
       <div class="footer-logo">
@@ -103,7 +123,7 @@
   <div class="small-font">Link 3</div>
   <div class="small-font">Link 3</div>
 </div>
-
 </footer>
+
 </body>
 </html>
