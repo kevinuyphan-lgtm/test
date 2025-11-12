@@ -313,14 +313,17 @@ def ny_kunde():
         flash("Du må være logget inn for å legge til kunder.", "error")
         return redirect(url_for("login"))
 
-    if request.method == "POST":
-        ny = Kunde(
-            navn = request.form.get("navn"),
-            adresse = request.form.get("adresse"),
-            orgnr = request.form.get("orgnr"),
-            referanse = request.form.get("referanse"),
-            user_id = user.id
-        )
+        if request.method == "POST":
+            ny = Kunde(
+                navn = request.form.get("navn"),
+                adresse = request.form.get("adresse"),
+                orgnr = request.form.get("orgnr"),
+                referanse = request.form.get("referanse"),
+                telefon = request.form.get("telefon"),
+                epost = request.form.get("epost"),
+                user_id = user.id
+            )
+
         db.session.add(ny)
         db.session.commit()
         flash("Kunde lagt til ✅", "success")
