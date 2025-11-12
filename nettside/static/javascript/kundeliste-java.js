@@ -42,8 +42,9 @@ document.addEventListener("DOMContentLoaded", function() {
             originalValues[f] = el.value;
         });
 
-        saveBtn.disabled = !isNew;
-        saveBtn.classList.toggle("active", isNew);
+        saveBtn.disabled = true; // Start alltid deaktivert
+        saveBtn.classList.remove("active");
+
         popup.style.display = "flex";
     }
 
@@ -75,9 +76,18 @@ document.addEventListener("DOMContentLoaded", function() {
     fields.forEach(f => {
         const el = document.getElementById(f);
         el.addEventListener("input", ()=>{
-            const changed = fields.some(f => document.getElementById(f).value !== originalValues[f]);
-            saveBtn.disabled = !changed && !isNew;
-            saveBtn.classList.toggle("active", changed || isNew);
+            const allFilled = fields.every(f => document.getElementById(f).value.trim() !== "");
+
+            if(isNew){
+                // Ny kunde: alle felt må være fylt
+                saveBtn.disabled = !allFilled;
+                saveBtn.classList.toggle("active", allFilled);
+            } else {
+                // Edit eksisterende: aktiver kun hvis endring OG alle felt fylt
+                const changed = fields.some(f => document.getElementById(f).value !== originalValues[f]);
+                saveBtn.disabled = !allFilled || !changed;
+                saveBtn.classList.toggle("active", allFilled && changed);
+            }
         });
     });
 
