@@ -42,9 +42,9 @@
     </div>
 
     <!-- Tabell -->
-    <div class="table-card">
+    <div class="table-card" id="tableCard">
       {% if kunder|length == 0 %}
-        <p class="no-data">Du har ikke registrert noen kunder ennå.</p>
+        <p class="no-data" id="noData">Du har ikke registrert noen kunder ennå.</p>
       {% else %}
         <table class="data-table" id="kundeTable">
           <thead>
@@ -73,7 +73,7 @@
               <td data-field="orgnr">{{ kunde.orgnr }}</td>
               <td data-field="referanse">{{ kunde.referanse }}</td>
               <td style="text-align:center;">
-                <img src="{{ url_for('static', filename='bilder/edit.jpeg') }}" class="edit-icon" style="width:32px;height:32px;">
+                <img src="{{ url_for('static', filename='bilder/edit.jpeg') }}" class="edit-icon" style="width:32px;height:32px;cursor:pointer;">
               </td>
             </tr>
             {% endfor %}
