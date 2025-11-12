@@ -1,23 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // 🔍 Søkefunksjon
-    const searchInput = document.getElementById("searchInput");
-    const table = document.getElementById("kundeTable");
-    if (searchInput && table) {
-        searchInput.addEventListener("keyup", function() {
-            const filter = searchInput.value.toLowerCase();
-            const rows = table.getElementsByTagName("tr");
-            for (let i = 1; i < rows.length; i++) {
-                const rowText = rows[i].innerText.toLowerCase();
-                rows[i].style.display = rowText.includes(filter) ? "" : "none";
-            }
-        });
-    }
-
-    // ✏️ Popup-funksjon
     const popup = document.getElementById("popup");
     const closePopup = document.getElementById("closePopup");
     const saveBtn = document.getElementById("saveChanges");
-
     const fields = [
         "popupNavn",
         "popupFirma",
@@ -31,34 +15,68 @@ document.addEventListener("DOMContentLoaded", function() {
     let originalValues = {};
     let currentKundeId = null;
 
-    document.querySelectorAll(".edit-icon").forEach(icon => {
-        icon.addEventListener("click", () => {
-            currentKundeId = icon.dataset.id; // Hent kunde-id
-            fields.forEach(f => {
-                const el = document.getElementById(f);
-                const dataAttr = "data-" + f.replace("popup", "").toLowerCase();
-                el.value = icon.getAttribute(dataAttr) || "";
-                originalValues[f] = el.value;
-            });
+    // Funksjon for å åpne popup (edit eller readonly)
+    function openPopup(data, readonly = false) {
+        fields.forEach(f => {
+            const el = document.getElementById(f);
+            const key = f.replace("popup", "").toLowerCase();
+            el.value = data[key] || "";
+            el.readOnly = readonly;
+            originalValues[f] = el.value;
+        });
 
-            saveBtn.disabled = true;
-            saveBtn.classList.remove("active");
-            popup.style.display = "flex";
+        saveBtn.disabled = readonly;
+        saveBtn.classList.toggle("active", !readonly);
+        popup.style.display = "flex";
+    }
+
+    // 🔹 Rediger-knapp
+    document.querySelectorAll(".edit-icon").forEach(icon => {
+        icon.addEventListener("click", (e) => {
+            e.stopPropagation(); // forhindrer at row click trigger readonly
+            currentKundeId = icon.dataset.id;
+
+            const data = {
+                navn: icon.dataset.navn,
+                firma: icon.dataset.firma,
+                adresse: icon.dataset.adresse,
+                orgnr: icon.dataset.orgnr,
+                referanse: icon.dataset.referanse,
+                telefon: icon.dataset.telefon,
+                epost: icon.dataset.epost
+            };
+
+            openPopup(data, false); // ikke readonly
+        });
+    });
+
+    // 🔹 Klikk på raden (bortsett fra edit)
+    document.querySelectorAll("#kundeTable tbody tr").forEach(row => {
+        row.addEventListener("click", (e) => {
+            if(e.target.classList.contains("edit-icon")) return; // ignorér edit-knapp
+
+            const icon = row.querySelector(".edit-icon");
+            const data = {
+                navn: icon.dataset.navn,
+                firma: icon.dataset.firma,
+                adresse: icon.dataset.adresse,
+                orgnr: icon.dataset.orgnr,
+                referanse: icon.dataset.referanse,
+                telefon: icon.dataset.telefon,
+                epost: icon.dataset.epost
+            };
+
+            openPopup(data, true); // readonly
         });
     });
 
     // Lukk popup
-    const closePopupFn = () => {
-        popup.style.display = "none";
-        currentKundeId = null;
-    };
-
-    closePopup.addEventListener("click", closePopupFn);
+    closePopup.addEventListener("click", () => popup.style.display = "none");
     popup.addEventListener("click", (e) => {
-        if (e.target === popup) closePopupFn();
+        if (e.target === popup) popup.style.display = "none";
     });
 
-    // Aktiver "Lagre" knappen når en verdi endres
+    // Aktiver lagre-knapp når input endres (bare for edit)
     fields.forEach(f => {
         const el = document.getElementById(f);
         el.addEventListener("input", () => {
@@ -70,13 +88,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Lagre endringer
     saveBtn.addEventListener("click", () => {
-        if (!currentKundeId) return;
+        if(!currentKundeId) return;
 
-        const updatedData = {};
-        fields.forEach(f => {
-            const key = f.replace("popup", "").toLowerCase(); // navn, firma osv
-            updatedData[key] = document.getElementById(f).value;
-        });
+        const updatedData = {
+            navn: document.getElementById("popupNavn").value,
+            firma: document.getElementById("popupFirma").value,
+            adresse: document.getElementById("popupAdresse").value,
+            orgnr: document.getElementById("popupOrgnr").value,
+            referanse: document.getElementById("popupReferanse").value,
+            telefon: document.getElementById("popupTelefon").value,
+            epost: document.getElementById("popupEpost").value
+        };
 
         fetch(`/update-kunde/${currentKundeId}`, {
             method: "POST",
@@ -86,13 +108,23 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(res => res.json())
         .then(data => {
             if(data.success){
-                location.reload(); // oppdater siden for å se endringer
+                // Oppdater tabell dynamisk
+                const row = document.querySelector(`.edit-icon[data-id='${currentKundeId}']`).closest("tr");
+                row.children[0].innerText = data.kunde.navn;
+                row.children[1].innerText = data.kunde.adresse;
+                row.children[2].innerText = data.kunde.orgnr;
+                row.children[3].innerText = data.kunde.referanse;
+
+                const icon = row.querySelector(".edit-icon");
+                Object.keys(data.kunde).forEach(key => {
+                    icon.dataset[key] = data.kunde[key];
+                });
+
+                popup.style.display = "none";
             } else {
-                console.error("Feil ved lagring:", data.message);
+                console.error(data.message);
             }
         })
-        .catch(err => console.error("Fetch error:", err));
-
-        closePopupFn();
+        .catch(err => console.error(err));
     });
 });

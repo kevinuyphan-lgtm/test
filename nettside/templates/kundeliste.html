@@ -64,7 +64,7 @@
                     </thead>
                     <tbody>
                         {% for kunde in kunder %}
-                        <tr>
+                        <tr data-id="{{ kunde.id }}">
                             <td>{{ kunde.navn }}</td>
                             <td>{{ kunde.adresse }}</td>
                             <td>{{ kunde.orgnr }}</td>
@@ -74,13 +74,13 @@
                                     class="edit-icon" 
                                     data-id="{{ kunde.id }}"
                                     data-navn="{{ kunde.navn }}"
-                                    data-firma="{{ kunde.firmanavn if kunde.firmanavn else '' }}"
+                                    data-firma="{{ kunde.firmanavn if kunde.firmanavn else 'Ikke registrert' }}"
                                     data-adresse="{{ kunde.adresse }}"
                                     data-orgnr="{{ kunde.orgnr }}"
                                     data-referanse="{{ kunde.referanse }}"
                                     data-telefon="{{ kunde.telefon if kunde.telefon else '' }}"
                                     data-epost="{{ kunde.epost if kunde.epost else '' }}"
-                                    style="cursor:pointer; width:24px; height:24px;">
+                                    style="cursor:pointer; width:32px; height:32px;">
                             </td>
                         </tr>
                         {% endfor %}

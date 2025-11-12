@@ -353,29 +353,48 @@ def download_faktura(faktura_id):
     user_folder = os.path.join(PDF_FOLDER, f"user_{user.id}")
     return send_from_directory(user_folder, faktura.filnavn, as_attachment=True)
 
+from flask import jsonify
+
 @app.route("/update-kunde/<int:kunde_id>", methods=["POST"])
 def update_kunde(kunde_id):
     user = current_user()
     if not user:
-        return {"success": False, "message": "Ikke logget inn"}, 401
+        return jsonify({"success": False, "message": "Du må være logget inn"}), 401
 
     kunde = Kunde.query.get_or_404(kunde_id)
+
     if kunde.user_id != user.id:
-        return {"success": False, "message": "Ingen tilgang"}, 403
+        return jsonify({"success": False, "message": "Ingen tilgang"}), 403
 
     data = request.get_json()
-    kunde.navn = data.get("navn", kunde.navn)
-    kunde.firma = data.get("firma", getattr(kunde, "firma", None))
-    kunde.adresse = data.get("adresse", kunde.adresse)
-    kunde.orgnr = data.get("orgnr", kunde.orgnr)
-    kunde.referanse = data.get("referanse", kunde.referanse)
-    kunde.telefon = data.get("telefon", kunde.telefon)
-    kunde.epost = data.get("epost", kunde.epost)
 
-    db.session.commit()
-    return {"success": True}
+    try:
+        kunde.navn = data.get("navn", kunde.navn)
+        kunde.adresse = data.get("adresse", kunde.adresse)
+        kunde.orgnr = data.get("orgnr", kunde.orgnr)
+        kunde.referanse = data.get("referanse", kunde.referanse)
+        kunde.telefon = data.get("telefon", kunde.telefon)
+        kunde.epost = data.get("epost", kunde.epost)
 
-from flask import jsonify, request
+        db.session.commit()
+
+        # Returner hele raden som JSON for dynamisk oppdatering
+        return jsonify({
+            "success": True,
+            "kunde": {
+                "id": kunde.id,
+                "navn": kunde.navn,
+                "adresse": kunde.adresse,
+                "orgnr": kunde.orgnr,
+                "referanse": kunde.referanse,
+                "telefon": kunde.telefon,
+                "epost": kunde.epost
+            }
+        })
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500
 
 # -------------------------------
 # PASSWORD RESET
