@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
         currentKundeId = kundeId;
         isNew = mode === "new";
 
-        popupTitle.textContent = isNew ? "Ny Kunde" : "Edit Kunde";
+        popupTitle.textContent = isNew ? "Ny Kunde" : "Endre Kunde";
 
         fields.forEach(f => {
             const el = document.getElementById(f);
@@ -42,23 +42,28 @@ document.addEventListener("DOMContentLoaded", function() {
             originalValues[f] = el.value;
         });
 
-        saveBtn.disabled = true;
-        saveBtn.classList.remove("active");
+        updateSaveButton();
         popup.style.display = "flex";
+    }
+
+    // ===== Oppdater Lagre-knapp status =====
+    function updateSaveButton(){
+        const allFilled = fields.every(f => document.getElementById(f).value.trim() !== "");
+        const changed = fields.some(f => document.getElementById(f).value !== originalValues[f]);
+        saveBtn.disabled = !(allFilled && (isNew || changed));
+        saveBtn.classList.toggle("active", allFilled && (isNew || changed));
     }
 
     // ===== Legg til event på edit-ikon =====
     function addEditEvents(){
         if(!table) return;
         table.querySelectorAll(".edit-icon").forEach(icon => {
-            icon.removeEventListener("click", icon._clickListener); 
-            const listener = e => {
+            icon.onclick = null; // unngå dobbel binding
+            icon.addEventListener("click", e=>{
                 e.stopPropagation();
                 const row = icon.closest("tr");
                 openPopup(row.dataset.id, "edit", row);
-            };
-            icon.addEventListener("click", listener);
-            icon._clickListener = listener;
+            });
         });
     }
 
@@ -76,85 +81,79 @@ document.addEventListener("DOMContentLoaded", function() {
     // ===== Input felter =====
     fields.forEach(f => {
         const el = document.getElementById(f);
-        el.addEventListener("input", ()=>{
-            const allFilled = fields.every(f => document.getElementById(f).value.trim() !== "");
-            if(isNew){
-                // Ny kunde: alle felt må være fylt
-                saveBtn.disabled = !allFilled;
-                saveBtn.classList.toggle("active", allFilled);
-            } else {
-                // Edit eksisterende: aktiver kun hvis endring OG alle felt fylt
-                const changed = fields.some(f => document.getElementById(f).value !== originalValues[f]);
-                saveBtn.disabled = !allFilled || !changed;
-                saveBtn.classList.toggle("active", allFilled && changed);
-            }
-        });
+        el.addEventListener("input", updateSaveButton);
     });
 
     // ===== Lagre ny/endre eksisterende =====
     saveBtn.addEventListener("click", ()=>{
-        if(saveBtn.disabled) return; // Sikkerhet
+        if(saveBtn.disabled) return; // ekstra sikkerhet
 
         const payload = {};
-        fields.forEach(f => payload[f.replace("popup","").toLowerCase()] = document.getElementById(f).value);
+        fields.forEach(f => payload[f.replace("popup","").toLowerCase()] = document.getElementById(f).value.trim());
 
         const url = isNew ? "/add-kunde" : `/update-kunde/${currentKundeId}`;
 
         fetch(url,{
             method:"POST",
             headers:{"Content-Type":"application/json"},
-            body:JSON.stringify(payload)
-        }).then(res => res.json())
-          .then(data => {
-              if(!data.success){
-                  alert(data.message || "Noe gikk galt");
-                  return;
-              }
+            body:JSON.stringify(payload),
+            credentials: "same-origin" // viktig for Flask session
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(!data.success){
+                alert(data.message || "Noe gikk galt");
+                return;
+            }
 
-              // Opprett tabell hvis den ikke finnes
-              if(isNew && !table){
-                  if(noData) noData.remove();
-                  tableCard.innerHTML = `
-                      <table class="data-table" id="kundeTable">
-                          <thead>
-                              <tr>
-                                  <th>Navn</th>
-                                  <th>Adresse</th>
-                                  <th>Org.nr</th>
-                                  <th>Referanse</th>
-                                  <th>Handling</th>
-                              </tr>
-                          </thead>
-                          <tbody></tbody>
-                      </table>`;
-                  table = document.getElementById("kundeTable");
-              }
+            // Opprett tabell hvis den ikke finnes
+            if(isNew && !table){
+                if(noData) noData.remove();
+                tableCard.innerHTML = `
+                    <table class="data-table" id="kundeTable">
+                        <thead>
+                            <tr>
+                                <th>Navn</th>
+                                <th>Adresse</th>
+                                <th>Org.nr</th>
+                                <th>Referanse</th>
+                                <th>Handling</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>`;
+                table = document.getElementById("kundeTable");
+            }
 
-              if(isNew){
-                  const tbody = table.querySelector("tbody");
-                  const row = document.createElement("tr");
-                  row.dataset.id = data.kunde.id;
-                  Object.keys(data.kunde).forEach(k => row.dataset[k] = data.kunde[k] || "");
-                  row.innerHTML = `
-                      <td data-field="navn">${data.kunde.navn}</td>
-                      <td data-field="adresse">${data.kunde.adresse}</td>
-                      <td data-field="orgnr">${data.kunde.orgnr}</td>
-                      <td data-field="referanse">${data.kunde.referanse}</td>
-                      <td style="text-align:center;">
-                          <img src="/static/bilder/edit.jpeg" class="edit-icon" style="width:32px;height:32px;cursor:pointer;">
-                      </td>`;
-                  tbody.appendChild(row);
-                  addEditEvents();
-              } else {
-                  const row = table.querySelector(`tr[data-id='${currentKundeId}']`);
-                  fields.forEach(f=>{
-                      const key = f.replace("popup","").toLowerCase();
-                      row.dataset[key] = data.kunde[key];
-                      row.querySelector(`[data-field="${key}"]`).textContent = data.kunde[key];
-                  });
-              }
+            if(isNew){
+                const tbody = table.querySelector("tbody");
+                const row = document.createElement("tr");
+                row.dataset.id = data.kunde.id;
+                Object.keys(data.kunde).forEach(k => row.dataset[k] = data.kunde[k] || "");
+                row.innerHTML = `
+                    <td data-field="navn">${data.kunde.navn}</td>
+                    <td data-field="adresse">${data.kunde.adresse}</td>
+                    <td data-field="orgnr">${data.kunde.orgnr}</td>
+                    <td data-field="referanse">${data.kunde.referanse}</td>
+                    <td style="text-align:center;">
+                        <img src="/static/bilder/edit.jpeg" class="edit-icon" style="width:32px;height:32px;cursor:pointer;">
+                    </td>`;
+                tbody.appendChild(row);
+                addEditEvents();
+            } else {
+                const row = table.querySelector(`tr[data-id='${currentKundeId}']`);
+                fields.forEach(f=>{
+                    const key = f.replace("popup","").toLowerCase();
+                    row.dataset[key] = data.kunde[key];
+                    row.querySelector(`[data-field="${key}"]`).textContent = data.kunde[key];
+                });
+            }
 
-              popup.style.display = "none";
-          }).catch(err=>console.error(err));
+            popup.style.display = "none";
+        })
+        .catch(err=>{
+            console.error(err);
+            alert("Noe gikk galt under lagring.");
+        });
     });
 });
