@@ -371,6 +371,44 @@ def update_kunde(kunde_id):
         db.session.rollback()
         return jsonify({"success": False, "message": str(e)}), 500
 
+@app.route("/add-kunde", methods=["POST"])
+def add_kunde():
+    user = current_user()
+    if not user:
+        return jsonify({"success": False, "message": "Du må være logget inn"}), 401
+
+    data = request.get_json()
+    try:
+        ny_kunde = Kunde(
+            navn=data.get("navn", ""),
+            firmanavn=data.get("firma", ""),
+            adresse=data.get("adresse", ""),
+            orgnr=data.get("orgnr", ""),
+            referanse=data.get("referanse", ""),
+            telefon=data.get("telefon", ""),
+            epost=data.get("epost", ""),
+            user_id=user.id
+        )
+        db.session.add(ny_kunde)
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "kunde": {
+                "id": ny_kunde.id,
+                "navn": ny_kunde.navn,
+                "firma": ny_kunde.firmanavn,
+                "adresse": ny_kunde.adresse,
+                "orgnr": ny_kunde.orgnr,
+                "referanse": ny_kunde.referanse,
+                "telefon": ny_kunde.telefon,
+                "epost": ny_kunde.epost
+            }
+        })
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "message": str(e)}), 500
+
 # -------------------------------
 # PASSWORD RESET
 # -------------------------------
