@@ -33,14 +33,14 @@ document.addEventListener("DOMContentLoaded", function() {
         currentKundeId = kundeId;
         isNew = mode === "new";
 
-        console.log("DEBUG openPopup", {kundeId, mode, rowData}); // DEBUG
+        console.log("DEBUG openPopup", {kundeId, mode, rowData});
 
         popupTitle.textContent = isNew ? "Ny Kunde" : "Endre Kunde";
 
         fields.forEach(f => {
             const el = document.getElementById(f);
             let key = f.replace("popup","").toLowerCase();
-            el.value = isNew ? "" : (rowData.dataset[key] || "");
+            el.value = isNew ? "" : (rowData?.dataset[key] || "");
             el.removeAttribute("readonly");
             originalValues[f] = el.value;
         });
@@ -64,11 +64,11 @@ document.addEventListener("DOMContentLoaded", function() {
     function addEditEvents(){
         if(!table) return;
         table.querySelectorAll(".edit-icon").forEach(icon => {
-            icon.onclick = null; // unngå dobbel binding
+            icon.onclick = null;
             icon.addEventListener("click", e=>{
                 e.stopPropagation();
                 const row = icon.closest("tr");
-                console.log("DEBUG clicked edit", row.dataset); // DEBUG
+                console.log("DEBUG clicked edit", row.dataset);
                 openPopup(row.dataset.id, "edit", row);
             });
         });
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const url = isNew ? "/add-kunde" : `/update-kunde/${currentKundeId}`;
 
-        console.log("DEBUG save click", {url, payload, currentKundeId, isNew}); // DEBUG
+        console.log("DEBUG save click", {url, payload, currentKundeId, isNew});
 
         fetch(url,{
             method:"POST",
@@ -109,14 +109,14 @@ document.addEventListener("DOMContentLoaded", function() {
             credentials: "same-origin"
         })
         .then(res => {
-            console.log("DEBUG response", res); // DEBUG
+            console.log("DEBUG response", res);
             return res.json().catch(err => {
                 console.error("DEBUG JSON parse error", err);
                 throw new Error("Kan ikke parse JSON fra server");
             });
         })
         .then(data => {
-            console.log("DEBUG fetch data", data); // DEBUG
+            console.log("DEBUG fetch data", data);
 
             if(!data.success){
                 alert(data.message || "Noe gikk galt");
@@ -148,10 +148,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 row.dataset.id = data.kunde.id;
                 Object.keys(data.kunde).forEach(k => row.dataset[k] = data.kunde[k] || "");
                 row.innerHTML = `
-                    <td data-field="navn">${data.kunde.navn}</td>
-                    <td data-field="adresse">${data.kunde.adresse}</td>
-                    <td data-field="orgnr">${data.kunde.orgnr}</td>
-                    <td data-field="referanse">${data.kunde.referanse}</td>
+                    <td data-field="navn">${data.kunde.navn || ""}</td>
+                    <td data-field="adresse">${data.kunde.adresse || ""}</td>
+                    <td data-field="orgnr">${data.kunde.orgnr || ""}</td>
+                    <td data-field="referanse">${data.kunde.referanse || ""}</td>
                     <td style="text-align:center;">
                         <img src="/static/bilder/edit.jpeg" class="edit-icon" style="width:32px;height:32px;cursor:pointer;">
                     </td>`;
@@ -159,11 +159,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 addEditEvents();
             } else {
                 const row = table.querySelector(`tr[data-id='${currentKundeId}']`);
-                if(!row) console.warn("DEBUG: Ingen rad funnet med ID", currentKundeId); // DEBUG
+                if(!row) console.warn("DEBUG: Ingen rad funnet med ID", currentKundeId);
                 fields.forEach(f=>{
                     const key = f.replace("popup","").toLowerCase();
-                    row.dataset[key] = data.kunde[key];
-                    row.querySelector(`[data-field="${key}"]`).textContent = data.kunde[key];
+                    const val = data.kunde[key] || "";
+                    if(row) row.dataset[key] = val;
+                    const cell = row?.querySelector(`[data-field="${key}"]`);
+                    if(cell) cell.textContent = val;
                 });
             }
 
