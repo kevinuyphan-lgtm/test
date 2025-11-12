@@ -42,9 +42,8 @@ document.addEventListener("DOMContentLoaded", function() {
             originalValues[f] = el.value;
         });
 
-        saveBtn.disabled = true; // Start alltid deaktivert
+        saveBtn.disabled = true;
         saveBtn.classList.remove("active");
-
         popup.style.display = "flex";
     }
 
@@ -52,12 +51,14 @@ document.addEventListener("DOMContentLoaded", function() {
     function addEditEvents(){
         if(!table) return;
         table.querySelectorAll(".edit-icon").forEach(icon => {
-            icon.removeEventListener("click", ()=>{}); // unngå dobbel binding
-            icon.addEventListener("click", e=>{
+            icon.removeEventListener("click", icon._clickListener); 
+            const listener = e => {
                 e.stopPropagation();
                 const row = icon.closest("tr");
                 openPopup(row.dataset.id, "edit", row);
-            });
+            };
+            icon.addEventListener("click", listener);
+            icon._clickListener = listener;
         });
     }
 
@@ -77,7 +78,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const el = document.getElementById(f);
         el.addEventListener("input", ()=>{
             const allFilled = fields.every(f => document.getElementById(f).value.trim() !== "");
-
             if(isNew){
                 // Ny kunde: alle felt må være fylt
                 saveBtn.disabled = !allFilled;
@@ -93,8 +93,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // ===== Lagre ny/endre eksisterende =====
     saveBtn.addEventListener("click", ()=>{
+        if(saveBtn.disabled) return; // Sikkerhet
+
         const payload = {};
         fields.forEach(f => payload[f.replace("popup","").toLowerCase()] = document.getElementById(f).value);
+
         const url = isNew ? "/add-kunde" : `/update-kunde/${currentKundeId}`;
 
         fetch(url,{
