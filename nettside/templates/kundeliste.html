@@ -64,23 +64,23 @@
                     </thead>
                     <tbody>
                         {% for kunde in kunder %}
-                        <tr data-id="{{ kunde.id }}">
-                            <td>{{ kunde.navn }}</td>
-                            <td>{{ kunde.adresse }}</td>
-                            <td>{{ kunde.orgnr }}</td>
-                            <td>{{ kunde.referanse }}</td>
+                        <tr 
+                            data-id="{{ kunde.id }}"
+                            data-navn="{{ kunde.navn }}"
+                            data-firma="{{ kunde.firmanavn if kunde.firmanavn else '' }}"
+                            data-adresse="{{ kunde.adresse }}"
+                            data-orgnr="{{ kunde.orgnr }}"
+                            data-referanse="{{ kunde.referanse }}"
+                            data-telefon="{{ kunde.telefon if kunde.telefon else '' }}"
+                            data-epost="{{ kunde.epost if kunde.epost else '' }}"
+                        >
+                            <td data-field="navn">{{ kunde.navn }}</td>
+                            <td data-field="adresse">{{ kunde.adresse }}</td>
+                            <td data-field="orgnr">{{ kunde.orgnr }}</td>
+                            <td data-field="referanse">{{ kunde.referanse }}</td>
                             <td style="text-align:center;">
                                 <img src="{{ url_for('static', filename='bilder/edit.jpeg') }}" 
-                                    class="edit-icon" 
-                                    data-id="{{ kunde.id }}"
-                                    data-navn="{{ kunde.navn }}"
-                                    data-firma="{{ kunde.firmanavn if kunde.firmanavn else 'Ikke registrert' }}"
-                                    data-adresse="{{ kunde.adresse }}"
-                                    data-orgnr="{{ kunde.orgnr }}"
-                                    data-referanse="{{ kunde.referanse }}"
-                                    data-telefon="{{ kunde.telefon if kunde.telefon else '' }}"
-                                    data-epost="{{ kunde.epost if kunde.epost else '' }}"
-                                    style="cursor:pointer; width:32px; height:32px;">
+                                     class="edit-icon" style="cursor:pointer; width:32px; height:32px;">
                             </td>
                         </tr>
                         {% endfor %}

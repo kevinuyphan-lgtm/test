@@ -36,16 +36,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
         fields.forEach(f => {
             const el = document.getElementById(f);
-            if (mode === "edit") {
-                const dataAttr = "data-" + f.replace("popup","").toLowerCase();
-                el.value = rowData.getAttribute(dataAttr);
-                el.removeAttribute("readonly");
-            } else {
-                // read-only
-                const dataAttr = "data-" + f.replace("popup","").toLowerCase();
-                el.value = rowData.getAttribute(dataAttr);
-                el.setAttribute("readonly", true);
-            }
+            const dataAttr = "data-" + f.replace("popup","").toLowerCase();
+            el.value = rowData.getAttribute(dataAttr) || "";
+            if(mode === "edit") el.removeAttribute("readonly");
+            else el.setAttribute("readonly", true);
+
             originalValues[f] = el.value;
         });
 
@@ -60,8 +55,9 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll(".edit-icon").forEach(icon => {
         icon.addEventListener("click", e => {
             e.stopPropagation();
-            const kundeId = icon.dataset.id;
-            openPopup(kundeId, "edit", icon.closest("tr"));
+            const row = icon.closest("tr");
+            const kundeId = row.dataset.id;
+            openPopup(kundeId, "edit", row);
         });
     });
 
@@ -69,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll("#kundeTable tbody tr").forEach(row => {
         row.addEventListener("click", e => {
             if (!e.target.classList.contains("edit-icon")) {
-                const kundeId = row.querySelector(".edit-icon").dataset.id;
+                const kundeId = row.dataset.id;
                 openPopup(kundeId, "view", row);
             }
         });
@@ -77,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // ===== Lukk popup =====
     closePopup.addEventListener("click", () => popup.style.display = "none");
-    popup.addEventListener("click", (e) => { if (e.target === popup) popup.style.display = "none"; });
+    popup.addEventListener("click", e => { if (e.target === popup) popup.style.display = "none"; });
 
     // ===== Aktiver lagre-knapp =====
     fields.forEach(f => {
@@ -85,8 +81,7 @@ document.addEventListener("DOMContentLoaded", function() {
         el.addEventListener("input", () => {
             const changed = fields.some(f => document.getElementById(f).value !== originalValues[f]);
             saveBtn.disabled = !changed;
-            if (changed) saveBtn.classList.add("active");
-            else saveBtn.classList.remove("active");
+            saveBtn.classList.toggle("active", changed);
         });
     });
 
@@ -107,12 +102,17 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(res => res.json())
         .then(data => {
             if (data.success) {
-                // Oppdater tabellraden dynamisk
-                const row = document.querySelector(`#kundeTable .edit-icon[data-id='${currentKundeId}']`).closest("tr");
-                fields.forEach(f => {
-                    const col = f.replace("popup","");
-                    row.querySelector(`[data-${col.toLowerCase()}]`).textContent = data.kunde[col];
-                    row.querySelector(`.edit-icon`).setAttribute(`data-${col.toLowerCase()}`, data.kunde[col]);
+                const row = document.querySelector(`#kundeTable tbody tr[data-id='${currentKundeId}']`);
+                
+                // Oppdater <tr> data-attributes
+                Object.keys(updatedData).forEach(key => {
+                    row.setAttribute(`data-${key}`, updatedData[key]);
+                });
+
+                // Oppdater cellene
+                row.querySelectorAll("td[data-field]").forEach(td => {
+                    const field = td.getAttribute("data-field");
+                    if (updatedData[field] !== undefined) td.textContent = updatedData[field];
                 });
             } else {
                 console.error(data.message);
