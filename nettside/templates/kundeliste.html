@@ -32,8 +32,6 @@
 </div>
 
 <div class="main-content">
-  <div class="overskrift"><div>
-
   <div class="container">
     <!-- Søk + Ny kunde -->
     <div class="search-container">
@@ -59,6 +57,7 @@
           <tbody>
             {% for kunde in kunder %}
             <tr 
+              class="kunde-row"
               data-id="{{ kunde.id }}"
               data-navn="{{ kunde.navn }}"
               data-firma="{{ kunde.firmanavn if kunde.firmanavn else '' }}"
@@ -73,8 +72,8 @@
               <td data-field="orgnr">{{ kunde.orgnr }}</td>
               <td data-field="referanse">{{ kunde.referanse }}</td>
               <td style="text-align:center;">
-                  <img src="{{ url_for('static', filename='bilder/edit.jpeg') }}" class="edit-icon" style="width:32px;height:32px;cursor:pointer;">
-                  <img src="{{ url_for('static', filename='bilder/delete.png') }}" class="delete-icon" style="width:32px;height:32px;cursor:pointer;margin-left:8px;">
+                <img src="{{ url_for('static', filename='bilder/edit.jpeg') }}" class="edit-icon" title="Rediger">
+                <img src="{{ url_for('static', filename='bilder/delete.png') }}" class="delete-icon" title="Slett">
               </td>
             </tr>
             {% endfor %}
@@ -124,13 +123,15 @@
   </div>
 </div>
 
-<!-- Popup for bekreft sletting -->
-<div id="deletePopup" class="popup-overlay" style="display:none;">
+<!-- Popup for sletting -->
+<div class="popup-overlay" id="deletePopup">
   <div class="popup-box">
+    <h2>Bekreft sletting</h2>
     <p>Er du sikker på at du vil slette denne kunden?</p>
-    <button id="deleteConfirm" class="save-btn">Ja, slett</button>
-    <button id="deleteCancel" class="cancel-btn">Avbryt</button>
+    <div class="popup-buttons">
+      <button id="confirmDelete" class="delete-confirm">Slett</button>
+      <button id="cancelDelete" class="cancel-delete">Avbryt</button>
+    </div>
   </div>
 </div>
-
 {% endblock %}
