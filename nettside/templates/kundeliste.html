@@ -5,13 +5,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style_kundeliste.css') }}">
     <script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}"></script>
+    <script src="{{ url_for('static', filename='javascript/kundeliste-java.js') }}"></script>
 {% endblock %}
 
 {% block body %}
 
 <div class="sidebar">
   <ul class="sidebar-links">
-
     <li class="sidebar-item">
         <a class="dropdown-btn" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
     </li>
@@ -27,7 +27,7 @@
 
     <li class="sidebar-item open">
       <button class="dropdown-btn active">👥 Kunder</button>
-      <div class="dropdown-content">
+      <div class="dropdown-content" style="display:flex;">
         <a href="{{ url_for('kundeliste') }}" class="active">Alle kunder</a>
         <a href="{{ url_for('ny_kunde') }}">Ny kunde</a>
       </div>
@@ -36,7 +36,6 @@
     <li><a href="#">📦 Produkter</a></li>
     <li><a href="#">📊 Rapporter</a></li>
     <li><a href="#">💲 Transaksjoner</a></li>
-
   </ul>
 </div>
 
@@ -44,17 +43,23 @@
     <h1 class="overskrift">Kundeliste</h1>
     <div class="container">
 
+        <!-- 🔍 Søkefelt -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Søk etter kunde...">
+        </div>
+
         <div class="table-card">
             {% if kunder|length == 0 %}
                 <p class="no-data">Du har ikke registrert noen kunder ennå.</p>
             {% else %}
-                <table class="data-table">
+                <table class="data-table" id="kundeTable">
                     <thead>
                         <tr>
                             <th>Navn</th>
                             <th>Adresse</th>
                             <th>Org.nr</th>
                             <th>Referanse</th>
+                            <th>Handling</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,12 +69,38 @@
                             <td>{{ kunde.adresse }}</td>
                             <td>{{ kunde.orgnr }}</td>
                             <td>{{ kunde.referanse }}</td>
+                            <td>
+                                <span class="edit-icon" 
+                                      data-navn="{{ kunde.navn }}"
+                                      data-firma="{{ kunde.firmanavn if kunde.firmanavn else 'Ikke registrert' }}"
+                                      data-adresse="{{ kunde.adresse }}"
+                                      data-orgnr="{{ kunde.orgnr }}"
+                                      data-referanse="{{ kunde.referanse }}"
+                                      data-telefon="{{ kunde.telefon if kunde.telefon else 'Ikke oppgitt' }}"
+                                      data-epost="{{ kunde.epost if kunde.epost else 'Ikke oppgitt' }}">
+                                    ✏️
+                                </span>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             {% endif %}
         </div>
+    </div>
+</div>
+
+<!-- 🪟 Popup -->
+<div class="popup-overlay" id="popup">
+    <div class="popup-box">
+        <button class="popup-close" id="closePopup">&times;</button>
+        <h2 id="popupNavn"></h2>
+        <p><strong>Firma:</strong> <span id="popupFirma"></span></p>
+        <p><strong>Adresse:</strong> <span id="popupAdresse"></span></p>
+        <p><strong>Org.nr:</strong> <span id="popupOrgnr"></span></p>
+        <p><strong>Referanse:</strong> <span id="popupReferanse"></span></p>
+        <p><strong>Telefon:</strong> <span id="popupTelefon"></span></p>
+        <p><strong>E-post:</strong> <span id="popupEpost"></span></p>
     </div>
 </div>
 

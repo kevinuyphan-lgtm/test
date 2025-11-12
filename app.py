@@ -47,6 +47,9 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 serializer = URLSafeTimedSerializer(app.secret_key)
 
+from flask_migrate import Migrate
+migrate = Migrate(app, db)
+
 # -------------------------------
 # MODELS
 # -------------------------------
@@ -76,20 +79,6 @@ class Faktura(db.Model):
     status = db.Column(db.String(20), default="utkast")  # utkast → sendt → betalt
     betalt_dato = db.Column(db.DateTime, nullable=True)   # når den faktisk ble betalt
     user_id = db.Column(db.Integer, db.ForeignKey('bruker.id'), nullable=False)
-
-# -------------------------------
-# CREATE DB & TEST USER
-# -------------------------------
-with app.app_context():
-    db.create_all()  # Lager bare tabeller som ikke finnes
-
-    # Lag testbruker om den ikke finnes
-    if not Bruker.query.filter_by(email="test@localhost").first():
-        pw_hash = bcrypt.generate_password_hash("123456").decode("utf-8")
-        test_user = Bruker(navn="Test Bruker", email="test@localhost", password_hash=pw_hash)
-        db.session.add(test_user)
-        db.session.commit()
-        print("Testbruker opprettet: test@localhost / 123456")
 
 # -------------------------------
 # HELPER FUNCTIONS
@@ -399,5 +388,12 @@ def reset_with_token(token):
 # -------------------------------
 # RUN LOCAL
 # -------------------------------
+def create_app():
+    from flask_migrate import Migrate
+
+    migrate = Migrate(app, db)
+    return app
+
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    create_app().run(debug=True)
