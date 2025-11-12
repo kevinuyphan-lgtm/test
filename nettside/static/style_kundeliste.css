@@ -176,6 +176,13 @@
     gap: 15px;
 }
 
+.popup-box input[readonly] {
+    background-color: #f0f0f0; /* grå bakgrunn for å signalisere read-only */
+    border-color: #ddd;
+    cursor: not-allowed;       /* stopper musepekeren */
+    color: #555;               /* mørk grå tekst */
+}
+
 .popup-box h2 {
     margin-top: 0;
     text-align: center;
