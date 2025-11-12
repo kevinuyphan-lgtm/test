@@ -33,17 +33,16 @@ document.addEventListener("DOMContentLoaded", function() {
         currentKundeId = kundeId;
         isNew = mode === "new";
 
+        console.log("DEBUG openPopup", {kundeId, mode, rowData}); // DEBUG
+
         popupTitle.textContent = isNew ? "Ny Kunde" : "Endre Kunde";
 
         fields.forEach(f => {
             const el = document.getElementById(f);
             let key = f.replace("popup","").toLowerCase();
-
-            // Sett verdien fra rowData, fallback til tom streng
             el.value = isNew ? "" : (rowData.dataset[key] || "");
-
             el.removeAttribute("readonly");
-            originalValues[f] = el.value; // lagre string
+            originalValues[f] = el.value;
         });
 
         updateSaveButton();
@@ -69,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
             icon.addEventListener("click", e=>{
                 e.stopPropagation();
                 const row = icon.closest("tr");
+                console.log("DEBUG clicked edit", row.dataset); // DEBUG
                 openPopup(row.dataset.id, "edit", row);
             });
         });
@@ -93,21 +93,31 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // ===== Lagre ny/endre eksisterende =====
     saveBtn.addEventListener("click", ()=>{
-        if(saveBtn.disabled) return; // ekstra sikkerhet
+        if(saveBtn.disabled) return;
 
         const payload = {};
         fields.forEach(f => payload[f.replace("popup","").toLowerCase()] = document.getElementById(f).value.trim());
 
         const url = isNew ? "/add-kunde" : `/update-kunde/${currentKundeId}`;
 
+        console.log("DEBUG save click", {url, payload, currentKundeId, isNew}); // DEBUG
+
         fetch(url,{
             method:"POST",
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify(payload),
-            credentials: "same-origin" // viktig for Flask session
+            credentials: "same-origin"
         })
-        .then(res => res.json())
+        .then(res => {
+            console.log("DEBUG response", res); // DEBUG
+            return res.json().catch(err => {
+                console.error("DEBUG JSON parse error", err);
+                throw new Error("Kan ikke parse JSON fra server");
+            });
+        })
         .then(data => {
+            console.log("DEBUG fetch data", data); // DEBUG
+
             if(!data.success){
                 alert(data.message || "Noe gikk galt");
                 return;
@@ -149,6 +159,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 addEditEvents();
             } else {
                 const row = table.querySelector(`tr[data-id='${currentKundeId}']`);
+                if(!row) console.warn("DEBUG: Ingen rad funnet med ID", currentKundeId); // DEBUG
                 fields.forEach(f=>{
                     const key = f.replace("popup","").toLowerCase();
                     row.dataset[key] = data.kunde[key];
@@ -159,8 +170,8 @@ document.addEventListener("DOMContentLoaded", function() {
             popup.style.display = "none";
         })
         .catch(err=>{
-            console.error(err);
-            alert("Noe gikk galt under lagring.");
+            console.error("DEBUG fetch error:", err);
+            alert("Noe gikk galt under lagring. Sjekk console for detaljer.");
         });
     });
 });
