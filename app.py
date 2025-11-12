@@ -353,6 +353,28 @@ def download_faktura(faktura_id):
     user_folder = os.path.join(PDF_FOLDER, f"user_{user.id}")
     return send_from_directory(user_folder, faktura.filnavn, as_attachment=True)
 
+@app.route("/update-kunde/<int:kunde_id>", methods=["POST"])
+def update_kunde(kunde_id):
+    user = current_user()
+    if not user:
+        return {"success": False, "message": "Ikke logget inn"}, 401
+
+    kunde = Kunde.query.get_or_404(kunde_id)
+    if kunde.user_id != user.id:
+        return {"success": False, "message": "Ingen tilgang"}, 403
+
+    data = request.get_json()
+    kunde.navn = data.get("navn", kunde.navn)
+    kunde.firma = data.get("firma", getattr(kunde, "firma", None))
+    kunde.adresse = data.get("adresse", kunde.adresse)
+    kunde.orgnr = data.get("orgnr", kunde.orgnr)
+    kunde.referanse = data.get("referanse", kunde.referanse)
+    kunde.telefon = data.get("telefon", kunde.telefon)
+    kunde.epost = data.get("epost", kunde.epost)
+
+    db.session.commit()
+    return {"success": True}
+
 # -------------------------------
 # PASSWORD RESET
 # -------------------------------

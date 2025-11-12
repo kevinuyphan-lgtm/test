@@ -2,16 +2,18 @@ document.addEventListener("DOMContentLoaded", function() {
     // 🔍 Søkefunksjon
     const searchInput = document.getElementById("searchInput");
     const table = document.getElementById("kundeTable");
-    searchInput.addEventListener("keyup", function() {
-        const filter = searchInput.value.toLowerCase();
-        const rows = table.getElementsByTagName("tr");
-        for (let i = 1; i < rows.length; i++) {
-            const rowText = rows[i].innerText.toLowerCase();
-            rows[i].style.display = rowText.includes(filter) ? "" : "none";
-        }
-    });
+    if (searchInput && table) {
+        searchInput.addEventListener("keyup", function() {
+            const filter = searchInput.value.toLowerCase();
+            const rows = table.getElementsByTagName("tr");
+            for (let i = 1; i < rows.length; i++) {
+                const rowText = rows[i].innerText.toLowerCase();
+                rows[i].style.display = rowText.includes(filter) ? "" : "none";
+            }
+        });
+    }
 
-    // ✏️ Popup-funksjon med editable input-felt
+    // ✏️ Popup-funksjon
     const popup = document.getElementById("popup");
     const closePopup = document.getElementById("closePopup");
     const saveBtn = document.getElementById("saveChanges");
@@ -27,14 +29,15 @@ document.addEventListener("DOMContentLoaded", function() {
     ];
 
     let originalValues = {};
+    let currentKundeId = null;
 
     document.querySelectorAll(".edit-icon").forEach(icon => {
         icon.addEventListener("click", () => {
-            // Sett input-feltene og lagre originalverdier
+            currentKundeId = icon.dataset.id; // Hent kunde-id
             fields.forEach(f => {
                 const el = document.getElementById(f);
                 const dataAttr = "data-" + f.replace("popup", "").toLowerCase();
-                el.value = icon.getAttribute(dataAttr);
+                el.value = icon.getAttribute(dataAttr) || "";
                 originalValues[f] = el.value;
             });
 
@@ -45,9 +48,14 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     // Lukk popup
-    closePopup.addEventListener("click", () => popup.style.display = "none");
+    const closePopupFn = () => {
+        popup.style.display = "none";
+        currentKundeId = null;
+    };
+
+    closePopup.addEventListener("click", closePopupFn);
     popup.addEventListener("click", (e) => {
-        if (e.target === popup) popup.style.display = "none";
+        if (e.target === popup) closePopupFn();
     });
 
     // Aktiver "Lagre" knappen når en verdi endres
@@ -56,22 +64,36 @@ document.addEventListener("DOMContentLoaded", function() {
         el.addEventListener("input", () => {
             const changed = fields.some(f => document.getElementById(f).value !== originalValues[f]);
             saveBtn.disabled = !changed;
-            if (changed) {
-                saveBtn.classList.add("active");
-            } else {
-                saveBtn.classList.remove("active");
-            }
+            saveBtn.classList.toggle("active", changed);
         });
     });
 
-    // TODO: Legg til AJAX / POST for å sende data til backend
+    // Lagre endringer
     saveBtn.addEventListener("click", () => {
+        if (!currentKundeId) return;
+
         const updatedData = {};
         fields.forEach(f => {
-            updatedData[f] = document.getElementById(f).value;
+            const key = f.replace("popup", "").toLowerCase(); // navn, firma osv
+            updatedData[key] = document.getElementById(f).value;
         });
-        console.log("Oppdaterte data:", updatedData);
-        // Her kan du gjøre en fetch/post til Flask for å lagre endringene
-        popup.style.display = "none";
+
+        fetch(`/update-kunde/${currentKundeId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updatedData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success){
+                alert("Kunde oppdatert!");
+                location.reload(); // oppdater siden
+            } else {
+                alert("Feil: " + data.message);
+            }
+        })
+        .catch(err => console.error("Fetch error:", err));
+
+        closePopupFn();
     });
 });
