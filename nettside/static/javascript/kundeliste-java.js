@@ -4,122 +4,106 @@ document.addEventListener("DOMContentLoaded", function() {
     const popup = document.getElementById("popup");
     const closePopup = document.getElementById("closePopup");
     const saveBtn = document.getElementById("saveChanges");
+    const newKundeBtn = document.getElementById("newKundeBtn");
+    const popupTitle = document.getElementById("popupTitle");
 
     const fields = [
-        "popupNavn",
-        "popupFirma",
-        "popupAdresse",
-        "popupOrgnr",
-        "popupReferanse",
-        "popupTelefon",
-        "popupEpost"
+        "popupNavn","popupFirma","popupAdresse","popupOrgnr",
+        "popupReferanse","popupTelefon","popupEpost"
     ];
 
     let originalValues = {};
     let currentKundeId = null;
+    let isNew = false;
 
-    // ===== Søkefunksjon =====
-    if (searchInput && table) {
+    // Søk
+    if(searchInput && table) {
         searchInput.addEventListener("keyup", function() {
             const filter = searchInput.value.toLowerCase();
             const rows = table.getElementsByTagName("tr");
-            for (let i = 1; i < rows.length; i++) {
+            for(let i=1;i<rows.length;i++){
                 const rowText = rows[i].innerText.toLowerCase();
                 rows[i].style.display = rowText.includes(filter) ? "" : "none";
             }
         });
     }
 
-    // ===== Åpne popup =====
-    function openPopup(kundeId, mode="edit", rowData=null) {
+    function openPopup(kundeId=null, mode="edit", rowData=null) {
         currentKundeId = kundeId;
+        isNew = mode==="new";
+        popupTitle.textContent = isNew ? "Ny Kunde" : "Edit Kunde";
 
         fields.forEach(f => {
             const el = document.getElementById(f);
-            const dataAttr = "data-" + f.replace("popup","").toLowerCase();
-            el.value = rowData.getAttribute(dataAttr) || "";
-            if(mode === "edit") el.removeAttribute("readonly");
-            else el.setAttribute("readonly", true);
-
+            el.value = isNew ? "" : rowData.getAttribute("data-"+f.replace("popup","").toLowerCase()) || "";
+            el.removeAttribute("readonly");
             originalValues[f] = el.value;
         });
 
-        saveBtn.style.display = mode === "edit" ? "inline-block" : "none";
         saveBtn.disabled = true;
         saveBtn.classList.remove("active");
-
         popup.style.display = "flex";
     }
 
-    // ===== Klikk på edit-ikon =====
     document.querySelectorAll(".edit-icon").forEach(icon => {
         icon.addEventListener("click", e => {
             e.stopPropagation();
-            const row = icon.closest("tr");
-            const kundeId = row.dataset.id;
-            openPopup(kundeId, "edit", row);
+            openPopup(icon.closest("tr").dataset.id, "edit", icon.closest("tr"));
         });
     });
 
-    // ===== Klikk på tabellrad =====
-    document.querySelectorAll("#kundeTable tbody tr").forEach(row => {
-        row.addEventListener("click", e => {
-            if (!e.target.classList.contains("edit-icon")) {
-                const kundeId = row.dataset.id;
-                openPopup(kundeId, "view", row);
-            }
-        });
-    });
+    newKundeBtn.addEventListener("click", () => openPopup(null, "new"));
 
-    // ===== Lukk popup =====
-    closePopup.addEventListener("click", () => popup.style.display = "none");
-    popup.addEventListener("click", e => { if (e.target === popup) popup.style.display = "none"; });
+    closePopup.addEventListener("click", () => popup.style.display="none");
+    popup.addEventListener("click", e => { if(e.target===popup) popup.style.display="none"; });
 
-    // ===== Aktiver lagre-knapp =====
     fields.forEach(f => {
-        const el = document.getElementById(f);
-        el.addEventListener("input", () => {
+        document.getElementById(f).addEventListener("input", ()=>{
             const changed = fields.some(f => document.getElementById(f).value !== originalValues[f]);
             saveBtn.disabled = !changed;
             saveBtn.classList.toggle("active", changed);
         });
     });
 
-    // ===== Lagre-endringer =====
-    saveBtn.addEventListener("click", () => {
-        if (!currentKundeId) return;
+    saveBtn.addEventListener("click", ()=>{
+        const payload = {};
+        fields.forEach(f => payload[f.replace("popup","").toLowerCase()] = document.getElementById(f).value);
+        const url = isNew ? "/add-kunde" : `/update-kunde/${currentKundeId}`;
 
-        const updatedData = {};
-        fields.forEach(f => {
-            updatedData[f.replace("popup","").toLowerCase()] = document.getElementById(f).value;
-        });
+        fetch(url,{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(payload)
+        }).then(res=>res.json()).then(data=>{
+            if(!data.success){ alert(data.message || "Noe gikk galt"); return; }
 
-        fetch(`/update-kunde/${currentKundeId}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(updatedData)
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                const row = document.querySelector(`#kundeTable tbody tr[data-id='${currentKundeId}']`);
-                
-                // Oppdater <tr> data-attributes
-                Object.keys(updatedData).forEach(key => {
-                    row.setAttribute(`data-${key}`, updatedData[key]);
-                });
-
-                // Oppdater cellene
-                row.querySelectorAll("td[data-field]").forEach(td => {
-                    const field = td.getAttribute("data-field");
-                    if (updatedData[field] !== undefined) td.textContent = updatedData[field];
+            if(isNew){
+                const tbody = table.querySelector("tbody");
+                const row = document.createElement("tr");
+                row.dataset.id = data.kunde.id;
+                Object.keys(data.kunde).forEach(k => row.dataset[k] = data.kunde[k] || "");
+                row.innerHTML = `
+                    <td data-field="navn">${data.kunde.navn}</td>
+                    <td data-field="adresse">${data.kunde.adresse}</td>
+                    <td data-field="orgnr">${data.kunde.orgnr}</td>
+                    <td data-field="referanse">${data.kunde.referanse}</td>
+                    <td style="text-align:center;">
+                        <img src="/static/bilder/edit.jpeg" class="edit-icon" style="width:32px;height:32px;">
+                    </td>`;
+                tbody.appendChild(row);
+                row.querySelector(".edit-icon").addEventListener("click", e=>{
+                    openPopup(data.kunde.id,"edit",row);
                 });
             } else {
-                console.error(data.message);
+                const row = table.querySelector(`tr[data-id='${currentKundeId}']`);
+                fields.forEach(f=>{
+                    const key = f.replace("popup","").toLowerCase();
+                    row.dataset[key] = data.kunde[key];
+                    row.querySelector(`[data-field="${key}"]`).textContent = data.kunde[key];
+                });
             }
-        })
-        .catch(err => console.error(err));
+        }).catch(err=>console.error(err));
 
-        popup.style.display = "none";
+        popup.style.display="none";
     });
 });
