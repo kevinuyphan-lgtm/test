@@ -379,9 +379,8 @@ def add_kunde():
 
 @app.route("/delete-kunde/<int:kunde_id>", methods=["POST"])
 def delete_kunde(kunde_id):
-    from models import Kunde  # eller der Kunde-modellen din er definert
     try:
-        kunde = Kunde.query.get(kunde_id)
+        kunde = Kunde.query.get(kunde_id)  # bruker Kunde fra app.py
         if not kunde:
             return jsonify({"success": False, "message": "Kunde ikke funnet."}), 404
 
