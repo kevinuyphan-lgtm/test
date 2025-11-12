@@ -377,6 +377,21 @@ def add_kunde():
         db.session.rollback()
         return jsonify({"success": False, "message": str(e)}), 500
 
+@app.route("/delete-kunde/<int:kunde_id>", methods=["POST"])
+def delete_kunde(kunde_id):
+    from models import Kunde  # eller der Kunde-modellen din er definert
+    try:
+        kunde = Kunde.query.get(kunde_id)
+        if not kunde:
+            return jsonify({"success": False, "message": "Kunde ikke funnet."}), 404
+
+        db.session.delete(kunde)
+        db.session.commit()
+        return jsonify({"success": True, "message": "Kunde slettet."})
+    except Exception as e:
+        print("Feil under sletting:", e)
+        return jsonify({"success": False, "message": "En feil oppstod under sletting."}), 500
+
 # -------------------------------
 # PASSWORD RESET
 # -------------------------------
