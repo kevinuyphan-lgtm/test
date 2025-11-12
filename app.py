@@ -65,6 +65,7 @@ class Bruker(db.Model):
 class Kunde(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     navn = db.Column(db.String(150), nullable=False)
+    firmanavn = db.Column(db.String(150), nullable=True)  # NYTT FELT
     epost = db.Column(db.String(150), nullable=True)
     telefon = db.Column(db.String(50), nullable=True)
     adresse = db.Column(db.String(200), nullable=True)
