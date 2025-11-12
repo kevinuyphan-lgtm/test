@@ -377,33 +377,6 @@ def update_kunde(kunde_id):
 
 from flask import jsonify, request
 
-@app.route("/update-kunde/<int:kunde_id>", methods=["POST"])
-def update_kunde(kunde_id):
-    user = current_user()
-    if not user:
-        return jsonify({"success": False, "message": "Må være logget inn"}), 401
-
-    kunde = Kunde.query.get_or_404(kunde_id)
-
-    if kunde.user_id != user.id:
-        return jsonify({"success": False, "message": "Ingen tilgang"}), 403
-
-    data = request.get_json()
-    # Oppdater feltene
-    kunde.navn = data.get("navn", kunde.navn)
-    # sjekk om 'firma' finnes på modellen, ellers hopp over
-    if hasattr(kunde, "firmanavn"):
-        kunde.firmanavn = data.get("firma", kunde.firmanavn)
-    kunde.adresse = data.get("adresse", kunde.adresse)
-    kunde.orgnr = data.get("orgnr", kunde.orgnr)
-    kunde.referanse = data.get("referanse", kunde.referanse)
-    kunde.telefon = data.get("telefon", kunde.telefon)
-    kunde.epost = data.get("epost", kunde.epost)
-
-    db.session.commit()
-
-    return jsonify({"success": True})
-
 # -------------------------------
 # PASSWORD RESET
 # -------------------------------
