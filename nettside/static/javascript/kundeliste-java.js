@@ -11,27 +11,67 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // ✏️ Popup-funksjon
+    // ✏️ Popup-funksjon med editable input-felt
     const popup = document.getElementById("popup");
     const closePopup = document.getElementById("closePopup");
-    const editIcons = document.querySelectorAll(".edit-icon");
+    const saveBtn = document.getElementById("saveChanges");
 
-    editIcons.forEach(icon => {
+    const fields = [
+        "popupNavn",
+        "popupFirma",
+        "popupAdresse",
+        "popupOrgnr",
+        "popupReferanse",
+        "popupTelefon",
+        "popupEpost"
+    ];
+
+    let originalValues = {};
+
+    document.querySelectorAll(".edit-icon").forEach(icon => {
         icon.addEventListener("click", () => {
-            document.getElementById("popupNavn").innerText = icon.dataset.navn;
-            document.getElementById("popupFirma").innerText = icon.dataset.firma;
-            document.getElementById("popupAdresse").innerText = icon.dataset.adresse;
-            document.getElementById("popupOrgnr").innerText = icon.dataset.orgnr;
-            document.getElementById("popupReferanse").innerText = icon.dataset.referanse;
-            document.getElementById("popupTelefon").innerText = icon.dataset.telefon;
-            document.getElementById("popupEpost").innerText = icon.dataset.epost;
+            // Sett input-feltene og lagre originalverdier
+            fields.forEach(f => {
+                const el = document.getElementById(f);
+                const dataAttr = "data-" + f.replace("popup", "").toLowerCase();
+                el.value = icon.getAttribute(dataAttr);
+                originalValues[f] = el.value;
+            });
 
+            saveBtn.disabled = true;
+            saveBtn.classList.remove("active");
             popup.style.display = "flex";
         });
     });
 
+    // Lukk popup
     closePopup.addEventListener("click", () => popup.style.display = "none");
     popup.addEventListener("click", (e) => {
         if (e.target === popup) popup.style.display = "none";
+    });
+
+    // Aktiver "Lagre" knappen når en verdi endres
+    fields.forEach(f => {
+        const el = document.getElementById(f);
+        el.addEventListener("input", () => {
+            const changed = fields.some(f => document.getElementById(f).value !== originalValues[f]);
+            saveBtn.disabled = !changed;
+            if (changed) {
+                saveBtn.classList.add("active");
+            } else {
+                saveBtn.classList.remove("active");
+            }
+        });
+    });
+
+    // TODO: Legg til AJAX / POST for å sende data til backend
+    saveBtn.addEventListener("click", () => {
+        const updatedData = {};
+        fields.forEach(f => {
+            updatedData[f] = document.getElementById(f).value;
+        });
+        console.log("Oppdaterte data:", updatedData);
+        // Her kan du gjøre en fetch/post til Flask for å lagre endringene
+        popup.style.display = "none";
     });
 });
