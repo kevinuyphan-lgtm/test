@@ -133,6 +133,22 @@
             font-size: 16px;
         }
 
+
+/* Penn-ikon - større versjon */
+.edit-icon {
+    cursor: pointer;
+    font-size: 24px; /* økt fra 18px */
+    width: 32px;     /* legg til hvis det er img */
+    height: 32px;    /* legg til hvis det er img */
+    color: #4a90e2;
+    transition: 0.2s;
+}
+
+.edit-icon:hover {
+    color: #1e70bf;
+}
+
+
 /* ===== POPUP MED EDITABLE FELT ===== */
 .popup-overlay {
     position: fixed;

@@ -86,10 +86,9 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(res => res.json())
         .then(data => {
             if(data.success){
-                alert("Kunde oppdatert!");
-                location.reload(); // oppdater siden
+                location.reload(); // oppdater siden for å se endringer
             } else {
-                alert("Feil: " + data.message);
+                console.error("Feil ved lagring:", data.message);
             }
         })
         .catch(err => console.error("Fetch error:", err));
