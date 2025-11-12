@@ -290,4 +290,5 @@ body {
 /* MAIN tar all tilgjengelig plass mellom navbar og footer */
 main {
     flex: 1;
+    padding-top: calc(75px + 12px*2); /* logo + navbar padding */
 }
