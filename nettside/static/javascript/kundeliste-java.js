@@ -37,19 +37,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
         fields.forEach(f => {
             const el = document.getElementById(f);
-            el.value = isNew ? "" : rowData.dataset[f.replace("popup","").toLowerCase()] || "";
+            let key = f.replace("popup","").toLowerCase();
+
+            // Sett verdien fra rowData, fallback til tom streng
+            el.value = isNew ? "" : (rowData.dataset[key] || "");
+
             el.removeAttribute("readonly");
-            originalValues[f] = el.value;
+            originalValues[f] = el.value; // lagre string
         });
 
         updateSaveButton();
         popup.style.display = "flex";
     }
 
-    // ===== Oppdater Lagre-knapp status =====
     function updateSaveButton(){
         const allFilled = fields.every(f => document.getElementById(f).value.trim() !== "");
-        const changed = fields.some(f => document.getElementById(f).value !== originalValues[f]);
+        const changed = fields.some(f => {
+            const elVal = document.getElementById(f).value.trim();
+            const origVal = originalValues[f] ? originalValues[f].trim() : "";
+            return elVal !== origVal;
+        });
         saveBtn.disabled = !(allFilled && (isNew || changed));
         saveBtn.classList.toggle("active", allFilled && (isNew || changed));
     }
