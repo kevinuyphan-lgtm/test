@@ -170,15 +170,28 @@
 }
 
 /* ===== Ikoner ===== */
-.edit-icon, .delete-icon {
+.edit-icon {
   cursor: pointer;
-  font-size: 24px;
-  width: 32px;
-  height: 32px;
+  width: 22px;
+  height: 22px;
   transition: 0.2s;
+  vertical-align: middle;
 }
-.edit-icon:hover, .delete-icon:hover {
+
+.delete-icon {
+  cursor: pointer;
+  width: 18px; /* litt mindre enn edit */
+  height: 18px;
+  margin-left: 10px; /* flytter den litt til høyre */
+  transition: 0.2s;
+  vertical-align: middle;
+  opacity: 0.85;
+}
+
+.edit-icon:hover,
+.delete-icon:hover {
   transform: scale(1.1);
+  opacity: 1;
 }
 
 /* ===== RESPONSIV ===== */
@@ -200,10 +213,6 @@
 }
 
 /* ===== DELETE POPUP ===== */
-#deletePopup.popup-overlay {
-  /* arver centering */
-}
-
 #deletePopup .popup-box {
   width: 420px;
   max-width: 92%;

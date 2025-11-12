@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const noData = document.getElementById("noData");
 
     const deletePopup = document.getElementById("deletePopup"); // Ny popup for sletting
-    const deleteConfirmBtn = document.getElementById("deleteConfirm");
-    const deleteCancelBtn = document.getElementById("deleteCancel");
+    const deleteConfirmBtn = document.getElementById("confirmDelete");
+    const deleteCancelBtn = document.getElementById("cancelDelete");
     let kundeToDeleteId = null;
 
     const fields = [
