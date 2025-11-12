@@ -60,25 +60,25 @@
 }
 
 /* Søkefelt og ny knapp */
-/* Søkefelt og ny knapp */
 .search-container {
   display: flex;
-  gap: 10px;               /* mellomrom mellom søkefelt og knapp */
+  width: 100%;           /* fyller hele bredden */
   margin-bottom: 15px;
-  width: 100%;             /* fyller hele containerens bredde */
+  gap: 10px;             /* mellom søkefelt og knapp */
 }
 
 .search-container input {
-  flex: 1;                 /* søkefelt tar all ledig plass */
+  flex: 1;               /* tar all ledig plass */
   padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 16px;
+  min-width: 0;          /* for å hindre overflow */
 }
 
 .new-btn {
-  flex: 0 0 auto;          /* knapp tar bare den plassen den trenger */
-  padding: 8px 16px;       /* litt bredere knapp */
+  flex: 0 0 auto;        /* tar kun nødvendig plass */
+  padding: 8px 16px;
   background: #007bff;
   color: white;
   border: none;
@@ -88,7 +88,6 @@
   transition: 0.2s;
 }
 .new-btn:hover { background: #005ec9; }
-
 
 /* Popup */
 .popup-overlay {
@@ -101,6 +100,7 @@
   align-items: center;
   z-index: 2000;
 }
+
 .popup-box {
   background: white;
   padding: 30px;
@@ -115,10 +115,12 @@
   position: relative;
   animation: fadeIn 0.2s ease-in-out;
 }
+
 .popup-box h2 {
   margin-top: 0;
   text-align: center;
 }
+
 .popup-close {
   position: absolute;
   top: 12px;
@@ -128,10 +130,12 @@
   font-size: 22px;
   cursor: pointer;
 }
+
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
+
 .popup-box input {
   width: 100%;
   padding: 10px 12px;
@@ -144,6 +148,7 @@
   border-color: #4a90e2;
   box-shadow: 0 0 5px rgba(74,144,226,0.5);
 }
+
 #saveChanges {
   align-self: flex-end;
   padding: 10px 20px;
@@ -154,6 +159,7 @@
   font-size: 15px;
   cursor: not-allowed;
 }
+
 #saveChanges.active {
   background-color: #4a90e2;
   cursor: pointer;
@@ -175,4 +181,6 @@
 @media (max-width: 768px) {
   .container, .table-card { max-width: 100%; padding: 15px; }
   .data-table { font-size: 13px; }
+  .search-container { flex-direction: column; gap: 10px; }
+  .new-btn { width: 100%; }
 }
