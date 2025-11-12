@@ -73,7 +73,8 @@
               <td data-field="orgnr">{{ kunde.orgnr }}</td>
               <td data-field="referanse">{{ kunde.referanse }}</td>
               <td style="text-align:center;">
-                <img src="{{ url_for('static', filename='bilder/edit.jpeg') }}" class="edit-icon" style="width:32px;height:32px;cursor:pointer;">
+                  <img src="{{ url_for('static', filename='bilder/edit.jpeg') }}" class="edit-icon" style="width:32px;height:32px;cursor:pointer;">
+                  <img src="{{ url_for('static', filename='bilder/delete.png') }}" class="delete-icon" style="width:32px;height:32px;cursor:pointer;margin-left:8px;">
               </td>
             </tr>
             {% endfor %}
@@ -122,4 +123,14 @@
     <button id="saveChanges" class="save-btn" disabled>Lagre</button>
   </div>
 </div>
+
+<!-- Popup for bekreft sletting -->
+<div id="deletePopup" class="popup-overlay" style="display:none;">
+  <div class="popup-box">
+    <p>Er du sikker på at du vil slette denne kunden?</p>
+    <button id="deleteConfirm" class="save-btn">Ja, slett</button>
+    <button id="deleteCancel" class="cancel-btn">Avbryt</button>
+  </div>
+</div>
+
 {% endblock %}
