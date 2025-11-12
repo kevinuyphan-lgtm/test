@@ -307,32 +307,6 @@ def kundeliste():
     kunder = Kunde.query.filter_by(user_id=user.id).all()
     return render_template("kundeliste.html", kunder=kunder)
 
-@app.route("/ny-kunde", methods=["GET", "POST"])
-def ny_kunde():
-    user = current_user()
-    if not user:
-        flash("Du må være logget inn for å legge til kunder.", "error")
-        return redirect(url_for("login"))
-
-        if request.method == "POST":
-            ny = Kunde(
-                navn = request.form.get("navn"),
-                adresse = request.form.get("adresse"),
-                orgnr = request.form.get("orgnr"),
-                referanse = request.form.get("referanse"),
-                telefon = request.form.get("telefon"),
-                epost = request.form.get("epost"),
-                user_id = user.id
-            )
-
-        db.session.add(ny)
-        db.session.commit()
-        flash("Kunde lagt til ✅", "success")
-        return redirect(url_for("kundeliste"))
-
-
-    return render_template("ny_kunde.html")
-
 @app.route("/betalt")
 def betalt():
     user = current_user()

@@ -60,21 +60,25 @@
 }
 
 /* Søkefelt og ny knapp */
+/* Søkefelt og ny knapp */
 .search-container {
   display: flex;
-  gap: 10px;
+  gap: 10px;               /* mellomrom mellom søkefelt og knapp */
   margin-bottom: 15px;
+  width: 100%;             /* fyller hele containerens bredde */
 }
+
 .search-container input {
+  flex: 1;                 /* søkefelt tar all ledig plass */
   padding: 8px 12px;
-  width: 100%;
-  max-width: 400px;
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 16px;
 }
+
 .new-btn {
-  padding: 8px 12px;
+  flex: 0 0 auto;          /* knapp tar bare den plassen den trenger */
+  padding: 8px 16px;       /* litt bredere knapp */
   background: #007bff;
   color: white;
   border: none;
@@ -84,6 +88,7 @@
   transition: 0.2s;
 }
 .new-btn:hover { background: #005ec9; }
+
 
 /* Popup */
 .popup-overlay {
