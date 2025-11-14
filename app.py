@@ -14,7 +14,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 INSTANCE_PATH = os.path.join(BASE_DIR, 'instance')
 os.makedirs(INSTANCE_PATH, exist_ok=True)
 
-PDF_FOLDER = os.path.join(BASE_DIR, 'lagret_faktura')
+PDF_FOLDER = os.environ.get("PDF_FOLDER_PATH", "/mnt/pdf_storage")
 os.makedirs(PDF_FOLDER, exist_ok=True)
 
 # -------------------------------
