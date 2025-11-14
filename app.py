@@ -40,6 +40,9 @@ else:
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# -------------------------------
+# EXTENSIONS
+# -------------------------------
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 serializer = URLSafeTimedSerializer(app.secret_key)
@@ -66,7 +69,7 @@ class Kunde(db.Model):
     adresse = db.Column(db.String(200), nullable=True)
     orgnr = db.Column(db.String(50), nullable=True)
     referanse = db.Column(db.String(100), nullable=True)
-    land = db.Column(db.String(50), nullable=True)  # NY kolonne
+    land = db.Column(db.String(50), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('bruker.id'), nullable=False)
 
 class Faktura(db.Model):
@@ -186,7 +189,6 @@ def generate_invoice():
 
     invoice_date_str = request.form.get("invoice_date")
     invoice_date = datetime.strptime(invoice_date_str, "%Y-%m-%d").date() if invoice_date_str else datetime.utcnow().date()
-
     days_to_due = request.form.get("forfalls_dager")
     due_date = invoice_date + timedelta(days=int(days_to_due)) if days_to_due and days_to_due.isdigit() else invoice_date + timedelta(days=10)
 
@@ -224,6 +226,9 @@ def generate_invoice():
     pdf_buffer.seek(0)
     return send_file(pdf_buffer, as_attachment=True, download_name=filename)
 
+# -------------------------------
+# Resterende ruter
+# -------------------------------
 @app.route("/lagret_fakturaer")
 def lagret_fakturaer():
     user = current_user()
@@ -300,7 +305,7 @@ def download_faktura(faktura_id):
     return send_from_directory(user_folder, faktura.filnavn, as_attachment=True)
 
 # -------------------------------
-# ROUTES: KUNDE AJAX
+# AJAX-RUTER FOR KUNDER
 # -------------------------------
 @app.route("/update-kunde/<int:kunde_id>", methods=["POST"], endpoint="update_kunde")
 def update_kunde(kunde_id):
@@ -381,10 +386,9 @@ def add_kunde():
 @app.route("/delete-kunde/<int:kunde_id>", methods=["POST"])
 def delete_kunde(kunde_id):
     try:
-        kunde = Kunde.query.get(kunde_id)  # bruker Kunde fra app.py
+        kunde = Kunde.query.get(kunde_id)
         if not kunde:
             return jsonify({"success": False, "message": "Kunde ikke funnet."}), 404
-
         db.session.delete(kunde)
         db.session.commit()
         return jsonify({"success": True, "message": "Kunde slettet."})
@@ -428,24 +432,14 @@ def reset_with_token(token):
     return render_template("reset_password.html", token=token)
 
 # -------------------------------
-# RUN APP
+# AUTO-MIGRATE PÅ RENDER
 # -------------------------------
-from auto_migrate import run_auto_migrate
-
-# --- etter alle imports, modeller og ruter ---
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
-serializer = URLSafeTimedSerializer(app.secret_key)
-
-# Koble Flask-Migrate til app og db
-migrate = Migrate(app, db)
-
-# --- Auto-migrasjon på Render ---
 from auto_migrate import run_auto_migrate
 with app.app_context():
     run_auto_migrate()
 
-# --- Kjør app lokalt ---
+# -------------------------------
+# KJØR APP LOKALT
+# -------------------------------
 if __name__ == "__main__":
     app.run(debug=True)
-
