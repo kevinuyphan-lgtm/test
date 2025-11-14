@@ -432,14 +432,20 @@ def reset_with_token(token):
 # -------------------------------
 from auto_migrate import run_auto_migrate
 
-# KJØR AUTO-MIGRATE SELV NÅR RENDER IMPORTERER app
+# --- etter alle imports, modeller og ruter ---
+db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
+serializer = URLSafeTimedSerializer(app.secret_key)
+
+# Koble Flask-Migrate til app og db
+migrate = Migrate(app, db)
+
+# --- Auto-migrasjon på Render ---
+from auto_migrate import run_auto_migrate
 with app.app_context():
     run_auto_migrate()
 
-from app import app, db
-from flask_migrate import Migrate
-
-migrate = Migrate(app, db)
-
+# --- Kjør app lokalt ---
 if __name__ == "__main__":
     app.run(debug=True)
+
