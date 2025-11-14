@@ -436,8 +436,14 @@ from auto_migrate import run_auto_migrate
 with app.app_context():
     run_auto_migrate()
 
+from app import app, db
+from flask_migrate import Migrate
+
+migrate = Migrate(app, db)
+
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 from flask_migrate import MigrateCommand
 from flask.cli import with_appcontext
