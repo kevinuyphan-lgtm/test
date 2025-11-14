@@ -438,3 +438,15 @@ with app.app_context():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+from flask_migrate import MigrateCommand
+from flask.cli import with_appcontext
+import click
+
+@app.cli.command("db-upgrade")
+@with_appcontext
+def db_upgrade():
+    """Kjør migrasjon fra Flask CLI."""
+    from auto_migrate import run_auto_migrate
+    run_auto_migrate()
+
