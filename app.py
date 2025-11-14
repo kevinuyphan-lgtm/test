@@ -69,7 +69,8 @@ class Kunde(db.Model):
     adresse = db.Column(db.String(200), nullable=True)
     orgnr = db.Column(db.String(50), nullable=True)
     referanse = db.Column(db.String(100), nullable=True)
-    land = db.Column(db.String(50), nullable=True)
+    land = db.Column(db.String(50), nullable=True)  # eksisterende kolonne
+    mobilnummer = db.Column(db.String(50), nullable=True)  # NY kolonne
     user_id = db.Column(db.Integer, db.ForeignKey('bruker.id'), nullable=False)
 
 class Faktura(db.Model):
