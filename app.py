@@ -61,17 +61,18 @@ class Bruker(db.Model):
     kunder = db.relationship('Kunde', backref='bruker', lazy=True)
 
 class Kunde(db.Model):
+    __tablename__ = 'kunde'
     id = db.Column(db.Integer, primary_key=True)
     navn = db.Column(db.String(150), nullable=False)
-    firmanavn = db.Column(db.String(150), nullable=True)
-    epost = db.Column(db.String(150), nullable=True)
-    telefon = db.Column(db.String(50), nullable=True)
-    adresse = db.Column(db.String(200), nullable=True)
-    orgnr = db.Column(db.String(50), nullable=True)
-    referanse = db.Column(db.String(100), nullable=True)
-    land = db.Column(db.String(50), nullable=True)  # eksisterende kolonne
-    mobilnummer = db.Column(db.String(50), nullable=True)  # NY kolonne
+    epost = db.Column(db.String(150))
+    telefon = db.Column(db.String(50))
+    adresse = db.Column(db.String(200))
+    orgnr = db.Column(db.String(50))
+    referanse = db.Column(db.String(100))
     user_id = db.Column(db.Integer, db.ForeignKey('bruker.id'), nullable=False)
+    firmanavn = db.Column(db.String(150))
+    land = db.Column(db.String(50))
+    test = db.Column(db.String(100))  # <- ny kolonne
 
 class Faktura(db.Model):
     id = db.Column(db.Integer, primary_key=True)
