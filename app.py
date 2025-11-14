@@ -431,11 +431,9 @@ def reset_with_token(token):
 # -------------------------------
 from auto_migrate import run_auto_migrate
 
-def create_app():
-    # Sørg for at app og db lastes først
-    with app.app_context():
-        run_auto_migrate()
-    return app
+# KJØR AUTO-MIGRATE SELV NÅR RENDER IMPORTERER app
+with app.app_context():
+    run_auto_migrate()
 
 if __name__ == "__main__":
-    create_app().run(debug=True)
+    app.run(debug=True)
