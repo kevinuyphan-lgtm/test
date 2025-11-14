@@ -73,7 +73,6 @@ class Kunde(db.Model):
     firmanavn = db.Column(db.String(150))
     land = db.Column(db.String(50))
     test = db.Column(db.String(100))  # <- ny kolonne
-    test2 = db.Column(db.String(100))  # <- ny kolonne
 
 class Faktura(db.Model):
     id = db.Column(db.Integer, primary_key=True)
