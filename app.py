@@ -429,7 +429,12 @@ def reset_with_token(token):
 # -------------------------------
 # RUN APP
 # -------------------------------
+from auto_migrate import run_auto_migrate
+
 def create_app():
+    # Sørg for at app og db lastes først
+    with app.app_context():
+        run_auto_migrate()
     return app
 
 if __name__ == "__main__":
