@@ -434,13 +434,6 @@ def reset_with_token(token):
     return render_template("reset_password.html", token=token)
 
 # -------------------------------
-# AUTO-MIGRATE PÅ RENDER
-# -------------------------------
-from auto_migrate import run_auto_migrate
-with app.app_context():
-    run_auto_migrate()
-
-# -------------------------------
 # KJØR APP LOKALT
 # -------------------------------
 if __name__ == "__main__":
