@@ -99,13 +99,6 @@ def is_admin():
     user = current_user()
     return bool(user and user.email in ADMIN_EMAILS)
 
-def verify_reset_token(token, max_age_seconds=3600):
-    try:
-        data = serializer.loads(token, max_age=max_age_seconds)
-        return data.get("user_id")
-    except (BadSignature, SignatureExpired):
-        return None
-
 # -------------------------------
 # ROUTES: AUTH
 # -------------------------------
@@ -402,21 +395,21 @@ def delete_kunde(kunde_id):
 # -------------------------------
 # PASSWORD RESET
 # -------------------------------
+# -------------------------------
+# PASSWORD RESET
+# -------------------------------
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()
         user = Bruker.query.filter_by(email=email).first()
 
-        # Vis samme melding uansett om e-posten finnes (unngå user enumeration)
         flash("Hvis e-posten finnes, har vi sendt en reset-link.", "info")
 
         if user:
-            # generer token basert på epost (forutsatt utils bruker epost)
             token = generate_reset_token(user.email)
             reset_link = url_for("reset_with_token", token=token, _external=True)
 
-            # nyttig for lokalt debugging (fjern i produksjon eller logg i stedet)
             app.logger.info(f"[DEBUG] Reset-link for {user.email}: {reset_link}")
 
             html = f"""
@@ -424,9 +417,8 @@ def forgot_password():
                 <p>Klikk lenken under for å tilbakestille passordet ditt:</p>
                 <p><a href="{reset_link}">{reset_link}</a></p>
                 <p>Lenken er gyldig i 1 time.</p>
-            ""
-            
-            # send epost via din mailer (forventet signatur send_email(subject, to_email, html_content))
+            """
+
             send_email(
                 subject="Tilbakestill passord",
                 to_email=user.email,
@@ -440,13 +432,14 @@ def forgot_password():
 
 @app.route("/reset/<token>", methods=["GET", "POST"])
 def reset_with_token(token):
-    # verify_reset_token skal returnere epost (eller None hvis ugyldig)
     email = verify_reset_token(token)
+
     if not email:
         flash("Ugyldig eller utløpt token.", "error")
         return redirect(url_for("forgot_password"))
 
     user = Bruker.query.filter_by(email=email).first()
+
     if not user:
         flash("Bruker ikke funnet.", "error")
         return redirect(url_for("forgot_password"))
@@ -466,6 +459,7 @@ def reset_with_token(token):
         return redirect(url_for("login"))
 
     return render_template("reset_password.html", token=token)
+
 
 
 
