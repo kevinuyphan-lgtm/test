@@ -99,9 +99,6 @@ def is_admin():
     user = current_user()
     return bool(user and user.email in ADMIN_EMAILS)
 
-def generate_reset_token(user_id):
-    return serializer.dumps({"user_id": user_id})
-
 def verify_reset_token(token, max_age_seconds=3600):
     try:
         data = serializer.loads(token, max_age=max_age_seconds)
