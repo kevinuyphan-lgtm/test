@@ -6,6 +6,9 @@ from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from datetime import datetime, timedelta
 import os
 from generate_pdf import generate_invoice_pdf
+from mail.utils import generate_reset_token, verify_reset_token
+from mail.mailer import send_email
+
 
 # -------------------------------
 # BASE PATHS
@@ -405,34 +408,69 @@ def delete_kunde(kunde_id):
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
     if request.method == "POST":
-        email = request.form.get("email", "").strip()
+        email = request.form.get("email", "").strip().lower()
         user = Bruker.query.filter_by(email=email).first()
-        flash("Hvis eposten finnes, har vi sendt en reset-link (se serverloggen).", "info")
+
+        # Vis samme melding uansett om e-posten finnes (unngå user enumeration)
+        flash("Hvis e-posten finnes, har vi sendt en reset-link.", "info")
+
         if user:
-            token = generate_reset_token(user.id)
+            # generer token basert på epost (forutsatt utils bruker epost)
+            token = generate_reset_token(user.email)
             reset_link = url_for("reset_with_token", token=token, _external=True)
-            print(f"[DEBUG] Reset-link for {user.email}: {reset_link}")
+
+            # nyttig for lokalt debugging (fjern i produksjon eller logg i stedet)
+            app.logger.info(f"[DEBUG] Reset-link for {user.email}: {reset_link}")
+
+            html = f"""
+                <p>Hei {user.navn},</p>
+                <p>Klikk lenken under for å tilbakestille passordet ditt:</p>
+                <p><a href="{reset_link}">{reset_link}</a></p>
+                <p>Lenken er gyldig i 1 time.</p>
+            ""
+            
+            # send epost via din mailer (forventet signatur send_email(subject, to_email, html_content))
+            send_email(
+                subject="Tilbakestill passord",
+                to_email=user.email,
+                html_content=html
+            )
+
         return redirect(url_for("login"))
+
     return render_template("forgot_password.html")
+
 
 @app.route("/reset/<token>", methods=["GET", "POST"])
 def reset_with_token(token):
-    user_id = verify_reset_token(token)
-    if not user_id:
+    # verify_reset_token skal returnere epost (eller None hvis ugyldig)
+    email = verify_reset_token(token)
+    if not email:
         flash("Ugyldig eller utløpt token.", "error")
         return redirect(url_for("forgot_password"))
-    user = Bruker.query.get_or_404(user_id)
+
+    user = Bruker.query.filter_by(email=email).first()
+    if not user:
+        flash("Bruker ikke funnet.", "error")
+        return redirect(url_for("forgot_password"))
+
     if request.method == "POST":
-        new_pw = request.form.get("password", "")
-        confirm_pw = request.form.get("confirm_password", "")
-        if not new_pw or new_pw != confirm_pw:
-            flash("Passordene må være like og ikke tomme.", "error")
+        pw = request.form.get("password")
+        pw2 = request.form.get("confirm_password")
+
+        if not pw or pw != pw2:
+            flash("Passordene må være like.", "error")
             return render_template("reset_password.html", token=token)
-        user.password_hash = bcrypt.generate_password_hash(new_pw).decode("utf-8")
+
+        user.password_hash = bcrypt.generate_password_hash(pw).decode("utf-8")
         db.session.commit()
+
         flash("Passord oppdatert! Du kan nå logge inn.", "success")
         return redirect(url_for("login"))
+
     return render_template("reset_password.html", token=token)
+
+
 
 # -------------------------------
 # KJØR APP LOKALT
