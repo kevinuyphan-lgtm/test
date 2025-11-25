@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <title>Faktura Data</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style_tjenester.css') }}">
-    <script src="/static/javascript/tjenester-java.js"></script>
-    <script src="/static/javascript/sidebar-java.js"></script>
+<title>Ny Faktura</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style_tjenester.css') }}">
+<script src="/static/javascript/tjenester-java.js"></script>
+<script src="/static/javascript/sidebar-java.js"></script>
 {% endblock %}
 
 {% block body %}
 <div class="sidebar">
   <ul class="sidebar-links">
     <li class="sidebar-item">
-        <a class="dropdown-btn active" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
+      <a class="dropdown-btn active" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
     </li>
     <li class="sidebar-item">
       <button class="dropdown-btn">📄 Faktura</button>
@@ -25,92 +25,101 @@
     <li class="sidebar-item">
       <a class="dropdown-btn" href="{{ url_for('kundeliste') }}">👥 Kunder</a>
     </li>
-    <li><a href="#">📦 Produkter</a></li>
-    <li><a href="#">📊 Rapporter</a></li>
-    <li><a href="#">💲 Transaksjoner</a></li>
   </ul>
 </div>
 
-<div class="container">
-    <h1>Fyll ut faktura informasjon</h1>
+<div class="main-content">
+  <div class="invoice-card">
+    <h1 class="page-title">Opprett ny faktura</h1>
 
-    <form action="/generate-invoice" method="POST" id="pdfForm">
-        <h3 class="spacing">Mottaker</h3>
+    <form action="/generate-invoice" method="POST">
 
-        <div class="form-group">
-            <label for="firmanavn">Firmanavn (ny eller velg eksisterende):</label>
-            <input list="kunder_list" id="firmanavn" name="firmanavn" placeholder="Kundens firmanavn" required>
+      <!-- MOTTAKER -->
+      <section class="form-section">
+        <h2>Mottaker</h2>
+        <div class="grid-2">
+          <div>
+            <label>Firmanavn</label>
+            <input list="kunder_list" name="firmanavn" placeholder="Velg eller skriv inn" required>
             <datalist id="kunder_list">
-                {% for kunde in kunder %}
-                    <option value="{{ kunde.navn }}" data-adresse="{{ kunde.adresse }}" data-orgnr="{{ kunde.orgnr }}" data-referanse="{{ kunde.referanse }}"></option>
-                {% endfor %}
+              {% for kunde in kunder %}
+              <option value="{{ kunde.navn }}"></option>
+              {% endfor %}
             </datalist>
-        </div>
-        <div class="form-group">
-            <label for="firmaadresse">Adresse:</label>
-            <input type="text" id="firmaadresse" name="firmaadresse" placeholder="Adresse" required>
-        </div>
-        <div class="form-group">
-            <label for="orgnr">Org.nr:</label>
-            <input type="text" id="orgnr" name="orgnr" placeholder="Organisasjonsnummer" required>
-        </div>
-        <div class="form-group">
-            <label for="referanse">Referanse:</label>
-            <input type="text" id="referanse" name="referanse" placeholder="Deres referanse">
-        </div>
+          </div>
 
-        <hr>
+          <div>
+            <label>Org.nr</label>
+            <input type="text" name="orgnr">
+          </div>
 
-        <h3 class="spacing">Fakturadetaljer</h3>
-        <div class="form-group">
-            <label for="invoice_date">Fakturadato:</label>
-            <input type="date" id="invoice_date" name="invoice_date" readonly>
+          <div>
+            <label>Adresse</label>
+            <input type="text" name="firmaadresse">
+          </div>
+
+          <div>
+            <label>Referanse</label>
+            <input type="text" name="referanse">
+          </div>
         </div>
+      </section>
 
-
-        <div class="form-group">
-            <label for="forfalls_dager">Antall dager til forfall:</label>
-            <input type="number" id="forfalls_dager" name="forfalls_dager" min="1" value="7">
+      <!-- FAKTURA -->
+      <section class="form-section">
+        <h2>Fakturadetaljer</h2>
+        <div class="grid-3">
+          <div>
+            <label>Fakturadato</label>
+            <input type="date" name="invoice_date" readonly>
+          </div>
+          <div>
+            <label>Dager til forfall</label>
+            <input type="number" name="forfalls_dager" value="7">
+          </div>
+          <div>
+            <label>Forfallsdato</label>
+            <input type="text" readonly>
+          </div>
         </div>
+      </section>
 
-        
-        <div class="form-group">
-            <label>Forfallsdato:</label>
-            <input type="text" id="due_date_display" readonly>
-            <input type="hidden" id="due_date" name="due_date">
-        </div>
-
-        <hr>
-
-        <h3 class="spacing">Produkter</h3>
+      <!-- PRODUKTER -->
+      <section class="form-section">
+        <h2>Produkter</h2>
         <div id="produkter-container">
-            <div class="produkt">
-                <input type="text" name="produkt_navn[]" placeholder="Produktnavn" required>
-                <input type="number" name="produkt_antall[]" placeholder="Antall" min="1" value="1" required>
-                <input type="number" name="produkt_pris[]" placeholder="Pris" min="0" step="0.01" required>
-            </div>
+          <div class="produkt-row">
+            <input type="text" name="produkt_navn[]" placeholder="Produkt">
+            <input type="number" name="produkt_antall[]" placeholder="Antall">
+            <input type="number" step="0.01" name="produkt_pris[]" placeholder="Pris">
+          </div>
         </div>
-        <button type="button" id="leggTilProdukt">+ Legg til produkt</button>
+        <button type="button" class="secondary-btn">+ Legg til produkt</button>
+      </section>
 
-        <hr>
-
-        <h3 class="spacing">Avsender (vårt firma)</h3>
-        <div class="form-group">
-            <label for="avsender_firmanavn">Firmanavn:</label>
-            <input type="text" id="avsender_firmanavn" name="avsender_firmanavn" value="Mitt Firma AS">
+      <!-- AVSENDER -->
+      <section class="form-section">
+        <h2>Avsender</h2>
+        <div class="grid-2">
+          <div>
+            <label>Firmanavn</label>
+            <input type="text" name="avsender_firmanavn" value="Mitt Firma AS">
+          </div>
+          <div>
+            <label>Org.nr</label>
+            <input type="text" name="avsender_orgnr" value="999888777">
+          </div>
+          <div>
+            <label>Adresse</label>
+            <input type="text" name="avsender_adresse" value="Bedriftsveien 12, Oslo">
+          </div>
         </div>
-        <div class="form-group">
-            <label for="avsender_adresse">Adresse:</label>
-            <input type="text" id="avsender_adresse" name="avsender_adresse" value="Bedriftsveien 12, 0123 Oslo">
-        </div>
-        <div class="form-group">
-            <label for="avsender_orgnr">Org.nr:</label>
-            <input type="text" id="avsender_orgnr" name="avsender_orgnr" value="999888777">
-        </div>
+      </section>
 
-        <hr>
-
-        <button type="submit">Lag faktura</button>
+      <div class="submit-area">
+        <button type="submit" class="primary-btn">Lag faktura</button>
+      </div>
     </form>
+  </div>
 </div>
 {% endblock %}
