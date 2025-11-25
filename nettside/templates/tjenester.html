@@ -11,9 +11,7 @@
 {% block body %}
 <div class="sidebar">
   <ul class="sidebar-links">
-    <li class="sidebar-item">
-      <a class="dropdown-btn active" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
-    </li>
+    <li class="sidebar-item"><a class="dropdown-btn" href="{{ url_for('tjenester') }}">+ Ny faktura</a></li>
     <li class="sidebar-item">
       <button class="dropdown-btn">📄 Faktura</button>
       <div class="dropdown-content">
@@ -22,9 +20,12 @@
         <a href="{{ url_for('betalt') }}">Betalt</a>
       </div>
     </li>
-    <li class="sidebar-item">
-      <a class="dropdown-btn" href="{{ url_for('kundeliste') }}">👥 Kunder</a>
+    <li class="sidebar-item open">
+      <button class="dropdown-btn active">👥 Kunder</button>
     </li>
+    <li><a href="#">📦 Produkter</a></li>
+    <li><a href="#">📊 Rapporter</a></li>
+    <li><a href="#">💲 Transaksjoner</a></li>
   </ul>
 </div>
 
