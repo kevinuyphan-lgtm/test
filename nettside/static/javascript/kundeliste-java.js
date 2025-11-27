@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const emailContainer = document.getElementById('emailContainer');
   const addEmailBtn = document.getElementById('addEmail');
 
-  function updateCheckboxes() {
+  function updateSendButton() {
     const fakturaCheckboxes = document.querySelectorAll('input[name="faktura"]');
     const anyChecked = Array.from(fakturaCheckboxes).some(cb => cb.checked);
     if(anyChecked){
@@ -29,17 +29,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  // Observer for å fange dynamiske checkboxer
-  const observer = new MutationObserver(updateCheckboxes);
-  observer.observe(document.querySelector('.faktura-container'), {childList: true, subtree: true});
-  updateCheckboxes();
-
-  // Event listener på checkboxer (delegation)
+  // Delegert eventlistener for checkboxer
   document.querySelector('.faktura-container').addEventListener('change', e => {
     if(e.target && e.target.matches('input[name="faktura"]')) {
-      updateCheckboxes();
+      updateSendButton();
     }
   });
+  updateSendButton();
 
   // Åpne popup
   sendSelectedBtn.addEventListener('click', () => {
@@ -76,7 +72,6 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     });
   }
-
   document.querySelectorAll('.email-input').forEach(input => setupEmailValidation(input));
 
   // ===== SIDEBAR ACTIVE LINK =====
@@ -88,4 +83,5 @@ document.addEventListener("DOMContentLoaded", function() {
       link.closest('.sidebar-group').querySelector('.sidebar-toggle').classList.add('active');
     }
   });
+
 });
