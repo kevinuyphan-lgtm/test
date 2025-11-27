@@ -11,7 +11,7 @@
 {% block body %}
 <div class="layout">
 
-  <!-- MODERNE SIDEBAR -->
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <h2 class="brand">InvoicePro</h2>
@@ -94,7 +94,6 @@
 <!-- POPUP NY/EDIT KUNDE -->
 <div class="popup-overlay" id="popup">
   <div class="popup-box">
-    <button class="popup-close" id="closePopup">&times;</button>
     <h2 id="popupTitle">Ny Kunde</h2>
 
     <div class="popup-field">
@@ -126,7 +125,10 @@
       <input type="email" id="popupEpost">
     </div>
 
-    <button id="saveChanges" class="save-btn" disabled>Lagre</button>
+    <div class="popup-buttons">
+      <button id="closePopup" class="cancel-btn">Avbryt</button>
+      <button id="saveChanges" class="save-btn" disabled>Lagre</button>
+    </div>
   </div>
 </div>
 
