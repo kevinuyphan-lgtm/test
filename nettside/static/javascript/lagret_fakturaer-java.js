@@ -1,102 +1,73 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-  // ===== POPUP ELEMENTER =====
-  const popup = document.getElementById('popup');
-  const closePopup = document.getElementById('closePopup');
-  const popupTitle = document.getElementById('popupTitle');
-  const saveChanges = document.getElementById('saveChanges');
+  // === ELEMENTER ===
+  const sendBtn = document.getElementById("sendSelected");
+  const checkboxes = document.querySelectorAll('input[name="faktura"]');
+  const sendPopup = document.getElementById("sendPopup");
+  const cancelSend = document.getElementById("cancelSend");
+  const confirmSend = document.getElementById("confirmSend");
+  const addEmail = document.getElementById("addEmail");
+  const emailContainer = document.getElementById("emailContainer");
 
-  const inputs = {
-    navn: document.getElementById('popupNavn'),
-    firma: document.getElementById('popupFirma'),
-    adresse: document.getElementById('popupAdresse'),
-    orgnr: document.getElementById('popupOrgnr'),
-    referanse: document.getElementById('popupReferanse'),
-    telefon: document.getElementById('popupTelefon'),
-    epost: document.getElementById('popupEpost')
-  };
+  // === OPPDATER SEND-BUTTON ===
+  function updateSendBtn() {
+    const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
+    if(anyChecked) {
+      sendBtn.classList.add("active");
+      sendBtn.disabled = false;
+    } else {
+      sendBtn.classList.remove("active");
+      sendBtn.disabled = true;
+    }
+  }
 
-  // ===== SLETT POPUP ELEMENTER =====
-  const deletePopup = document.getElementById('deletePopup');
-  const cancelDelete = document.getElementById('cancelDelete');
-  const confirmDelete = document.getElementById('confirmDelete');
-  let currentDeleteId = null;
+  checkboxes.forEach(cb => cb.addEventListener("change", updateSendBtn));
+  updateSendBtn();
 
-  // ===== ÅPNE NY KUNDE POPUP =====
-  document.getElementById('newKundeBtn').addEventListener('click', () => {
-    popupTitle.textContent = "Ny Kunde";
-    Object.values(inputs).forEach(i => i.value = '');
-    saveChanges.disabled = true;
-    saveChanges.classList.remove('active');
-    popup.style.display = 'flex';
+  // === ÅPNE POPUP ===
+  sendBtn.addEventListener("click", () => {
+    if(sendBtn.disabled) return;
+    // Nullstill emails
+    emailContainer.innerHTML = `<div class="email-field"><input type="email" placeholder="Skriv inn epost" class="email-input"></div>`;
+    confirmSend.disabled = true;
+    confirmSend.classList.remove("active");
+    sendPopup.style.display = "flex";
   });
 
-  // ===== CLOSE POPUP =====
-  closePopup.addEventListener('click', () => popup.style.display = 'none');
-
-  // ===== INPUT VALIDERING FOR LAGRE KNAPP =====
-  Object.values(inputs).forEach(input => {
-    input.addEventListener('input', () => {
-      const anyFilled = Object.values(inputs).some(i => i.value.trim() !== '');
-      if(anyFilled){
-        saveChanges.disabled = false;
-        saveChanges.classList.add('active');
-      } else {
-        saveChanges.disabled = true;
-        saveChanges.classList.remove('active');
-      }
-    });
+  // === AVBRYT POPUP ===
+  cancelSend.addEventListener("click", () => {
+    sendPopup.style.display = "none";
   });
 
-  // ===== REDIGER KUNDE =====
-  document.querySelectorAll('.edit-icon').forEach(icon => {
-    icon.addEventListener('click', (e) => {
-      const row = e.target.closest('tr');
-      popupTitle.textContent = "Rediger Kunde";
-
-      inputs.navn.value = row.dataset.navn || '';
-      inputs.firma.value = row.dataset.firma || '';
-      inputs.adresse.value = row.dataset.adresse || '';
-      inputs.orgnr.value = row.dataset.orgnr || '';
-      inputs.referanse.value = row.dataset.referanse || '';
-      inputs.telefon.value = row.dataset.telefon || '';
-      inputs.epost.value = row.dataset.epost || '';
-
-      saveChanges.disabled = false;
-      saveChanges.classList.add('active');
-      popup.style.display = 'flex';
-    });
+  // === LEGG TIL NY EMAIL FELT ===
+  addEmail.addEventListener("click", () => {
+    const div = document.createElement("div");
+    div.classList.add("email-field");
+    div.innerHTML = `<input type="email" placeholder="Skriv inn epost" class="email-input">`;
+    emailContainer.appendChild(div);
   });
 
-  // ===== SLETT KUNDE =====
-  document.querySelectorAll('.delete-icon').forEach(icon => {
-    icon.addEventListener('click', (e) => {
-      const row = e.target.closest('tr');
-      currentDeleteId = row.dataset.id;
-      deletePopup.style.display = 'flex';
-    });
-  });
-
-  cancelDelete.addEventListener('click', () => {
-    deletePopup.style.display = 'none';
-    currentDeleteId = null;
-  });
-
-  confirmDelete.addEventListener('click', () => {
-    if(currentDeleteId){
-      // Send DELETE request til serveren her om ønskelig
-      console.log("Slett kunde med id:", currentDeleteId);
-      deletePopup.style.display = 'none';
+  // === AKTIVER SEND KNAPP NÅR ALLE FELTER FYLT ===
+  emailContainer.addEventListener("input", () => {
+    const inputs = emailContainer.querySelectorAll("input.email-input");
+    const allFilled = Array.from(inputs).every(i => i.value.trim() !== "");
+    if(allFilled && inputs.length > 0) {
+      confirmSend.disabled = false;
+      confirmSend.classList.add("active");
+    } else {
+      confirmSend.disabled = true;
+      confirmSend.classList.remove("active");
     }
   });
 
-  // ===== SIDEBAR DROPDOWN =====
-  const toggles = document.querySelectorAll(".sidebar-toggle");
-  toggles.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const parent = btn.closest(".sidebar-group");
-      parent.classList.toggle("open");
-    });
+  // === SEND FAKTURAER ===
+  confirmSend.addEventListener("click", () => {
+    if(confirmSend.disabled) return;
+    const emails = Array.from(emailContainer.querySelectorAll("input.email-input")).map(i => i.value.trim());
+    const selected = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+    console.log("Sender fakturaer:", selected, "til:", emails);
+    // TODO: send til backend via fetch/ajax
+    sendPopup.style.display = "none";
   });
 
 });
