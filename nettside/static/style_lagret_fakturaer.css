@@ -1,34 +1,48 @@
+/* MAIN CONTENT */
 .main-content {
+  flex: 1;
   margin-left: 260px;
-  padding: 30px;
+  padding: 30px 40px;
   max-width: 800px;
 }
 
+/* TITLE */
 .page-title {
   text-align: center;
   margin-bottom: 20px;
+  font-weight: 600;
 }
 
+/* FACTURA CONTAINER */
 .faktura-container {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
+/* FACTURA BOX */
 .faktura-box {
   background: #fff;
   border-radius: 10px;
   padding: 12px 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: 0.2s;
 }
-
+.faktura-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
 .faktura-box label {
   display: flex;
   align-items: center;
   gap: 10px;
   cursor: pointer;
 }
+.faktura-info {
+  font-size: 15px;
+}
 
+/* SEND BUTTON */
 .send-btn {
   margin-top: 20px;
   padding: 10px 20px;
@@ -39,12 +53,12 @@
   font-size: 15px;
   cursor: not-allowed;
 }
-
 .send-btn.active {
   background: #4a90e2;
   cursor: pointer;
 }
 
+/* POPUP */
 .popup-overlay {
   display: none;
   position: fixed;
@@ -55,7 +69,6 @@
   align-items: center;
   z-index: 2000;
 }
-
 .popup-box {
   background: #fff;
   padding: 25px;
@@ -66,6 +79,7 @@
   gap: 15px;
 }
 
+/* EMAIL FIELD */
 .email-field input {
   width: 100%;
   padding: 10px;
@@ -73,13 +87,13 @@
   border: 1px solid #ccc;
 }
 
+/* POPUP BUTTONS */
 .popup-buttons {
   display: flex;
   gap: 10px;
   justify-content: flex-end;
   margin-top: 10px;
 }
-
 .cancel-btn {
   background: #e04b4b;
   color: white;
@@ -88,7 +102,6 @@
   border-radius: 6px;
   cursor: pointer;
 }
-
 .confirm-btn {
   background: #ccc;
   color: white;
@@ -97,12 +110,10 @@
   border-radius: 6px;
   cursor: not-allowed;
 }
-
 .confirm-btn.active {
   background: #4a90e2;
   cursor: pointer;
 }
-
 .add-email-btn {
   background: #f0f0f0;
   border: none;
