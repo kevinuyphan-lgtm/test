@@ -1,33 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-  // ===== SIDEBAR DROPDOWN & AKTIVE LENKER =====
-  const sidebarGroups = document.querySelectorAll(".sidebar-group");
-  const sidebarLinks = document.querySelectorAll(".sidebar-link, .sidebar-submenu a");
-
-  // Dropdown funksjon
-  sidebarGroups.forEach(group => {
-    const toggle = group.querySelector(".sidebar-toggle");
-    toggle.addEventListener("click", () => {
-      sidebarGroups.forEach(g => {
-        if(g !== group) g.classList.remove("open");
-      });
-      group.classList.toggle("open");
-    });
-  });
-
-  // Sett aktiv lenke basert på URL
-  const currentUrl = window.location.pathname;
-  sidebarLinks.forEach(link => {
-    if(link.getAttribute("href") === currentUrl){
-      link.classList.add("active");
-      const parentGroup = link.closest(".sidebar-group");
-      if(parentGroup){
-        parentGroup.classList.add("open");
-        parentGroup.querySelector(".sidebar-toggle").classList.add("active");
-      }
-    }
-  });
-
   // ===== POPUP NY/EDIT KUNDE =====
   const popup = document.getElementById('popup');
   const closePopup = document.getElementById('closePopup');
@@ -44,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
     epost: document.getElementById('popupEpost')
   };
 
+  // Åpne popup for ny kunde
   document.getElementById('newKundeBtn').addEventListener('click', () => {
     popupTitle.textContent = "Ny Kunde";
     Object.values(inputs).forEach(i => i.value = '');
@@ -52,9 +25,10 @@ document.addEventListener("DOMContentLoaded", function() {
     popup.style.display = 'flex';
   });
 
+  // Lukk popup
   closePopup.addEventListener('click', () => popup.style.display = 'none');
 
-  // Aktiver lagre-knapp når input fylles
+  // Aktiver lagre-knapp når minst ett felt fylles
   Object.values(inputs).forEach(input => {
     input.addEventListener('input', () => {
       const anyFilled = Object.values(inputs).some(i => i.value.trim() !== '');
@@ -68,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
-  // Rediger-knapp
+  // Rediger eksisterende kunde
   document.querySelectorAll('.edit-icon').forEach(icon => {
     icon.addEventListener('click', (e) => {
       const row = e.target.closest('tr');
@@ -108,6 +82,7 @@ document.addEventListener("DOMContentLoaded", function() {
   confirmDelete.addEventListener('click', () => {
     if(currentDeleteId){
       console.log("Slett kunde med id:", currentDeleteId);
+      // Her kan du gjøre ajax/fetch request for å slette på backend
       deletePopup.style.display = 'none';
     }
   });
