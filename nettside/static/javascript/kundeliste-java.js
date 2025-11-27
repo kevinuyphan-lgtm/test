@@ -1,58 +1,69 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-  const checkboxes = document.querySelectorAll('input[name="faktura"]');
-  const sendBtn = document.getElementById('sendSelected');
-  const popup = document.getElementById('sendPopup');
+  const fakturaCheckboxes = document.querySelectorAll('input[name="faktura"]');
+  const sendSelectedBtn = document.getElementById('sendSelected');
+  const sendPopup = document.getElementById('sendPopup');
   const cancelSend = document.getElementById('cancelSend');
   const confirmSend = document.getElementById('confirmSend');
   const emailContainer = document.getElementById('emailContainer');
   const addEmailBtn = document.getElementById('addEmail');
 
-  // AKTIVER SEND KNAPP HVIS MINST EN CHECKED
-  function updateSendBtn() {
-    const anyChecked = Array.from(checkboxes).some(b => b.checked);
-    if(anyChecked){
-      sendBtn.classList.add('active');
-      sendBtn.disabled = false;
+  // FUNKSJON: Oppdater send-knapp status
+  function updateSendButton() {
+    const anyChecked = Array.from(fakturaCheckboxes).some(cb => cb.checked);
+    if(anyChecked) {
+      sendSelectedBtn.classList.add('active');
+      sendSelectedBtn.disabled = false;
     } else {
-      sendBtn.classList.remove('active');
-      sendBtn.disabled = true;
+      sendSelectedBtn.classList.remove('active');
+      sendSelectedBtn.disabled = true;
     }
   }
 
-  checkboxes.forEach(box => box.addEventListener('change', updateSendBtn));
-
-  // ÅPNE POPUP
-  sendBtn.addEventListener('click', () => {
-    popup.style.display = 'flex';
+  // Legg til change-event på alle faktura-checkboxer
+  fakturaCheckboxes.forEach(cb => {
+    cb.addEventListener('change', updateSendButton);
   });
 
-  // LUKK POPUP
-  cancelSend.addEventListener('click', () => {
-    popup.style.display = 'none';
-    confirmSend.classList.remove('active');
+  // Åpne popup når send-knappen trykkes
+  sendSelectedBtn.addEventListener('click', () => {
+    sendPopup.style.display = 'flex';
     confirmSend.disabled = true;
+    confirmSend.classList.remove('active');
   });
 
-  // ADD EMAIL FIELD
+  // Lukk popup
+  cancelSend.addEventListener('click', () => {
+    sendPopup.style.display = 'none';
+  });
+
+  // Legg til flere epost-felt
   addEmailBtn.addEventListener('click', () => {
     const div = document.createElement('div');
     div.classList.add('email-field');
-    div.innerHTML = '<input type="email" placeholder="Skriv inn epost" class="email-input">';
+    div.innerHTML = `<input type="email" placeholder="Skriv inn epost" class="email-input">`;
     emailContainer.appendChild(div);
     setupEmailValidation(div.querySelector('input'));
   });
 
-  // VALIDERING AV EMAIL
+  // Epost-validering
   function setupEmailValidation(input){
     input.addEventListener('input', () => {
       const allEmails = document.querySelectorAll('.email-input');
-      let valid = Array.from(allEmails).every(i => i.value === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(i.value));
-      confirmSend.disabled = !valid || Array.from(allEmails).every(i => i.value === '');
-      if(valid && !confirmSend.disabled) confirmSend.classList.add('active');
-      else confirmSend.classList.remove('active');
+      const allFilled = Array.from(allEmails).some(i => i.value.trim() !== '');
+      const allValid = Array.from(allEmails).every(i => i.value === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(i.value));
+      
+      if(allFilled && allValid){
+        confirmSend.disabled = false;
+        confirmSend.classList.add('active');
+      } else {
+        confirmSend.disabled = true;
+        confirmSend.classList.remove('active');
+      }
     });
   }
 
-  document.querySelectorAll('.email-input').forEach(i => setupEmailValidation(i));
+  // Initial setup av eksisterende email-felt
+  document.querySelectorAll('.email-input').forEach(input => setupEmailValidation(input));
+
 });
