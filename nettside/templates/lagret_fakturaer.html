@@ -4,7 +4,6 @@
 <title>Dine lagrede fakturaer</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='style_lagret_fakturaer.css') }}">
-<script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}" defer></script>
 <script src="{{ url_for('static', filename='javascript/lagret_fakturaer.js') }}" defer></script>
 {% endblock %}
 
@@ -19,7 +18,6 @@
     </div>
     <nav class="sidebar-nav">
       <a class="sidebar-link" href="{{ url_for('tjenester') }}">➕ Ny faktura</a>
-
       <div class="sidebar-group">
         <button class="sidebar-toggle dropdown-btn active">📄 Faktura <i>›</i></button>
         <div class="sidebar-submenu">
@@ -28,7 +26,6 @@
           <a href="{{ url_for('betalt') }}">Betalt</a>
         </div>
       </div>
-
       <a class="sidebar-link" href="{{ url_for('kundeliste') }}">👥 Kunder</a>
       <a class="sidebar-link" href="#">📦 Produkter</a>
       <a class="sidebar-link" href="#">📊 Rapporter</a>
@@ -36,41 +33,31 @@
     </nav>
   </aside>
 
-  <!-- HOVEDINNHOLD -->
+  <!-- MAIN CONTENT -->
   <div class="main-content">
-    <div class="container">
-      <div class="table-card">
-        <h1 class="page-title">Dine lagrede fakturaer</h1>
+    <h1 class="page-title">Dine lagrede fakturaer</h1>
 
-        {% if fakturaer %}
-        <form id="fakturaForm">
-          <div class="invoice-list">
-            {% for f in fakturaer %}
-            <label class="invoice-card">
+    <div class="faktura-container">
+      {% if fakturaer %}
+        {% for f in fakturaer %}
+          <div class="faktura-box">
+            <label>
               <input type="checkbox" name="faktura" value="{{ f.id }}">
-              <div class="invoice-info">
-                <span class="invoice-name">{{ f.filnavn }}</span>
-                <span class="invoice-date">{{ f.dato.strftime("%d.%m.%Y kl. %H:%M") }}</span>
-                {% if f.belop %}
-                <span class="invoice-amount">{{ f.belop }} kr</span>
-                {% endif %}
-              </div>
+              <span class="faktura-info">{{ f.filnavn }} – Opprettet: {{ f.dato.strftime("%d.%m.%Y") }}</span>
             </label>
-            {% endfor %}
           </div>
-
-          <button type="button" id="sendSelected" class="send-btn" disabled>Send valgt(e) faktura(er)</button>
-        </form>
-        {% else %}
-        <p class="empty-message">Du har ingen fakturaer enda.</p>
-        {% endif %}
-      </div>
+        {% endfor %}
+      {% else %}
+        <p class="empty-message">Ingen lagrede fakturaer.</p>
+      {% endif %}
     </div>
+
+    <button id="sendSelected" class="send-btn" disabled>✉ Send valgte fakturaer</button>
   </div>
 
 </div>
 
-<!-- POPUP SEND FACTURA -->
+<!-- SEND POPUP -->
 <div class="popup-overlay" id="sendPopup">
   <div class="popup-box">
     <h2>Send fakturaer</h2>
@@ -81,8 +68,8 @@
     </div>
     <button type="button" id="addEmail" class="add-email-btn">+ Legg til flere</button>
     <div class="popup-buttons">
-      <button id="cancelSend" class="cancel-btn">Avbryt</button>
-      <button id="confirmSend" class="send-confirm-btn" disabled>Send</button>
+      <button type="button" id="cancelSend" class="cancel-btn">Avbryt</button>
+      <button type="button" id="confirmSend" class="confirm-btn" disabled>Send</button>
     </div>
   </div>
 </div>
