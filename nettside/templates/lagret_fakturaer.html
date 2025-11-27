@@ -4,81 +4,76 @@
     <title>Dine fakturaer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style_lagret_fakturaer.css') }}">
-    <script src="/static/javascript/sidebar-java.js"></script>
+    <script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
+<div class="layout">
 
-<div class="sidebar">
-  <ul class="sidebar-links">
+  <!-- MODERNE SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="brand">InvoicePro</h2>
+      <span class="brand-sub">Dashboard</span>
+    </div>
 
-    <li class="sidebar-item">
-      <a class="dropdown-btn" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
-    </li>
+    <nav class="sidebar-nav">
+      <a class="sidebar-link" href="{{ url_for('tjenester') }}">➕ Ny faktura</a>
 
-    <li class="sidebar-group open">
-      <button class="dropdown-btn sidebar-toggle">
-        📄 Faktura <i>›</i>
-      </button>
-      <div class="sidebar-submenu">
-        <a href="{{ url_for('lagret_fakturaer') }}" class="active">Ubetalte</a>
-        <a href="{{ url_for('sendte') }}">Sendte</a>
-        <a href="{{ url_for('betalt') }}">Betalt</a>
+      <div class="sidebar-group">
+        <button class="sidebar-toggle dropdown-btn" type="button">
+          📄 Faktura <i>›</i>
+        </button>
+        <div class="sidebar-submenu">
+          <a href="{{ url_for('lagret_fakturaer') }}" class="active">Ubetalte</a>
+          <a href="{{ url_for('sendte') }}">Sendte</a>
+          <a href="{{ url_for('betalt') }}">Betalt</a>
+        </div>
       </div>
-    </li>
 
-    <li class="sidebar-item">
-      <a class="dropdown-btn" href="{{ url_for('kundeliste') }}">👥 Kunder</a>
-    </li>
+      <a class="sidebar-link" href="{{ url_for('kundeliste') }}">👥 Kunder</a>
+      <a class="sidebar-link" href="#">📦 Produkter</a>
+      <a class="sidebar-link" href="#">📊 Rapporter</a>
+      <a class="sidebar-link" href="#">💲 Transaksjoner</a>
+    </nav>
+  </aside>
 
-    <li class="sidebar-item">
-      <a class="dropdown-btn" href="#">📦 Produkter</a>
-    </li>
-
-    <li class="sidebar-item">
-      <a class="dropdown-btn" href="#">📊 Rapporter</a>
-    </li>
-
-    <li class="sidebar-item">
-      <a class="dropdown-btn" href="#">💲 Transaksjoner</a>
-    </li>
-
-  </ul></div>
-
-
-<div class="main-content">
-
+  <!-- HOVEDINNHOLD -->
+  <div class="main-content">
     <h1 class="page-title">Dine lagrede fakturaer</h1>
 
     {% if fakturaer %}
-    <table class="invoice-table">
-        <tr>
-            <th>Faktura</th>
-            <th>Opprettet</th>
-            <th>Handling</th>
-        </tr>
-    
-        {% for f in fakturaer %}
-        <tr>
-            <td>{{ f.filnavn }}</td>
-            <td>{{ f.dato.strftime("%d.%m.%Y kl. %H:%M") }}</td>
-            <td>
-                <a href="{{ url_for('download_faktura', faktura_id=f.id) }}">⬇ Last ned</a>
-                <form method="GET" action="{{ url_for('send_faktura', faktura_id=f.id) }}" 
-                      onsubmit="return confirm('Er du sikker på at du vil sende fakturaen?');" 
-                      style="display:inline;">
-                    <button type="submit" class="send-btn">✉ Send</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-
-    
+    <div class="table-card">
+      <table class="invoice-table">
+          <thead>
+            <tr>
+                <th>Faktura</th>
+                <th>Opprettet</th>
+                <th>Handling</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for f in fakturaer %}
+            <tr>
+                <td>{{ f.filnavn }}</td>
+                <td>{{ f.dato.strftime("%d.%m.%Y kl. %H:%M") }}</td>
+                <td class="action-cell">
+                    <a href="{{ url_for('download_faktura', faktura_id=f.id) }}" class="download-btn">⬇ Last ned</a>
+                    <form method="GET" action="{{ url_for('send_faktura', faktura_id=f.id) }}" 
+                          onsubmit="return confirm('Er du sikker på at du vil sende fakturaen?');" 
+                          style="display:inline;">
+                        <button type="submit" class="send-btn">✉ Send</button>
+                    </form>
+                </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+      </table>
+    </div>
     {% else %}
-    <p class="empty-message">Du har ingen fakturaer enda.</p>
+      <p class="empty-message">Du har ingen fakturaer enda.</p>
     {% endif %}
+  </div>
 
 </div>
-
 {% endblock %}
