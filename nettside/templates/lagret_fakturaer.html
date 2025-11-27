@@ -4,8 +4,8 @@
 <title>Dine lagrede fakturaer</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='style_lagret_fakturaer.css') }}">
-<script src="{{ url_for('static', filename='javascript/lagret_fakturaer-java.js') }}" defer></script>
 <script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}" defer></script>
+<script src="{{ url_for('static', filename='javascript/lagret_fakturaer.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -68,7 +68,7 @@
       </div>
     </div>
     <button type="button" id="addEmail" class="add-email-btn">+ Legg til flere</button>
-    <div class="popup-buttons">
+    <div class="popup-actions">
       <button type="button" id="cancelSend" class="cancel-btn">Avbryt</button>
       <button type="button" id="confirmSend" class="confirm-btn" disabled>Send</button>
     </div>
