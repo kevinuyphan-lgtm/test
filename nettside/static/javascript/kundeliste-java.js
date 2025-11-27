@@ -16,31 +16,33 @@ document.addEventListener("DOMContentLoaded", function() {
     epost: document.getElementById('popupEpost')
   };
 
+  function checkAllFieldsFilled() {
+    return Object.values(inputs).every(i => i.value.trim() !== '');
+  }
+
+  function updateSaveButton() {
+    if(checkAllFieldsFilled()){
+      saveChanges.disabled = false;
+      saveChanges.classList.add('active');
+    } else {
+      saveChanges.disabled = true;
+      saveChanges.classList.remove('active');
+    }
+  }
+
   // Åpne popup for ny kunde
   document.getElementById('newKundeBtn').addEventListener('click', () => {
     popupTitle.textContent = "Ny Kunde";
     Object.values(inputs).forEach(i => i.value = '');
-    saveChanges.disabled = true;
-    saveChanges.classList.remove('active');
+    updateSaveButton();
     popup.style.display = 'flex';
   });
 
   // Lukk popup
   closePopup.addEventListener('click', () => popup.style.display = 'none');
 
-  // Aktiver lagre-knapp når minst ett felt fylles
-  Object.values(inputs).forEach(input => {
-    input.addEventListener('input', () => {
-      const anyFilled = Object.values(inputs).some(i => i.value.trim() !== '');
-      if(anyFilled){
-        saveChanges.disabled = false;
-        saveChanges.classList.add('active');
-      } else {
-        saveChanges.disabled = true;
-        saveChanges.classList.remove('active');
-      }
-    });
-  });
+  // Lytt på input-endringer for å aktivere lagre-knapp
+  Object.values(inputs).forEach(input => input.addEventListener('input', updateSaveButton));
 
   // Rediger eksisterende kunde
   document.querySelectorAll('.edit-icon').forEach(icon => {
@@ -54,10 +56,21 @@ document.addEventListener("DOMContentLoaded", function() {
       inputs.referanse.value = row.dataset.referanse || '';
       inputs.telefon.value = row.dataset.telefon || '';
       inputs.epost.value = row.dataset.epost || '';
-      saveChanges.disabled = false;
-      saveChanges.classList.add('active');
+      updateSaveButton();
       popup.style.display = 'flex';
     });
+  });
+
+  // ===== LAGRE KNAPP =====
+  saveChanges.addEventListener('click', () => {
+    if(!checkAllFieldsFilled()) return;
+    const kundeData = {};
+    for(const key in inputs){
+      kundeData[key] = inputs[key].value.trim();
+    }
+    console.log("Lagre kunde:", kundeData);
+    // Her kan du gjøre ajax/fetch request til backend for å lagre
+    popup.style.display = 'none';
   });
 
   // ===== SLETT POPUP =====
@@ -82,7 +95,6 @@ document.addEventListener("DOMContentLoaded", function() {
   confirmDelete.addEventListener('click', () => {
     if(currentDeleteId){
       console.log("Slett kunde med id:", currentDeleteId);
-      // Her kan du gjøre ajax/fetch request for å slette på backend
       deletePopup.style.display = 'none';
     }
   });
