@@ -1,62 +1,85 @@
-/* ===== MAIN INNHOLD SENTRERT ===== */
+/* ===== MAIN CONTENT SENTRERT ===== */
 .main-content {
-    max-width: 700px;       /* samme som kundeliste */
-    margin: 0 auto;         /* sentrerer alt midt på skjermen */
-    padding: 40px 20px;
+    flex: 1;
+    padding: 40px 30px;
     box-sizing: border-box;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center; /* sentraliser innhold */
 }
 
-/* ===== TITTEL ===== */
+/* ===== PAGE TITLE ===== */
 .page-title {
     text-align: center;
-    margin-bottom: 25px;
     font-weight: 600;
+    margin-bottom: 30px;
 }
 
-/* ===== TABELL-KORT ===== */
-.invoice-table {
+/* ===== TABLE CARD ===== */
+.table-card {
     width: 100%;
+    max-width: 800px;
     background: white;
     border-radius: 12px;
-    padding: 0;
-    border-collapse: collapse;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-    overflow: hidden;
+    padding: 25px 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 
-/* Header */
-.invoice-table th {
-    background: #f4f4f4;
+/* ===== TABLE ===== */
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.invoice-table th, .invoice-table td {
     padding: 12px 15px;
     text-align: left;
-    font-weight: bold;
-    border-bottom: 1px solid #ddd;
-}
-
-/* Celler */
-.invoice-table td {
-    padding: 12px 15px;
     border-bottom: 1px solid #eee;
 }
 
-/* Hover Effekt */
-.invoice-table tr:hover {
-    background-color: #f8f8f8;
-    cursor: pointer;
-    transition: 0.15s;
-}
-
-/* Last ned knapp */
-.download-btn {
-    color: #007bff;
-    text-decoration: none;
+.invoice-table th {
+    background: #f4f4f4;
     font-weight: 600;
 }
+
+.invoice-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.action-cell {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.send-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background-color 0.2s;
+}
+
+.send-btn:hover {
+    background-color: #45a049;
+}
+
+.download-btn {
+    color: #007bff;
+    font-weight: 600;
+    text-decoration: none;
+}
+
 .download-btn:hover {
     text-decoration: underline;
 }
 
-/* Ingen fakturaer tekst */
+/* ===== EMPTY MESSAGE ===== */
 .empty-message {
     text-align: center;
     margin-top: 20px;
@@ -67,27 +90,16 @@
 /* ===== RESPONSIV ===== */
 @media (max-width: 768px) {
     .main-content {
-        max-width: 100%;
+        padding: 20px;
+    }
+    .table-card {
         padding: 20px;
     }
     .invoice-table {
         font-size: 14px;
     }
-}
-
-
-/* Knapp for sending av faktura */
-.send-btn {
-    background-color: #4CAF50; /* grønn */
-    color: white;
-    padding: 5px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.2s ease;
-}
-
-.send-btn:hover {
-    background-color: #45a049;
+    .action-cell {
+        flex-direction: column;
+        gap: 5px;
+    }
 }
