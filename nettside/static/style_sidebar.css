@@ -1,76 +1,81 @@
-/* ===== SIDEBAR ===== */
+/* ===== MODERNE SIDEBAR ===== */
+
 .sidebar {
-    position: absolute;
-    top: 15vh;           /* behold margin-top */
-    left: 0;             /* flytt sidebar helt til venstre */
-    width: 240px;
-    height: fit-content;
-    background-color: #fff;
-    border-right: 1px solid #ddd;
-    padding-top: 20px;
-    box-sizing: border-box;
+  width: 260px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0f172a, #1e293b);
+  color: #fff;
+  padding: 25px 20px;
+  box-sizing: border-box;
 }
 
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
 
-/* Fjern margin som tidligere dyttet den inn fra venstre */
-.sidebar-links {
-  list-style: none;
+.sidebar-header span {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.menu {
+  margin-top: 35px;
   display: flex;
   flex-direction: column;
-  padding: 0;
-  margin: 0;
+  gap: 10px;
 }
 
-.sidebar-links li {
-  border-bottom: 1px solid #f1f1f1;
-}
-
-.sidebar-links a,
-.dropdown-btn {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 14px 20px;
-  border: none;
+.menu-link, .menu-toggle {
   background: none;
+  border: none;
+  color: #e2e8f0;
+  padding: 12px 15px;
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 16px;
-  color: #333;
-  transition: all 0.2s ease;
+  text-decoration: none;
+  transition: 0.2s;
+  font-size: 15px;
 }
 
-.sidebar-links a:hover,
-.dropdown-btn:hover {
-  background-color: #f7f7f7;
-  color: #b00020;
+.menu-link:hover, .menu-toggle:hover {
+  background: rgba(255,255,255,0.1);
 }
 
-.dropdown-btn.active {
-  color: #b00020;
-  border-left: 4px solid #b00020;
-  background-color: #f9f9f9;
+.menu-link.active {
+  background: linear-gradient(135deg,#2563eb,#3b82f6);
+  color: white;
 }
 
-/* ===== DROPDOWN INNHOLD ===== */
-.dropdown-content {
+.menu-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.submenu {
   display: none;
   flex-direction: column;
-  background-color: #f5f5f5;
+  margin-left: 15px;
 }
 
-.dropdown-content a {
-  padding: 10px 30px;
-  font-size: 14px;
-  color: #444;
-  text-decoration: none;
-}
-
-.dropdown-content a:hover {
-  background-color: #eee;
-  color: #b00020;
-}
-
-/* Når dropdownen er åpen */
-.sidebar-item.open .dropdown-content {
+.menu-group:hover .submenu {
   display: flex;
+}
+
+.submenu a {
+  padding: 8px 10px;
+  color: #c7d2fe;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.submenu a:hover {
+  color: #fff;
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .sidebar {
+    display:none;
+  }
 }
