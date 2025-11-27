@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='style_lagret_fakturaer.css') }}">
 <script src="{{ url_for('static', filename='javascript/lagret_fakturaer.js') }}" defer></script>
+<script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -19,7 +20,7 @@
     <nav class="sidebar-nav">
       <a class="sidebar-link" href="{{ url_for('tjenester') }}">➕ Ny faktura</a>
       <div class="sidebar-group">
-        <button class="sidebar-toggle dropdown-btn active">📄 Faktura <i>›</i></button>
+        <button class="sidebar-toggle dropdown-btn">📄 Faktura <i>›</i></button>
         <div class="sidebar-submenu">
           <a href="{{ url_for('lagret_fakturaer') }}" class="active">Ubetalte</a>
           <a href="{{ url_for('sendte') }}">Sendte</a>
@@ -40,12 +41,12 @@
     <div class="faktura-container">
       {% if fakturaer %}
         {% for f in fakturaer %}
-          <div class="faktura-box">
-            <label>
-              <input type="checkbox" name="faktura" value="{{ f.id }}">
-              <span class="faktura-info">{{ f.filnavn }} – Opprettet: {{ f.dato.strftime("%d.%m.%Y") }}</span>
-            </label>
-          </div>
+        <div class="faktura-box">
+          <label>
+            <input type="checkbox" name="faktura" value="{{ f.id }}">
+            <span class="faktura-info">{{ f.filnavn }} – Opprettet: {{ f.dato.strftime("%d.%m.%Y") }}</span>
+          </label>
+        </div>
         {% endfor %}
       {% else %}
         <p class="empty-message">Ingen lagrede fakturaer.</p>
