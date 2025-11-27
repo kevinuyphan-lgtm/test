@@ -1,86 +1,114 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-  // ===== SIDEBAR DROPDOWN =====
-  const sidebarToggles = document.querySelectorAll(".sidebar-toggle");
-  sidebarToggles.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const parent = btn.closest(".sidebar-group");
-      parent.classList.toggle("open");
+  // ===== SIDEBAR DROPDOWN & AKTIVE LENKER =====
+  const sidebarGroups = document.querySelectorAll(".sidebar-group");
+  const sidebarLinks = document.querySelectorAll(".sidebar-link, .sidebar-submenu a");
+
+  // Dropdown funksjon
+  sidebarGroups.forEach(group => {
+    const toggle = group.querySelector(".sidebar-toggle");
+    toggle.addEventListener("click", () => {
+      sidebarGroups.forEach(g => {
+        if(g !== group) g.classList.remove("open");
+      });
+      group.classList.toggle("open");
     });
   });
 
-  // ===== FAKTURA CHECKBOX + SEND KNAPP =====
-  const sendSelectedBtn = document.getElementById('sendSelected');
-  const sendPopup = document.getElementById('sendPopup');
-  const cancelSend = document.getElementById('cancelSend');
-  const confirmSend = document.getElementById('confirmSend');
-  const emailContainer = document.getElementById('emailContainer');
-  const addEmailBtn = document.getElementById('addEmail');
-
-  function updateSendButton() {
-    const fakturaCheckboxes = document.querySelectorAll('input[name="faktura"]');
-    const anyChecked = Array.from(fakturaCheckboxes).some(cb => cb.checked);
-    if(anyChecked){
-      sendSelectedBtn.classList.add('active');
-      sendSelectedBtn.disabled = false;
-    } else {
-      sendSelectedBtn.classList.remove('active');
-      sendSelectedBtn.disabled = true;
-    }
-  }
-
-  // Delegert eventlistener for checkboxer
-  document.querySelector('.faktura-container').addEventListener('change', e => {
-    if(e.target && e.target.matches('input[name="faktura"]')) {
-      updateSendButton();
+  // Sett aktiv lenke basert på URL
+  const currentUrl = window.location.pathname;
+  sidebarLinks.forEach(link => {
+    if(link.getAttribute("href") === currentUrl){
+      link.classList.add("active");
+      const parentGroup = link.closest(".sidebar-group");
+      if(parentGroup){
+        parentGroup.classList.add("open");
+        parentGroup.querySelector(".sidebar-toggle").classList.add("active");
+      }
     }
   });
-  updateSendButton();
 
-  // Åpne popup
-  sendSelectedBtn.addEventListener('click', () => {
-    sendPopup.style.display = 'flex';
-    confirmSend.disabled = true;
-    confirmSend.classList.remove('active');
+  // ===== POPUP NY/EDIT KUNDE =====
+  const popup = document.getElementById('popup');
+  const closePopup = document.getElementById('closePopup');
+  const popupTitle = document.getElementById('popupTitle');
+  const saveChanges = document.getElementById('saveChanges');
+
+  const inputs = {
+    navn: document.getElementById('popupNavn'),
+    firma: document.getElementById('popupFirma'),
+    adresse: document.getElementById('popupAdresse'),
+    orgnr: document.getElementById('popupOrgnr'),
+    referanse: document.getElementById('popupReferanse'),
+    telefon: document.getElementById('popupTelefon'),
+    epost: document.getElementById('popupEpost')
+  };
+
+  document.getElementById('newKundeBtn').addEventListener('click', () => {
+    popupTitle.textContent = "Ny Kunde";
+    Object.values(inputs).forEach(i => i.value = '');
+    saveChanges.disabled = true;
+    saveChanges.classList.remove('active');
+    popup.style.display = 'flex';
   });
 
-  // Avbryt popup
-  cancelSend.addEventListener('click', () => sendPopup.style.display = 'none');
+  closePopup.addEventListener('click', () => popup.style.display = 'none');
 
-  // Legg til flere epost-felt
-  addEmailBtn.addEventListener('click', () => {
-    const div = document.createElement('div');
-    div.classList.add('email-field');
-    div.innerHTML = `<input type="email" placeholder="Skriv inn epost" class="email-input">`;
-    emailContainer.appendChild(div);
-    setupEmailValidation(div.querySelector('input'));
-  });
-
-  // Epost-validering
-  function setupEmailValidation(input){
+  // Aktiver lagre-knapp når input fylles
+  Object.values(inputs).forEach(input => {
     input.addEventListener('input', () => {
-      const allEmails = document.querySelectorAll('.email-input');
-      const allFilled = Array.from(allEmails).some(i => i.value.trim() !== '');
-      const allValid = Array.from(allEmails).every(i => i.value === '' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(i.value));
-      
-      if(allFilled && allValid){
-        confirmSend.disabled = false;
-        confirmSend.classList.add('active');
+      const anyFilled = Object.values(inputs).some(i => i.value.trim() !== '');
+      if(anyFilled){
+        saveChanges.disabled = false;
+        saveChanges.classList.add('active');
       } else {
-        confirmSend.disabled = true;
-        confirmSend.classList.remove('active');
+        saveChanges.disabled = true;
+        saveChanges.classList.remove('active');
       }
     });
-  }
-  document.querySelectorAll('.email-input').forEach(input => setupEmailValidation(input));
+  });
 
-  // ===== SIDEBAR ACTIVE LINK =====
-  const currentUrl = window.location.pathname;
-  document.querySelectorAll('.sidebar-submenu a').forEach(link => {
-    if(link.getAttribute('href') === currentUrl){
-      link.classList.add('active');
-      link.closest('.sidebar-group').classList.add('open');
-      link.closest('.sidebar-group').querySelector('.sidebar-toggle').classList.add('active');
+  // Rediger-knapp
+  document.querySelectorAll('.edit-icon').forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      const row = e.target.closest('tr');
+      popupTitle.textContent = "Rediger Kunde";
+      inputs.navn.value = row.dataset.navn || '';
+      inputs.firma.value = row.dataset.firma || '';
+      inputs.adresse.value = row.dataset.adresse || '';
+      inputs.orgnr.value = row.dataset.orgnr || '';
+      inputs.referanse.value = row.dataset.referanse || '';
+      inputs.telefon.value = row.dataset.telefon || '';
+      inputs.epost.value = row.dataset.epost || '';
+      saveChanges.disabled = false;
+      saveChanges.classList.add('active');
+      popup.style.display = 'flex';
+    });
+  });
+
+  // ===== SLETT POPUP =====
+  const deletePopup = document.getElementById('deletePopup');
+  const cancelDelete = document.getElementById('cancelDelete');
+  const confirmDelete = document.getElementById('confirmDelete');
+  let currentDeleteId = null;
+
+  document.querySelectorAll('.delete-icon').forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      const row = e.target.closest('tr');
+      currentDeleteId = row.dataset.id;
+      deletePopup.style.display = 'flex';
+    });
+  });
+
+  cancelDelete.addEventListener('click', () => {
+    deletePopup.style.display = 'none';
+    currentDeleteId = null;
+  });
+
+  confirmDelete.addEventListener('click', () => {
+    if(currentDeleteId){
+      console.log("Slett kunde med id:", currentDeleteId);
+      deletePopup.style.display = 'none';
     }
   });
 
