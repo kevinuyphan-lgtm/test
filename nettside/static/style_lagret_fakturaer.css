@@ -1,94 +1,56 @@
-/* MAIN CONTENT */
 .main-content {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  padding: 30px 40px;
-  box-sizing: border-box;
+  margin-left: 260px;
+  padding: 30px;
+  max-width: 800px;
 }
 
-/* CONTAINER */
-.container {
-  max-width: 900px;
-  width: 100%;
-}
-
-/* TABLE CARD */
-.table-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 25px 30px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-}
-
-/* PAGE TITLE */
 .page-title {
   text-align: center;
   margin-bottom: 20px;
-  font-weight: 600;
 }
 
-/* INVOICE CARD LIST */
-.invoice-list {
+.faktura-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
-.invoice-card {
+.faktura-box {
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.faktura-box label {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 15px 12px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  gap: 10px;
   cursor: pointer;
-  transition: background 0.2s;
-}
-.invoice-card:hover {
-  background: #f5f5f5;
-}
-.invoice-card input[type="checkbox"] {
-  transform: scale(1.3);
-}
-.invoice-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.invoice-name {
-  font-weight: 500;
-}
-.invoice-date, .invoice-amount {
-  font-size: 14px;
-  color: #555;
 }
 
-/* SEND BUTTON */
 .send-btn {
   margin-top: 20px;
-  padding: 10px 18px;
-  border: none;
+  padding: 10px 20px;
   border-radius: 6px;
+  border: none;
   background: #ccc;
-  color: #fff;
+  color: white;
   font-size: 15px;
   cursor: not-allowed;
-  width: 100%;
-  max-width: 300px;
 }
+
 .send-btn.active {
   background: #4a90e2;
   cursor: pointer;
 }
 
-/* POPUP */
 .popup-overlay {
+  display: none;
   position: fixed;
   top:0; left:0;
-  width:100%; height:100%;
+  width: 100%; height: 100%;
   background: rgba(0,0,0,0.6);
-  display: none;
   justify-content: center;
   align-items: center;
   z-index: 2000;
@@ -96,61 +58,55 @@
 
 .popup-box {
   background: #fff;
-  border-radius: 12px;
   padding: 25px;
+  border-radius: 12px;
   width: 400px;
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-/* EMAIL FIELD */
 .email-field input {
   width: 100%;
-  padding: 10px 12px;
+  padding: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
 }
-.add-email-btn {
-  align-self: flex-start;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  cursor: pointer;
-  font-size: 14px;
-}
-.add-email-btn:hover { background: #005ec9; }
 
-/* POPUP BUTTONS */
 .popup-buttons {
   display: flex;
   gap: 10px;
   justify-content: flex-end;
+  margin-top: 10px;
 }
+
 .cancel-btn {
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: none;
   background: #e04b4b;
   color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
 }
-.send-confirm-btn {
-  padding: 8px 14px;
-  border-radius: 6px;
-  border: none;
+
+.confirm-btn {
   background: #ccc;
   color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
   cursor: not-allowed;
 }
-.send-confirm-btn.active {
+
+.confirm-btn.active {
   background: #4a90e2;
   cursor: pointer;
 }
 
-/* RESPONSIV */
-@media(max-width:500px){
-  .popup-box{width:90%;}
+.add-email-btn {
+  background: #f0f0f0;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
 }
