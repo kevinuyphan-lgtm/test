@@ -16,9 +16,11 @@
       <a class="dropdown-btn" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
     </li>
 
-    <li class="sidebar-item open">
-      <button class="dropdown-btn active">📄 Faktura</button>
-      <div class="dropdown-content" style="display: flex;">
+    <li class="sidebar-group open">
+      <button class="dropdown-btn sidebar-toggle">
+        📄 Faktura <i>›</i>
+      </button>
+      <div class="sidebar-submenu">
         <a href="{{ url_for('lagret_fakturaer') }}" class="active">Ubetalte</a>
         <a href="{{ url_for('sendte') }}">Sendte</a>
         <a href="{{ url_for('betalt') }}">Betalt</a>
@@ -29,12 +31,19 @@
       <a class="dropdown-btn" href="{{ url_for('kundeliste') }}">👥 Kunder</a>
     </li>
 
-    <li><a href="#">📦 Produkter</a></li>
-    <li><a href="#">📊 Rapporter</a></li>
-    <li><a href="#">💲 Transaksjoner</a></li>
+    <li class="sidebar-item">
+      <a class="dropdown-btn" href="#">📦 Produkter</a>
+    </li>
 
-  </ul>
-</div>
+    <li class="sidebar-item">
+      <a class="dropdown-btn" href="#">📊 Rapporter</a>
+    </li>
+
+    <li class="sidebar-item">
+      <a class="dropdown-btn" href="#">💲 Transaksjoner</a>
+    </li>
+
+  </ul></div>
 
 
 <div class="main-content">
