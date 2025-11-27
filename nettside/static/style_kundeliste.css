@@ -7,16 +7,19 @@
 /* ===== HOVEDINNHOLD ===== */
 .main-content {
   flex: 1;
-  margin-left: 260px;
   padding: 30px 40px;
   box-sizing: border-box;
   background-color: #f9f9f9;
+
+  /* Fjern margin-left og bruk padding for luft */
+  margin-left: 0;
+  display: flex;
+  justify-content: center; /* Sentraliser innhold horisontalt */
 }
 
 /* ===== CONTAINER ===== */
 .container {
   max-width: 900px;
-  margin: 0 auto;
   width: 100%;
 }
 
@@ -58,6 +61,7 @@
   border-radius: 12px;
   padding: 25px 30px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  max-width: 100%; /* ikke overstige container */
 }
 
 /* ===== DATA TABLE ===== */
