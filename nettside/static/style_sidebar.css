@@ -110,3 +110,22 @@
     display: none;
   }
 }
+.sidebar-submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.sidebar-group.open .sidebar-submenu {
+  max-height: 300px;
+  opacity: 1;
+}
+
+.sidebar-toggle i {
+  transition: transform 0.3s ease;
+}
+
+.sidebar-group.open .sidebar-toggle i {
+  transform: rotate(90deg);
+}
