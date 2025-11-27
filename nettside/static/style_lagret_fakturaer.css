@@ -28,30 +28,40 @@
   font-weight: 600;
 }
 
-/* INVOICE LIST */
+/* INVOICE CARD LIST */
 .invoice-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 15px;
 }
 
-.invoice-item {
+.invoice-card {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
+  gap: 15px;
+  padding: 15px 12px;
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   transition: background 0.2s;
 }
-.invoice-item:hover {
+.invoice-card:hover {
   background: #f5f5f5;
 }
-.invoice-item input {
-  margin-right: 12px;
+.invoice-card input[type="checkbox"] {
+  transform: scale(1.3);
+}
+.invoice-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 .invoice-name {
-  font-size: 15px;
+  font-weight: 500;
+}
+.invoice-date, .invoice-amount {
+  font-size: 14px;
+  color: #555;
 }
 
 /* SEND BUTTON */
@@ -64,6 +74,8 @@
   color: #fff;
   font-size: 15px;
   cursor: not-allowed;
+  width: 100%;
+  max-width: 300px;
 }
 .send-btn.active {
   background: #4a90e2;
