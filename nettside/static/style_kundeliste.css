@@ -181,44 +181,51 @@
   margin-top: 15px;
 }
 
-/* ===== POPUP FELLES ===== */
+/* ===== POPUP OVERLAY ===== */
 .popup-overlay {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.5);
   display: none;
   justify-content: center;
   align-items: center;
   z-index: 2000;
 }
 
+/* ===== POPUP BOX ===== */
 .popup-box {
   background: #fff;
+  width: 600px; /* bredere popup */
+  max-width: 95%;
   padding: 25px 30px;
   border-radius: 12px;
-  width: 600px; /* bredere */
-  max-width: 90%;
-  max-height: 80vh;
-  overflow-y: auto;
-  box-shadow: 0 4px 25px rgba(0,0,0,0.3);
   display: flex;
   flex-direction: column;
   gap: 15px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  position: relative;
+  max-height: 90vh; /* maks høyde */
+  overflow-y: auto; /* scroll hvis nødvendig, men ikke for små skjermer */
 }
 
-/* FELTER I POPUP */
+/* ===== POPUP FELT ===== */
 .popup-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+}
+
+.popup-field label {
+  font-weight: 500;
+  font-size: 14px;
 }
 
 .popup-field input {
   padding: 10px 12px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .popup-field input:focus {
@@ -227,21 +234,23 @@
   box-shadow: 0 0 5px rgba(74,144,226,0.5);
 }
 
-/* ===== KNAPPER I POPUP ===== */
-.popup-buttons {
+/* ===== KNAPPER ===== */
+.popup-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  margin-top: 10px;
 }
 
 #saveChanges {
-  padding: 10px 18px;
-  background: #ccc;
-  color: white;
+  padding: 10px 20px;
   border: none;
   border-radius: 6px;
-  font-size: 15px;
+  background: #ccc;
+  color: white;
   cursor: not-allowed;
+  font-size: 15px;
+  transition: 0.2s;
 }
 
 #saveChanges.active {
@@ -249,39 +258,33 @@
   cursor: pointer;
 }
 
-#closePopup {
-  padding: 10px 18px;
-  background: #e04b4b;
-  color: white;
+#closePopupBtn {
+  padding: 10px 20px;
   border: none;
   border-radius: 6px;
+  background: #e04b4b;
+  color: white;
   font-size: 15px;
   cursor: pointer;
+  transition: 0.2s;
 }
 
-#closePopup:hover {
-  background: #c0392b;
+/* Flex container for lagre og avbryt */
+.popup-actions button {
+  flex: 0 0 auto;
 }
 
-/* ===== RESPONSIV ===== */
-@media (max-width: 768px) {
-  .main-content {
-    padding: 20px 15px;
-  }
-
-  .search-container {
-    flex-direction: column;
-  }
-
-  .new-btn {
-    width: 100%;
-  }
-
-  .table-card {
-    padding: 20px;
-  }
-
+/* Responsive for mindre skjermer */
+@media (max-width: 700px) {
   .popup-box {
     width: 95%;
+    padding: 20px;
+  }
+  .popup-field input {
+    font-size: 13px;
+  }
+  #saveChanges, #closePopupBtn {
+    font-size: 14px;
+    padding: 8px 16px;
   }
 }
