@@ -9,75 +9,86 @@
 {% endblock %}
 
 {% block body %}
-<div class="sidebar">
-  <ul class="sidebar-links">
-    <li class="sidebar-item"><a class="dropdown-btn" href="{{ url_for('tjenester') }}">+ Ny faktura</a></li>
-    <li class="sidebar-item">
-      <button class="dropdown-btn">📄 Faktura</button>
-      <div class="dropdown-content">
-        <a href="{{ url_for('lagret_fakturaer') }}">Ubetalte</a>
-        <a href="{{ url_for('sendte') }}">Sendte</a>
-        <a href="{{ url_for('betalt') }}">Betalt</a>
-      </div>
-    </li>
-    <li class="sidebar-item open">
-      <button class="dropdown-btn active">👥 Kunder</button>
-    </li>
-    <li><a href="#">📦 Produkter</a></li>
-    <li><a href="#">📊 Rapporter</a></li>
-    <li><a href="#">💲 Transaksjoner</a></li>
-  </ul>
-</div>
+<div class="layout">
 
-<div class="main-content">
-  <div class="container">
-    <div class="search-container">
-      <input type="text" id="searchInput" placeholder="Søk etter kunde...">
-      <button id="newKundeBtn" class="new-btn">+ Ny kunde</button>
+  <!-- MODERNE SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="brand">InvoicePro</h2>
+      <span class="brand-sub">Dashboard</span>
     </div>
 
-    <div class="table-card" id="tableCard">
-      {% if kunder|length == 0 %}
-        <p class="no-data" id="noData">Du har ikke registrert noen kunder ennå.</p>
-      {% else %}
-        <table class="data-table" id="kundeTable">
-          <thead>
-            <tr>
-              <th>Navn</th>
-              <th>Adresse</th>
-              <th>Org.nr</th>
-              <th>Referanse</th>
-              <th>Handling</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for kunde in kunder %}
-            <tr 
-              class="kunde-row"
-              data-id="{{ kunde.id }}"
-              data-navn="{{ kunde.navn }}"
-              data-firma="{{ kunde.firmanavn if kunde.firmanavn else '' }}"
-              data-adresse="{{ kunde.adresse }}"
-              data-orgnr="{{ kunde.orgnr }}"
-              data-referanse="{{ kunde.referanse }}"
-              data-telefon="{{ kunde.telefon if kunde.telefon else '' }}"
-              data-epost="{{ kunde.epost if kunde.epost else '' }}"
-            >
-              <td data-field="navn">{{ kunde.navn }}</td>
-              <td data-field="adresse">{{ kunde.adresse }}</td>
-              <td data-field="orgnr">{{ kunde.orgnr }}</td>
-              <td data-field="referanse">{{ kunde.referanse }}</td>
-              <td class="action-cell">
-                <img src="{{ url_for('static', filename='bilder/edit.jpeg') }}" class="edit-icon" title="Rediger">
-                <img src="{{ url_for('static', filename='bilder/delete.png') }}" class="delete-icon" title="Slett">
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% endif %}
+    <nav class="sidebar-nav">
+      <a class="sidebar-link" href="{{ url_for('tjenester') }}">➕ Ny faktura</a>
+
+      <div class="sidebar-group">
+        <button class="sidebar-toggle" type="button">📄 Faktura <i>›</i></button>
+        <div class="sidebar-submenu">
+          <a href="{{ url_for('lagret_fakturaer') }}">Ubetalte</a>
+          <a href="{{ url_for('sendte') }}">Sendte</a>
+          <a href="{{ url_for('betalt') }}">Betalt</a>
+        </div>
+      </div>
+
+      <a class="sidebar-link active" href="{{ url_for('kundeliste') }}">👥 Kunder</a>
+      <a class="sidebar-link" href="#">📦 Produkter</a>
+      <a class="sidebar-link" href="#">📊 Rapporter</a>
+      <a class="sidebar-link" href="#">💲 Transaksjoner</a>
+    </nav>
+  </aside>
+
+  <!-- HOVEDINNHOLD -->
+  <div class="main-content">
+    <div class="container">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Søk etter kunde...">
+        <button id="newKundeBtn" class="new-btn">+ Ny kunde</button>
+      </div>
+
+      <div class="table-card" id="tableCard">
+        {% if kunder|length == 0 %}
+          <p class="no-data" id="noData">Du har ikke registrert noen kunder ennå.</p>
+        {% else %}
+          <table class="data-table" id="kundeTable">
+            <thead>
+              <tr>
+                <th>Navn</th>
+                <th>Adresse</th>
+                <th>Org.nr</th>
+                <th>Referanse</th>
+                <th>Handling</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for kunde in kunder %}
+              <tr 
+                class="kunde-row"
+                data-id="{{ kunde.id }}"
+                data-navn="{{ kunde.navn }}"
+                data-firma="{{ kunde.firmanavn if kunde.firmanavn else '' }}"
+                data-adresse="{{ kunde.adresse }}"
+                data-orgnr="{{ kunde.orgnr }}"
+                data-referanse="{{ kunde.referanse }}"
+                data-telefon="{{ kunde.telefon if kunde.telefon else '' }}"
+                data-epost="{{ kunde.epost if kunde.epost else '' }}"
+              >
+                <td data-field="navn">{{ kunde.navn }}</td>
+                <td data-field="adresse">{{ kunde.adresse }}</td>
+                <td data-field="orgnr">{{ kunde.orgnr }}</td>
+                <td data-field="referanse">{{ kunde.referanse }}</td>
+                <td class="action-cell">
+                  <img src="{{ url_for('static', filename='bilder/edit.jpeg') }}" class="edit-icon" title="Rediger">
+                  <img src="{{ url_for('static', filename='bilder/delete.png') }}" class="delete-icon" title="Slett">
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+      </div>
     </div>
   </div>
+
 </div>
 
 <!-- Popup Ny/Edit Kunde -->
