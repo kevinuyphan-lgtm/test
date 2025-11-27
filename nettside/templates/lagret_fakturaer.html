@@ -1,29 +1,27 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <title>Dine fakturaer</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style_lagret_fakturaer.css') }}">
-    <script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}" defer></script>
+<title>Dine lagrede fakturaer</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style_lagret_fakturaer.css') }}">
+<script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}" defer></script>
+<script src="{{ url_for('static', filename='javascript/lagret_fakturaer.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
 <div class="layout">
 
-  <!-- MODERNE SIDEBAR -->
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <h2 class="brand">InvoicePro</h2>
       <span class="brand-sub">Dashboard</span>
     </div>
-
     <nav class="sidebar-nav">
       <a class="sidebar-link" href="{{ url_for('tjenester') }}">➕ Ny faktura</a>
 
       <div class="sidebar-group">
-        <button class="sidebar-toggle dropdown-btn" type="button">
-          📄 Faktura <i>›</i>
-        </button>
+        <button class="sidebar-toggle dropdown-btn">📄 Faktura <i>›</i></button>
         <div class="sidebar-submenu">
           <a href="{{ url_for('lagret_fakturaer') }}" class="active">Ubetalte</a>
           <a href="{{ url_for('sendte') }}">Sendte</a>
@@ -40,40 +38,46 @@
 
   <!-- HOVEDINNHOLD -->
   <div class="main-content">
-    <h1 class="page-title">Dine lagrede fakturaer</h1>
+    <div class="container">
+      <div class="table-card">
+        <h1 class="page-title">Dine lagrede fakturaer</h1>
 
-    {% if fakturaer %}
-    <div class="table-card">
-      <table class="invoice-table">
-          <thead>
-            <tr>
-                <th>Faktura</th>
-                <th>Opprettet</th>
-                <th>Handling</th>
-            </tr>
-          </thead>
-          <tbody>
-          {% for f in fakturaer %}
-            <tr>
-                <td>{{ f.filnavn }}</td>
-                <td>{{ f.dato.strftime("%d.%m.%Y kl. %H:%M") }}</td>
-                <td class="action-cell">
-                    <a href="{{ url_for('download_faktura', faktura_id=f.id) }}" class="download-btn">⬇ Last ned</a>
-                    <form method="GET" action="{{ url_for('send_faktura', faktura_id=f.id) }}" 
-                          onsubmit="return confirm('Er du sikker på at du vil sende fakturaen?');" 
-                          style="display:inline;">
-                        <button type="submit" class="send-btn">✉ Send</button>
-                    </form>
-                </td>
-            </tr>
-          {% endfor %}
-          </tbody>
-      </table>
+        {% if fakturaer %}
+        <form id="fakturaForm">
+          <div class="invoice-list">
+            {% for f in fakturaer %}
+            <label class="invoice-item">
+              <input type="checkbox" name="faktura" value="{{ f.id }}">
+              <span class="invoice-name">{{ f.filnavn }} - {{ f.dato.strftime("%d.%m.%Y") }}</span>
+            </label>
+            {% endfor %}
+          </div>
+
+          <button type="button" id="sendSelected" class="send-btn" disabled>Send faktura</button>
+        </form>
+        {% else %}
+        <p class="empty-message">Du har ingen fakturaer enda.</p>
+        {% endif %}
+      </div>
     </div>
-    {% else %}
-      <p class="empty-message">Du har ingen fakturaer enda.</p>
-    {% endif %}
   </div>
 
+</div>
+
+<!-- POPUP SEND FACTURA -->
+<div class="popup-overlay" id="sendPopup">
+  <div class="popup-box">
+    <h2>Send fakturaer</h2>
+    <div id="emailContainer">
+      <div class="email-field">
+        <input type="email" placeholder="Skriv inn epost" class="email-input">
+      </div>
+    </div>
+    <button type="button" id="addEmail" class="add-email-btn">+ Legg til flere</button>
+    <div class="popup-buttons">
+      <button id="cancelSend" class="cancel-btn">Avbryt</button>
+      <button id="confirmSend" class="send-confirm-btn" disabled>Send</button>
+    </div>
+  </div>
 </div>
 {% endblock %}
