@@ -1,6 +1,15 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-  const fakturaCheckboxes = document.querySelectorAll('input[name="faktura"]');
+  // ===== SIDEBAR DROPDOWN =====
+  const sidebarToggles = document.querySelectorAll(".sidebar-toggle");
+  sidebarToggles.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const parent = btn.closest(".sidebar-group");
+      parent.classList.toggle("open");
+    });
+  });
+
+  // ===== FAKTURA CHECKBOX + SEND KNAPP =====
   const sendSelectedBtn = document.getElementById('sendSelected');
   const sendPopup = document.getElementById('sendPopup');
   const cancelSend = document.getElementById('cancelSend');
@@ -8,10 +17,10 @@ document.addEventListener("DOMContentLoaded", function() {
   const emailContainer = document.getElementById('emailContainer');
   const addEmailBtn = document.getElementById('addEmail');
 
-  // FUNKSJON: Oppdater send-knapp status
-  function updateSendButton() {
+  function updateCheckboxes() {
+    const fakturaCheckboxes = document.querySelectorAll('input[name="faktura"]');
     const anyChecked = Array.from(fakturaCheckboxes).some(cb => cb.checked);
-    if(anyChecked) {
+    if(anyChecked){
       sendSelectedBtn.classList.add('active');
       sendSelectedBtn.disabled = false;
     } else {
@@ -20,22 +29,27 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  // Legg til change-event på alle faktura-checkboxer
-  fakturaCheckboxes.forEach(cb => {
-    cb.addEventListener('change', updateSendButton);
+  // Observer for å fange dynamiske checkboxer
+  const observer = new MutationObserver(updateCheckboxes);
+  observer.observe(document.querySelector('.faktura-container'), {childList: true, subtree: true});
+  updateCheckboxes();
+
+  // Event listener på checkboxer (delegation)
+  document.querySelector('.faktura-container').addEventListener('change', e => {
+    if(e.target && e.target.matches('input[name="faktura"]')) {
+      updateCheckboxes();
+    }
   });
 
-  // Åpne popup når send-knappen trykkes
+  // Åpne popup
   sendSelectedBtn.addEventListener('click', () => {
     sendPopup.style.display = 'flex';
     confirmSend.disabled = true;
     confirmSend.classList.remove('active');
   });
 
-  // Lukk popup
-  cancelSend.addEventListener('click', () => {
-    sendPopup.style.display = 'none';
-  });
+  // Avbryt popup
+  cancelSend.addEventListener('click', () => sendPopup.style.display = 'none');
 
   // Legg til flere epost-felt
   addEmailBtn.addEventListener('click', () => {
@@ -63,7 +77,15 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Initial setup av eksisterende email-felt
   document.querySelectorAll('.email-input').forEach(input => setupEmailValidation(input));
 
+  // ===== SIDEBAR ACTIVE LINK =====
+  const currentUrl = window.location.pathname;
+  document.querySelectorAll('.sidebar-submenu a').forEach(link => {
+    if(link.getAttribute('href') === currentUrl){
+      link.classList.add('active');
+      link.closest('.sidebar-group').classList.add('open');
+      link.closest('.sidebar-group').querySelector('.sidebar-toggle').classList.add('active');
+    }
+  });
 });
