@@ -46,14 +46,20 @@
         <form id="fakturaForm">
           <div class="invoice-list">
             {% for f in fakturaer %}
-            <label class="invoice-item">
+            <label class="invoice-card">
               <input type="checkbox" name="faktura" value="{{ f.id }}">
-              <span class="invoice-name">{{ f.filnavn }} - {{ f.dato.strftime("%d.%m.%Y") }}</span>
+              <div class="invoice-info">
+                <span class="invoice-name">{{ f.filnavn }}</span>
+                <span class="invoice-date">{{ f.dato.strftime("%d.%m.%Y kl. %H:%M") }}</span>
+                {% if f.belop %}
+                <span class="invoice-amount">{{ f.belop }} kr</span>
+                {% endif %}
+              </div>
             </label>
             {% endfor %}
           </div>
 
-          <button type="button" id="sendSelected" class="send-btn" disabled>Send faktura</button>
+          <button type="button" id="sendSelected" class="send-btn" disabled>Send valgt(e) faktura(er)</button>
         </form>
         {% else %}
         <p class="empty-message">Du har ingen fakturaer enda.</p>
