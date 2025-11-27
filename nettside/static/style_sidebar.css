@@ -1,81 +1,112 @@
-/* ===== MODERNE SIDEBAR ===== */
+/* ===== LAYOUT ===== */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
 
+/* ===== SIDEBAR ===== */
 .sidebar {
   width: 260px;
-  min-height: 100vh;
   background: linear-gradient(180deg, #0f172a, #1e293b);
   color: #fff;
   padding: 25px 20px;
   box-sizing: border-box;
 }
 
-.sidebar-header h2 {
-  margin: 0;
-  font-size: 20px;
+/* Header */
+.sidebar-header {
+  margin-bottom: 30px;
 }
 
-.sidebar-header span {
+.brand {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.brand-sub {
   font-size: 13px;
   color: #94a3b8;
 }
 
-.menu {
-  margin-top: 35px;
+/* NAV */
+.sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
-.menu-link, .menu-toggle {
-  background: none;
-  border: none;
+/* Links */
+.sidebar-link {
   color: #e2e8f0;
-  padding: 12px 15px;
-  border-radius: 12px;
-  cursor: pointer;
+  padding: 12px 14px;
+  border-radius: 10px;
   text-decoration: none;
-  transition: 0.2s;
   font-size: 15px;
+  transition: 0.2s ease;
 }
 
-.menu-link:hover, .menu-toggle:hover {
+.sidebar-link:hover {
   background: rgba(255,255,255,0.1);
 }
 
-.menu-link.active {
-  background: linear-gradient(135deg,#2563eb,#3b82f6);
+.sidebar-link.active {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
   color: white;
 }
 
-.menu-group {
+/* Groups */
+.sidebar-group {
   display: flex;
   flex-direction: column;
 }
 
-.submenu {
+/* Toggle button */
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: #e2e8f0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Submenu */
+.sidebar-submenu {
   display: none;
   flex-direction: column;
   margin-left: 15px;
+  margin-top: 5px;
 }
 
-.menu-group:hover .submenu {
+.sidebar-submenu a {
+  color: #c7d2fe;
+  padding: 8px 10px;
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+.sidebar-submenu a:hover {
+  background: rgba(255,255,255,0.08);
+  color: white;
+}
+
+/* Åpen dropdown */
+.sidebar-group.open .sidebar-submenu {
   display: flex;
 }
 
-.submenu a {
-  padding: 8px 10px;
-  color: #c7d2fe;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.submenu a:hover {
-  color: #fff;
-}
-
 /* Responsive */
-@media(max-width:768px){
+@media (max-width: 900px) {
   .sidebar {
-    display:none;
+    display: none;
   }
 }
