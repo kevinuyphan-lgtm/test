@@ -1,105 +1,144 @@
-/* ===== MAIN CONTENT SENTRERT ===== */
+/* MAIN CONTENT */
 .main-content {
-    flex: 1;
-    padding: 40px 30px;
-    box-sizing: border-box;
-    background-color: #f9f9f9;
-    display: flex;
-    justify-content: center; /* sentraliser innhold */
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 30px 40px;
+  box-sizing: border-box;
 }
 
-/* ===== PAGE TITLE ===== */
-.page-title {
-    text-align: center;
-    font-weight: 600;
-    margin-bottom: 30px;
+/* CONTAINER */
+.container {
+  max-width: 900px;
+  width: 100%;
 }
 
-/* ===== TABLE CARD ===== */
+/* TABLE CARD */
 .table-card {
-    width: 100%;
-    max-width: 800px;
-    background: white;
-    border-radius: 12px;
-    padding: 25px 30px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 
-/* ===== TABLE ===== */
-.invoice-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 15px;
+/* PAGE TITLE */
+.page-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 
-.invoice-table th, .invoice-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
+/* INVOICE LIST */
+.invoice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.invoice-table th {
-    background: #f4f4f4;
-    font-weight: 600;
+.invoice-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.invoice-item:hover {
+  background: #f5f5f5;
+}
+.invoice-item input {
+  margin-right: 12px;
+}
+.invoice-name {
+  font-size: 15px;
 }
 
-.invoice-table tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* ===== ACTION BUTTONS ===== */
-.action-cell {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
+/* SEND BUTTON */
 .send-btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 5px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: background-color 0.2s;
+  margin-top: 20px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background: #ccc;
+  color: #fff;
+  font-size: 15px;
+  cursor: not-allowed;
+}
+.send-btn.active {
+  background: #4a90e2;
+  cursor: pointer;
 }
 
-.send-btn:hover {
-    background-color: #45a049;
+/* POPUP */
+.popup-overlay {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
 }
 
-.download-btn {
-    color: #007bff;
-    font-weight: 600;
-    text-decoration: none;
+.popup-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.download-btn:hover {
-    text-decoration: underline;
+/* EMAIL FIELD */
+.email-field input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.add-email-btn {
+  align-self: flex-start;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.add-email-btn:hover { background: #005ec9; }
+
+/* POPUP BUTTONS */
+.popup-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.cancel-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background: #e04b4b;
+  color: white;
+  cursor: pointer;
+}
+.send-confirm-btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background: #ccc;
+  color: white;
+  cursor: not-allowed;
+}
+.send-confirm-btn.active {
+  background: #4a90e2;
+  cursor: pointer;
 }
 
-/* ===== EMPTY MESSAGE ===== */
-.empty-message {
-    text-align: center;
-    margin-top: 20px;
-    color: #777;
-    font-style: italic;
-}
-
-/* ===== RESPONSIV ===== */
-@media (max-width: 768px) {
-    .main-content {
-        padding: 20px;
-    }
-    .table-card {
-        padding: 20px;
-    }
-    .invoice-table {
-        font-size: 14px;
-    }
-    .action-cell {
-        flex-direction: column;
-        gap: 5px;
-    }
+/* RESPONSIV */
+@media(max-width:500px){
+  .popup-box{width:90%;}
 }
