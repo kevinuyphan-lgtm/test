@@ -1,26 +1,31 @@
-/* MAIN CONTENT */
+/* ===== MAIN CONTENT ===== */
 .main-content {
   flex: 1;
   margin-left: 260px;
   padding: 30px 40px;
-  max-width: 800px;
+  max-width: 850px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* TITLE */
+/* ===== PAGE TITLE ===== */
 .page-title {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   font-weight: 600;
+  font-size: 22px;
 }
 
-/* FACTURA CONTAINER */
+/* ===== FACTURA CONTAINER ===== */
 .faktura-container {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
 }
 
-/* FACTURA BOX */
+/* ===== FACTURA BOX ===== */
 .faktura-box {
   background: #fff;
   border-radius: 10px;
@@ -42,23 +47,24 @@
   font-size: 15px;
 }
 
-/* SEND BUTTON */
+/* ===== SEND BUTTON ===== */
 .send-btn {
   margin-top: 20px;
-  padding: 10px 20px;
+  padding: 12px 20px;
   border-radius: 6px;
   border: none;
   background: #ccc;
   color: white;
   font-size: 15px;
   cursor: not-allowed;
+  transition: 0.2s;
 }
 .send-btn.active {
   background: #4a90e2;
   cursor: pointer;
 }
 
-/* POPUP */
+/* ===== POPUP ===== */
 .popup-overlay {
   display: none;
   position: fixed;
@@ -73,51 +79,78 @@
   background: #fff;
   padding: 25px;
   border-radius: 12px;
-  width: 400px;
+  width: 450px;
+  max-width: 95%;
   display: flex;
   flex-direction: column;
   gap: 15px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
 }
 
 /* EMAIL FIELD */
 .email-field input {
   width: 100%;
-  padding: 10px;
+  padding: 10px 12px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* ADD EMAIL BUTTON */
+.add-email-btn {
+  background: #f0f0f0;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: 0.2s;
+}
+.add-email-btn:hover {
+  background: #e0e0e0;
 }
 
 /* POPUP BUTTONS */
-.popup-buttons {
+.popup-actions {
   display: flex;
-  gap: 10px;
   justify-content: flex-end;
+  gap: 10px;
   margin-top: 10px;
 }
 .cancel-btn {
   background: #e04b4b;
   color: white;
-  padding: 8px 14px;
+  padding: 10px 16px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition: 0.2s;
+}
+.cancel-btn:hover {
+  background: #c0392b;
 }
 .confirm-btn {
   background: #ccc;
   color: white;
-  padding: 8px 14px;
+  padding: 10px 16px;
   border: none;
   border-radius: 6px;
   cursor: not-allowed;
+  transition: 0.2s;
 }
 .confirm-btn.active {
   background: #4a90e2;
   cursor: pointer;
 }
-.add-email-btn {
-  background: #f0f0f0;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+  .main-content {
+    margin-left: 0;
+    padding: 20px;
+  }
+  .popup-box {
+    width: 95%;
+    padding: 20px;
+  }
 }
