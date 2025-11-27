@@ -4,21 +4,18 @@
   min-height: 100vh;
 }
 
-/* ===== MODERN SIDEBAR ===== */
-/* Sidebar-styling beholdes fra style_sidebar.css */
-
 /* ===== HOVEDINNHOLD ===== */
 .main-content {
   flex: 1;
-  margin-left: 260px; /* Tar høyde for sidebar (bredde + margin) */
-  padding: 30px 40px; /* Luft rundt innhold */
+  margin-left: 260px; /* bredde på sidebar */
+  padding: 30px 40px;
   box-sizing: border-box;
   background-color: #f9f9f9;
 }
 
 /* ===== CONTAINER ===== */
 .container {
-  max-width: 900px; /* litt bredere enn før */
+  max-width: 900px;
   margin: 0 auto;
   width: 100%;
 }
@@ -86,10 +83,21 @@
 }
 
 /* ===== IKONER ===== */
-.edit-icon, .delete-icon {
+.edit-icon {
+  width: 18px;
+  height: 18px;
   cursor: pointer;
-  transition: transform 0.2s;
   vertical-align: middle;
+  transition: transform 0.2s;
+}
+
+.delete-icon {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  vertical-align: middle;
+  margin-left: 6px;
+  transition: transform 0.2s;
 }
 
 .edit-icon:hover, .delete-icon:hover {
@@ -159,6 +167,18 @@
 #saveChanges.active {
   background: #4a90e2;
   cursor: pointer;
+}
+
+/* ===== DROPDOWN SIDEBAR ===== */
+.sidebar-group .sidebar-submenu {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  margin-left: 10px;
+}
+
+.sidebar-group.open .sidebar-submenu {
+  display: flex;
 }
 
 /* ===== RESPONSIV ===== */
