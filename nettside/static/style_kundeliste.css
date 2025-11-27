@@ -185,7 +185,8 @@
 .popup-overlay {
   position: fixed;
   top: 0; left: 0;
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   background: rgba(0,0,0,0.5);
   display: none;
   justify-content: center;
@@ -196,17 +197,16 @@
 /* ===== POPUP BOX ===== */
 .popup-box {
   background: #fff;
-  width: 600px; /* bredere popup */
+  width: 600px;
   max-width: 95%;
   padding: 25px 30px;
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-  position: relative;
-  max-height: 90vh; /* maks høyde */
-  overflow-y: auto; /* scroll hvis nødvendig, men ikke for små skjermer */
+  max-height: 85vh;
+  overflow-y: auto;
 }
 
 /* ===== POPUP FELT ===== */
@@ -234,12 +234,12 @@
   box-shadow: 0 0 5px rgba(74,144,226,0.5);
 }
 
-/* ===== KNAPPER ===== */
+/* ===== POPUP KNAPPER ===== */
 .popup-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: auto; /* skyver knappene til bunnen */
 }
 
 #saveChanges {
@@ -269,13 +269,71 @@
   transition: 0.2s;
 }
 
-/* Flex container for lagre og avbryt */
 .popup-actions button {
   flex: 0 0 auto;
 }
 
-/* Responsive for mindre skjermer */
-@media (max-width: 700px) {
+/* ===== DELETE POPUP ===== */
+#deletePopup .popup-box {
+  width: 420px;
+  max-width: 92%;
+  padding: 20px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  font-family: inherit;
+  color: #222;
+  text-align: center;
+  transform-origin: center;
+}
+
+#deletePopup .popup-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  width: 100%;
+}
+
+#deletePopup .popup-buttons button {
+  flex: 1 1 0;
+  max-width: 170px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.12s;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+}
+
+#deletePopup .popup-buttons .cancel-delete {
+  background: #e04b4b;
+  color: #fff;
+}
+
+#deletePopup .popup-buttons .delete-confirm {
+  background: #ccc;
+  color: #000;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 20px 15px;
+  }
+  .search-container {
+    flex-direction: column;
+  }
+  .new-btn {
+    width: 100%;
+  }
+  .table-card {
+    padding: 20px;
+  }
   .popup-box {
     width: 95%;
     padding: 20px;
