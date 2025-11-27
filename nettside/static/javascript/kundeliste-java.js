@@ -9,18 +9,18 @@ document.addEventListener("DOMContentLoaded", function() {
   const addEmailBtn = document.getElementById('addEmail');
 
   // AKTIVER SEND KNAPP HVIS MINST EN CHECKED
-  checkboxes.forEach(box => {
-    box.addEventListener('change', () => {
-      const anyChecked = Array.from(checkboxes).some(b => b.checked);
-      if(anyChecked){
-        sendBtn.classList.add('active');
-        sendBtn.disabled = false;
-      } else {
-        sendBtn.classList.remove('active');
-        sendBtn.disabled = true;
-      }
-    });
-  });
+  function updateSendBtn() {
+    const anyChecked = Array.from(checkboxes).some(b => b.checked);
+    if(anyChecked){
+      sendBtn.classList.add('active');
+      sendBtn.disabled = false;
+    } else {
+      sendBtn.classList.remove('active');
+      sendBtn.disabled = true;
+    }
+  }
+
+  checkboxes.forEach(box => box.addEventListener('change', updateSendBtn));
 
   // ÅPNE POPUP
   sendBtn.addEventListener('click', () => {
