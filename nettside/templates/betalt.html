@@ -23,13 +23,13 @@
       <div class="sidebar-group open">
         <button class="sidebar-toggle" type="button">📄 Faktura <i>›</i></button>
         <div class="sidebar-submenu">
-          <a href="{{ url_for('services.lagret_fakturaer') }}">Ubetalte</a>
-          <a href="{{ url_for('services.sendte') }}">Sendte</a>
-          <a href="{{ url_for('services.betalt') }}" class="active">Betalt</a>
+          <a href="{{ url_for('faktura.lagret_fakturaer') }}">Ubetalte</a>
+          <a href="{{ url_for('faktura.sendte') }}">Sendte</a>
+          <a href="{{ url_for('faktura.betalt') }}" class="active">Betalt</a>
         </div>
       </div>
 
-      <a class="sidebar-link" href="{{ url_for('services.kundeliste') }}">👥 Kunder</a>
+      <a class="sidebar-link" href="{{ url_for('kunde.kundeliste') }}">👥 Kunder</a>
       <a class="sidebar-link" href="#">📦 Produkter</a>
       <a class="sidebar-link" href="#">📊 Rapporter</a>
       <a class="sidebar-link" href="#">💲 Transaksjoner</a>
