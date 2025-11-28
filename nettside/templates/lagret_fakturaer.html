@@ -17,19 +17,16 @@
       <h2 class="brand">InvoicePro</h2>
       <span class="brand-sub">Dashboard</span>
     </div>
-
     <nav class="sidebar-nav">
       <a class="sidebar-link" href="{{ url_for('tjenester') }}">➕ Ny faktura</a>
-
       <div class="sidebar-group">
-        <button class="sidebar-toggle">📄 Faktura</button>
+        <button class="sidebar-toggle dropdown-btn">📄 Faktura <i>›</i></button>
         <div class="sidebar-submenu">
           <a href="{{ url_for('lagret_fakturaer') }}" class="active">Ubetalte</a>
           <a href="{{ url_for('sendte') }}">Sendte</a>
           <a href="{{ url_for('betalt') }}">Betalt</a>
         </div>
       </div>
-
       <a class="sidebar-link" href="{{ url_for('kundeliste') }}">👥 Kunder</a>
       <a class="sidebar-link" href="#">📦 Produkter</a>
       <a class="sidebar-link" href="#">📊 Rapporter</a>
@@ -39,79 +36,63 @@
 
   <!-- MAIN CONTENT -->
   <div class="main-content">
-    <h1 class="page-title">Dine lagrede fakturaer</h1>
 
-    <!-- TOP CONTROLS (Search + Sort + Send button) -->
-    <div class="top-controls">
-      <div class="search-wrapper">
-        <input type="text" id="invoiceSearch" placeholder="Søk etter filnavn...">
-        <span class="search-icon">🔍</span>
-      </div>
-
+    <div class="top-actions">
+      <input type="text" id="searchInput" placeholder="Søk etter faktura..." class="search-bar">
       <select id="sortSelect" class="sort-select">
-        <option value="nameAsc">Navn (A–Å)</option>
-        <option value="dateNew">Dato (Nyeste først)</option>
-        <option value="dateOld">Dato (Eldste først)</option>
+        <option value="dato_desc">Nyeste først</option>
+        <option value="dato_asc">Eldste først</option>
+        <option value="navn_asc">Navn A → Å</option>
+        <option value="navn_desc">Navn Å → A</option>
       </select>
-
       <button id="sendSelected" class="send-btn" disabled>✉ Send valgte</button>
     </div>
 
-    <!-- FACTURA GRID -->
-    <div class="invoice-grid" id="invoiceGrid">
-      {% for f in fakturaer %}
-      <label class="invoice-card"
-             data-name="{{ f.filnavn | lower }}"
-             data-date="{{ f.dato.timestamp() }}"
-             data-id="{{ f.id }}">
-        
-        <input type="checkbox" name="faktura" value="{{ f.id }}">
-
-        <div class="invoice-content">
-          <div class="invoice-icon">📄</div>
-
-          <div class="invoice-info">
-            <h3>{{ f.filnavn }}</h3>
-            <p>Opprettet: {{ f.dato.strftime("%d.%m.%Y") }}</p>
+    <div class="faktura-container" id="fakturaContainer">
+      {% if fakturaer %}
+        {% for f in fakturaer %}
+        <div class="faktura-box" data-dato="{{ f.dato.strftime('%Y-%m-%d') }}" data-navn="{{ f.filnavn }}">
+          <label>
+            <input type="checkbox" name="faktura" value="{{ f.id }}">
+            <span class="faktura-info">{{ f.filnavn }} – Opprettet: {{ f.dato.strftime("%d.%m.%Y") }}</span>
+          </label>
+          <div class="faktura-actions">
+            <button class="preview-btn" data-file="{{ f.filnavn }}">👁 Preview</button>
+            <button class="download-btn" data-file="{{ f.filnavn }}">⬇</button>
           </div>
         </div>
-
-        <!-- PDF PREVIEW -->
-        <div class="invoice-preview">
-          <span>PDF Preview</span>
-        </div>
-
-      </label>
-      {% endfor %}
+        {% endfor %}
+      {% else %}
+        <p class="empty-message">Ingen lagrede fakturaer.</p>
+      {% endif %}
     </div>
 
-    {% if fakturaer|length == 0 %}
-    <div class="empty-state">
-      <div class="empty-icon">📭</div>
-      <p>Ingen lagrede fakturaer.</p>
-    </div>
-    {% endif %}
   </div>
+
 </div>
 
 <!-- SEND POPUP -->
 <div class="popup-overlay" id="sendPopup">
   <div class="popup-box">
     <h2>Send fakturaer</h2>
-
     <div id="emailContainer">
       <div class="email-field">
-        <input type="email" placeholder="Skriv inn e-post" class="email-input">
+        <input type="email" placeholder="Skriv inn epost" class="email-input">
       </div>
     </div>
-
     <button type="button" id="addEmail" class="add-email-btn">+ Legg til flere</button>
-
-    <div class="popup-actions">
+    <div class="popup-buttons">
       <button type="button" id="cancelSend" class="cancel-btn">Avbryt</button>
       <button type="button" id="confirmSend" class="confirm-btn" disabled>Send</button>
     </div>
+  </div>
+</div>
 
+<!-- PDF PREVIEW POPUP -->
+<div class="popup-overlay" id="previewPopup">
+  <div class="popup-box pdf-popup">
+    <iframe id="pdfViewer" src="" frameborder="0"></iframe>
+    <button type="button" id="closePreview" class="cancel-btn">Lukk</button>
   </div>
 </div>
 {% endblock %}
