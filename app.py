@@ -1,7 +1,6 @@
 from flask import Flask
-from system.extensions import db, bcrypt, migrate
 from system.config import Config
-
+from system.extensions import db, bcrypt, migrate
 from system.auth import auth_bp
 from system.services import services_bp
 from system.invoice import faktura_bp
@@ -9,13 +8,17 @@ from system.password_reset import password_reset_bp
 from system.kunde import kunde_bp
 
 # -------------------------------
-# FLASK APP INIT
+# OPPRETT FLASK APP
 # -------------------------------
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder="nettside/templates",
+    static_folder="nettside/static"
+)
 app.config.from_object(Config)
 
 # -------------------------------
-# REGISTER EXTENSIONS
+# INIT EXTENSIONS
 # -------------------------------
 db.init_app(app)
 bcrypt.init_app(app)
@@ -31,7 +34,15 @@ app.register_blueprint(password_reset_bp)
 app.register_blueprint(kunde_bp)
 
 # -------------------------------
-# RUN APP
+# ROOT ROUTE
+# -------------------------------
+@app.route("/")
+def index():
+    from flask import render_template
+    return render_template("index.html")
+
+# -------------------------------
+# KJØR APP LOKALT
 # -------------------------------
 if __name__ == "__main__":
     app.run(debug=True)
