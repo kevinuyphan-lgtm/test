@@ -1,71 +1,4 @@
-/* ===== SIDEBAR (KONSISTENT PÅ ALLE SIDER) ===== */
-
-.sidebar {
-  width: 260px;
-  background-color: #2c3e50;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.sidebar-header {
-  padding: 20px;
-  text-align: center;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.sidebar-header .brand {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-.sidebar-header .brand-sub {
-  font-size: 12px;
-  color: rgba(255,255,255,0.6);
-}
-
-.sidebar-nav {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar-link, .sidebar-toggle {
-  display: flex;
-  align-items: center;
-  padding: 12px 20px;
-  color: #ecf0f1;
-  text-decoration: none;
-  font-size: 14px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  justify-content: space-between;
-}
-
-.sidebar-link:hover, .sidebar-toggle:hover {
-  background-color: rgba(255,255,255,0.08);
-}
-
-.sidebar-link.active, .sidebar-toggle.active {
-  background-color: #1abc9c;
-  color: #fff;
-}
-
-.sidebar-submenu {
-  display: none;
-  flex-direction: column;
-  padding-left: 10px;
-}
-
-.sidebar-group.open .sidebar-submenu {
-  display: flex;
-}
-
 /* ===== PAGE LAYOUT ===== */
-
 .layout {
   display: flex;
   min-height: 100vh;
@@ -270,7 +203,6 @@
   background: #c0392b;
 }
 
-/* Flex container for lagre og avbryt */
 .popup-actions button {
   flex: 0 0 auto;
 }
