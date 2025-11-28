@@ -11,49 +11,47 @@
 {% block body %}
 <div class="layout">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <h2 class="brand">InvoicePro</h2>
-      <span class="brand-sub">Dashboard</span>
-    </div>
-    <nav class="sidebar-nav">
-      <a class="sidebar-link" href="{{ url_for('tjenester') }}">➕ Ny faktura</a>
-      <div class="sidebar-group">
-        <button class="sidebar-toggle dropdown-btn">📄 Faktura <i>›</i></button>
-        <div class="sidebar-submenu">
-          <a href="{{ url_for('lagret_fakturaer') }}" class="active">Ubetalte</a>
-          <a href="{{ url_for('sendte') }}">Sendte</a>
-          <a href="{{ url_for('betalt') }}">Betalt</a>
-        </div>
-      </div>
-      <a class="sidebar-link" href="{{ url_for('kundeliste') }}">👥 Kunder</a>
-      <a class="sidebar-link" href="#">📦 Produkter</a>
-      <a class="sidebar-link" href="#">📊 Rapporter</a>
-      <a class="sidebar-link" href="#">💲 Transaksjoner</a>
-    </nav>
-  </aside>
+  <!-- SIDEBAR (urørt) -->
+  {{ super() }}
 
   <!-- MAIN CONTENT -->
   <div class="main-content">
-    <h1 class="page-title">Dine lagrede fakturaer</h1>
 
-    <div class="faktura-container">
+    <header class="page-header">
+      <h1>Dine lagrede fakturaer</h1>
+      <p class="subtitle">Velg fakturaene du ønsker å sende</p>
+    </header>
+
+    <section class="invoice-section">
+
       {% if fakturaer %}
+      <div class="invoice-grid">
         {% for f in fakturaer %}
-        <div class="faktura-box">
-          <label>
-            <input type="checkbox" name="faktura" value="{{ f.id }}">
-            <span class="faktura-info">{{ f.filnavn }} – Opprettet: {{ f.dato.strftime("%d.%m.%Y") }}</span>
-          </label>
-        </div>
+        <label class="invoice-card">
+          <input type="checkbox" name="faktura" value="{{ f.id }}">
+          <div class="invoice-content">
+            <div class="invoice-icon">📄</div>
+            <div class="invoice-info">
+              <h3>{{ f.filnavn }}</h3>
+              <p>Opprettet: {{ f.dato.strftime("%d.%m.%Y") }}</p>
+            </div>
+          </div>
+        </label>
         {% endfor %}
-      {% else %}
-        <p class="empty-message">Ingen lagrede fakturaer.</p>
-      {% endif %}
-    </div>
+      </div>
 
-    <button id="sendSelected" class="send-btn" disabled>✉ Send valgte fakturaer</button>
+      {% else %}
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <p>Ingen lagrede fakturaer enda.</p>
+        </div>
+      {% endif %}
+
+      <button id="sendSelected" class="send-btn" disabled>
+        ✉ Send valgte fakturaer
+      </button>
+
+    </section>
   </div>
 
 </div>
@@ -61,17 +59,24 @@
 <!-- SEND POPUP -->
 <div class="popup-overlay" id="sendPopup">
   <div class="popup-box">
+
     <h2>Send fakturaer</h2>
+    <p class="popup-description">Mottaker(e) vil få fakturaene som PDF-vedlegg.</p>
+
     <div id="emailContainer">
       <div class="email-field">
-        <input type="email" placeholder="Skriv inn epost" class="email-input">
+        <input type="email" placeholder="Skriv inn e-postadresse" class="email-input">
       </div>
     </div>
-    <button type="button" id="addEmail" class="add-email-btn">+ Legg til flere</button>
+
+    <button type="button" id="addEmail" class="add-email-btn">+ Legg til flere mottakere</button>
+
     <div class="popup-actions">
       <button type="button" id="cancelSend" class="cancel-btn">Avbryt</button>
       <button type="button" id="confirmSend" class="confirm-btn" disabled>Send</button>
     </div>
+
   </div>
 </div>
+
 {% endblock %}
