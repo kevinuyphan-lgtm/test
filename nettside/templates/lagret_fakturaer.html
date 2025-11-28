@@ -11,65 +11,101 @@
 {% block body %}
 <div class="layout">
 
-  <!-- SIDEBAR (urørt) -->
-  {{ super() }}
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="brand">InvoicePro</h2>
+      <span class="brand-sub">Dashboard</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="sidebar-link" href="{{ url_for('tjenester') }}">➕ Ny faktura</a>
+
+      <div class="sidebar-group">
+        <button class="sidebar-toggle">📄 Faktura</button>
+        <div class="sidebar-submenu">
+          <a href="{{ url_for('lagret_fakturaer') }}" class="active">Ubetalte</a>
+          <a href="{{ url_for('sendte') }}">Sendte</a>
+          <a href="{{ url_for('betalt') }}">Betalt</a>
+        </div>
+      </div>
+
+      <a class="sidebar-link" href="{{ url_for('kundeliste') }}">👥 Kunder</a>
+      <a class="sidebar-link" href="#">📦 Produkter</a>
+      <a class="sidebar-link" href="#">📊 Rapporter</a>
+      <a class="sidebar-link" href="#">💲 Transaksjoner</a>
+    </nav>
+  </aside>
 
   <!-- MAIN CONTENT -->
   <div class="main-content">
+    <h1 class="page-title">Dine lagrede fakturaer</h1>
 
-    <header class="page-header">
-      <h1>Dine lagrede fakturaer</h1>
-      <p class="subtitle">Velg fakturaene du ønsker å sende</p>
-    </header>
-
-    <section class="invoice-section">
-
-      {% if fakturaer %}
-      <div class="invoice-grid">
-        {% for f in fakturaer %}
-        <label class="invoice-card">
-          <input type="checkbox" name="faktura" value="{{ f.id }}">
-          <div class="invoice-content">
-            <div class="invoice-icon">📄</div>
-            <div class="invoice-info">
-              <h3>{{ f.filnavn }}</h3>
-              <p>Opprettet: {{ f.dato.strftime("%d.%m.%Y") }}</p>
-            </div>
-          </div>
-        </label>
-        {% endfor %}
+    <!-- TOP CONTROLS (Search + Sort + Send button) -->
+    <div class="top-controls">
+      <div class="search-wrapper">
+        <input type="text" id="invoiceSearch" placeholder="Søk etter filnavn...">
+        <span class="search-icon">🔍</span>
       </div>
 
-      {% else %}
-        <div class="empty-state">
-          <div class="empty-icon">📭</div>
-          <p>Ingen lagrede fakturaer enda.</p>
+      <select id="sortSelect" class="sort-select">
+        <option value="nameAsc">Navn (A–Å)</option>
+        <option value="dateNew">Dato (Nyeste først)</option>
+        <option value="dateOld">Dato (Eldste først)</option>
+      </select>
+
+      <button id="sendSelected" class="send-btn" disabled>✉ Send valgte</button>
+    </div>
+
+    <!-- FACTURA GRID -->
+    <div class="invoice-grid" id="invoiceGrid">
+      {% for f in fakturaer %}
+      <label class="invoice-card"
+             data-name="{{ f.filnavn | lower }}"
+             data-date="{{ f.dato.timestamp() }}"
+             data-id="{{ f.id }}">
+        
+        <input type="checkbox" name="faktura" value="{{ f.id }}">
+
+        <div class="invoice-content">
+          <div class="invoice-icon">📄</div>
+
+          <div class="invoice-info">
+            <h3>{{ f.filnavn }}</h3>
+            <p>Opprettet: {{ f.dato.strftime("%d.%m.%Y") }}</p>
+          </div>
         </div>
-      {% endif %}
 
-      <button id="sendSelected" class="send-btn" disabled>
-        ✉ Send valgte fakturaer
-      </button>
+        <!-- PDF PREVIEW -->
+        <div class="invoice-preview">
+          <span>PDF Preview</span>
+        </div>
 
-    </section>
+      </label>
+      {% endfor %}
+    </div>
+
+    {% if fakturaer|length == 0 %}
+    <div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <p>Ingen lagrede fakturaer.</p>
+    </div>
+    {% endif %}
   </div>
-
 </div>
 
 <!-- SEND POPUP -->
 <div class="popup-overlay" id="sendPopup">
   <div class="popup-box">
-
     <h2>Send fakturaer</h2>
-    <p class="popup-description">Mottaker(e) vil få fakturaene som PDF-vedlegg.</p>
 
     <div id="emailContainer">
       <div class="email-field">
-        <input type="email" placeholder="Skriv inn e-postadresse" class="email-input">
+        <input type="email" placeholder="Skriv inn e-post" class="email-input">
       </div>
     </div>
 
-    <button type="button" id="addEmail" class="add-email-btn">+ Legg til flere mottakere</button>
+    <button type="button" id="addEmail" class="add-email-btn">+ Legg til flere</button>
 
     <div class="popup-actions">
       <button type="button" id="cancelSend" class="cancel-btn">Avbryt</button>
@@ -78,5 +114,4 @@
 
   </div>
 </div>
-
 {% endblock %}
