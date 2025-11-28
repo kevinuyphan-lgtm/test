@@ -234,6 +234,14 @@ def lagret_fakturaer():
     fakturaer = Faktura.query.filter_by(user_id=user.id, status="utkast").all()
     return render_template("lagret_fakturaer.html", fakturaer=fakturaer)
 
+@app.route("/faktura/<filename>")
+def serve_faktura(filename):
+    user = current_user()
+    if not user:
+        return redirect(url_for("login"))
+    user_folder = os.path.join(PDF_FOLDER, f"user_{user.id}")
+    return send_from_directory(user_folder, filename)
+
 @app.route("/sendte")
 def sendte():
     user = current_user()
@@ -299,6 +307,44 @@ def download_faktura(faktura_id):
         return redirect(url_for("tjenester"))
     user_folder = os.path.join(PDF_FOLDER, f"user_{user.id}")
     return send_from_directory(user_folder, faktura.filnavn, as_attachment=True)
+
+@app.route("/send-faktura-ajax", methods=["POST"])
+def send_faktura_ajax():
+    user = current_user()
+    if not user:
+        return jsonify({"success": False}), 401
+
+    data = request.get_json()
+    faktura_ids = data.get("faktura_ids", [])
+    emails = data.get("emails", [])
+
+    sent_files = []
+    for fid in faktura_ids:
+        f = Faktura.query.get(fid)
+        if f and f.user_id == user.id:
+            user_folder = os.path.join(PDF_FOLDER, f"user_{user.id}")
+            filepath = os.path.join(user_folder, f.filnavn)
+            if os.path.exists(filepath):
+                # TODO: send mail med vedlegg
+                send_email(
+                    subject=f"Faktura {f.filnavn}",
+                    to_email=", ".join(emails),
+                    html_content=f"<p>Hei! Her er faktura {f.filnavn}</p>",
+                    attachments=[filepath]
+                )
+                f.status = "sendt"
+                sent_files.append(f.filnavn)
+    db.session.commit()
+    return jsonify({"success": True, "sent": sent_files})
+
+@app.route("/download/<filename>")
+def download_faktura(filename):
+    user = current_user()
+    if not user:
+        return redirect(url_for("login"))
+    user_folder = os.path.join(PDF_FOLDER, f"user_{user.id}")
+    return send_from_directory(user_folder, filename, as_attachment=True)
+
 
 # -------------------------------
 # AJAX-RUTER FOR KUNDER
