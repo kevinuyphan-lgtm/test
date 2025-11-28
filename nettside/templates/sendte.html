@@ -13,20 +13,20 @@
   <ul class="sidebar-links">
 
     <li class="sidebar-item">
-      <a class="dropdown-btn" href="{{ url_for('tjenester') }}">+ Ny faktura</a>
+      <a class="dropdown-btn" href="{{ url_for('services.tjenester') }}">+ Ny faktura</a>
     </li>
 
     <li class="sidebar-item open">
       <button class="dropdown-btn active">📄 Faktura</button>
       <div class="dropdown-content" style="display: flex;">
-        <a href="{{ url_for('lagret_fakturaer') }}">Ubetalte</a>
-        <a href="{{ url_for('sendte') }}" class="active">Sendte</a>
-        <a href="{{ url_for('betalt') }}">Betalt</a>
+        <a href="{{ url_for('faktura.lagret_fakturaer') }}">Ubetalte</a>
+        <a href="{{ url_for('faktura.sendte') }}" class="active">Sendte</a>
+        <a href="{{ url_for('faktura.betalt') }}">Betalt</a>
       </div>
     </li>
 
     <li class="sidebar-item">
-      <a class="dropdown-btn" href="{{ url_for('kundeliste') }}">👥 Kunder</a>
+      <a class="dropdown-btn" href="{{ url_for('kunde.kundeliste') }}">👥 Kunder</a>
     </li>
 
     <li><a href="#">📦 Produkter</a></li>
