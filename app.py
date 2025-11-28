@@ -2,13 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
-from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
+from itsdangerous import URLSafeTimedSerializer
 from datetime import datetime, timedelta
 import os
 from generate_pdf import generate_invoice_pdf
 from mail.utils import generate_reset_token, verify_reset_token
 from mail.mailer import send_email
-
 
 # -------------------------------
 # BASE PATHS
@@ -39,7 +38,6 @@ if db_url:
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 else:
     db_url = f"sqlite:///{os.path.join(INSTANCE_PATH, 'fakturaer.db')}"
-
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -75,8 +73,8 @@ class Kunde(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('bruker.id'), nullable=False)
     firmanavn = db.Column(db.String(150))
     land = db.Column(db.String(50))
-    test = db.Column(db.String(100))  # <- ny kolonne
-    test67 = db.Column(db.String(100))  # <- ny kolonne
+    test = db.Column(db.String(100))
+    test67 = db.Column(db.String(100))
 
 class Faktura(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -138,9 +136,8 @@ def login():
             session['user_id'] = user.id
             flash("Velkommen tilbake!", "success")
             return redirect(url_for("tjenester"))
-        else:
-            flash("Feil epost eller passord", "error")
-            return redirect(url_for("login"))
+        flash("Feil epost eller passord", "error")
+        return redirect(url_for("login"))
     return render_template("login.html")
 
 @app.route("/logout")
@@ -223,7 +220,7 @@ def generate_invoice():
     return send_file(pdf_buffer, as_attachment=True, download_name=filename)
 
 # -------------------------------
-# Resterende ruter
+# ROUTES: FACTURA MANAGEMENT
 # -------------------------------
 @app.route("/lagret_fakturaer")
 def lagret_fakturaer():
@@ -236,21 +233,53 @@ def lagret_fakturaer():
 
 @app.route("/faktura/<filename>")
 def serve_faktura(filename):
+    """PDF preview"""
     user = current_user()
     if not user:
         return redirect(url_for("login"))
     user_folder = os.path.join(PDF_FOLDER, f"user_{user.id}")
     return send_from_directory(user_folder, filename)
 
-@app.route("/sendte")
-def sendte():
+@app.route("/send-faktura-ajax", methods=["POST"])
+def send_faktura_ajax():
+    """Send faktura via AJAX"""
     user = current_user()
     if not user:
-        flash("Du må logge inn for å se sendte fakturaer", "error")
-        return redirect(url_for("login"))
-    fakturaer = Faktura.query.filter_by(user_id=user.id, status="sendt").all()
-    return render_template("sendte.html", fakturaer=fakturaer)
+        return jsonify({"success": False}), 401
 
+    data = request.get_json()
+    faktura_ids = data.get("faktura_ids", [])
+    emails = data.get("emails", [])
+
+    sent_files = []
+    for fid in faktura_ids:
+        f = Faktura.query.get(fid)
+        if f and f.user_id == user.id:
+            user_folder = os.path.join(PDF_FOLDER, f"user_{user.id}")
+            filepath = os.path.join(user_folder, f.filnavn)
+            if os.path.exists(filepath):
+                send_email(
+                    subject=f"Faktura {f.filnavn}",
+                    to_email=", ".join(emails),
+                    html_content=f"<p>Hei! Her er faktura {f.filnavn}</p>",
+                    attachments=[filepath]
+                )
+                f.status = "sendt"
+                sent_files.append(f.filnavn)
+    db.session.commit()
+    return jsonify({"success": True, "sent": sent_files})
+
+@app.route("/download/<filename>")
+def download_faktura(filename):
+    user = current_user()
+    if not user:
+        return redirect(url_for("login"))
+    user_folder = os.path.join(PDF_FOLDER, f"user_{user.id}")
+    return send_from_directory(user_folder, filename, as_attachment=True)
+
+# -------------------------------
+# SEND / MARK BETALT ROUTES
+# -------------------------------
 @app.route("/send-faktura/<int:faktura_id>")
 def send_faktura(faktura_id):
     user = current_user()
@@ -280,14 +309,14 @@ def mark_betalt(faktura_id):
     flash("Faktura markert som BETALT ✅", "success")
     return redirect(url_for("sendte"))
 
-@app.route("/kundeliste")
-def kundeliste():
+@app.route("/sendte")
+def sendte():
     user = current_user()
     if not user:
-        flash("Du må være logget inn for å se kundelisten.", "error")
+        flash("Du må logge inn for å se sendte fakturaer", "error")
         return redirect(url_for("login"))
-    kunder = Kunde.query.filter_by(user_id=user.id).all()
-    return render_template("kundeliste.html", kunder=kunder)
+    fakturaer = Faktura.query.filter_by(user_id=user.id, status="sendt").all()
+    return render_template("sendte.html", fakturaer=fakturaer)
 
 @app.route("/betalt")
 def betalt():
@@ -298,67 +327,26 @@ def betalt():
     fakturaer = Faktura.query.filter_by(user_id=user.id, status="betalt").all()
     return render_template("betalt.html", fakturaer=fakturaer)
 
-@app.route("/download/<int:faktura_id>")
-def download_faktura(faktura_id):
-    faktura = Faktura.query.get_or_404(faktura_id)
-    user = current_user()
-    if not user or faktura.user_id != user.id:
-        flash("Du har ikke tilgang til denne filen", "error")
-        return redirect(url_for("tjenester"))
-    user_folder = os.path.join(PDF_FOLDER, f"user_{user.id}")
-    return send_from_directory(user_folder, faktura.filnavn, as_attachment=True)
-
-@app.route("/send-faktura-ajax", methods=["POST"])
-def send_faktura_ajax():
+# -------------------------------
+# ROUTES: KUNDER AJAX
+# -------------------------------
+@app.route("/kundeliste")
+def kundeliste():
     user = current_user()
     if not user:
-        return jsonify({"success": False}), 401
-
-    data = request.get_json()
-    faktura_ids = data.get("faktura_ids", [])
-    emails = data.get("emails", [])
-
-    sent_files = []
-    for fid in faktura_ids:
-        f = Faktura.query.get(fid)
-        if f and f.user_id == user.id:
-            user_folder = os.path.join(PDF_FOLDER, f"user_{user.id}")
-            filepath = os.path.join(user_folder, f.filnavn)
-            if os.path.exists(filepath):
-                # TODO: send mail med vedlegg
-                send_email(
-                    subject=f"Faktura {f.filnavn}",
-                    to_email=", ".join(emails),
-                    html_content=f"<p>Hei! Her er faktura {f.filnavn}</p>",
-                    attachments=[filepath]
-                )
-                f.status = "sendt"
-                sent_files.append(f.filnavn)
-    db.session.commit()
-    return jsonify({"success": True, "sent": sent_files})
-
-@app.route("/download/<filename>")
-def download_faktura(filename):
-    user = current_user()
-    if not user:
+        flash("Du må være logget inn for å se kundelisten.", "error")
         return redirect(url_for("login"))
-    user_folder = os.path.join(PDF_FOLDER, f"user_{user.id}")
-    return send_from_directory(user_folder, filename, as_attachment=True)
+    kunder = Kunde.query.filter_by(user_id=user.id).all()
+    return render_template("kundeliste.html", kunder=kunder)
 
-
-# -------------------------------
-# AJAX-RUTER FOR KUNDER
-# -------------------------------
 @app.route("/update-kunde/<int:kunde_id>", methods=["POST"], endpoint="update_kunde")
 def update_kunde(kunde_id):
     user = current_user()
     if not user:
         return jsonify({"success": False, "message": "Du må være logget inn"}), 401
-
     kunde = Kunde.query.get_or_404(kunde_id)
     if kunde.user_id != user.id:
         return jsonify({"success": False, "message": "Ingen tilgang"}), 403
-
     data = request.get_json()
     try:
         kunde.navn = data.get("navn", kunde.navn)
@@ -369,20 +357,11 @@ def update_kunde(kunde_id):
         kunde.telefon = data.get("telefon", kunde.telefon)
         kunde.epost = data.get("epost", kunde.epost)
         db.session.commit()
-
-        return jsonify({
-            "success": True,
-            "kunde": {
-                "id": kunde.id,
-                "navn": kunde.navn,
-                "firma": kunde.firmanavn,
-                "adresse": kunde.adresse,
-                "orgnr": kunde.orgnr,
-                "referanse": kunde.referanse,
-                "telefon": kunde.telefon,
-                "epost": kunde.epost
-            }
-        })
+        return jsonify({"success": True, "kunde": {
+            "id": kunde.id, "navn": kunde.navn, "firma": kunde.firmanavn,
+            "adresse": kunde.adresse, "orgnr": kunde.orgnr, "referanse": kunde.referanse,
+            "telefon": kunde.telefon, "epost": kunde.epost
+        }})
     except Exception as e:
         db.session.rollback()
         return jsonify({"success": False, "message": str(e)}), 500
@@ -392,35 +371,21 @@ def add_kunde():
     user = current_user()
     if not user:
         return jsonify({"success": False, "message": "Du må være logget inn"}), 401
-
     data = request.get_json()
     try:
         ny_kunde = Kunde(
-            navn=data.get("navn", ""),
-            firmanavn=data.get("firma", ""),
-            adresse=data.get("adresse", ""),
-            orgnr=data.get("orgnr", ""),
-            referanse=data.get("referanse", ""),
-            telefon=data.get("telefon", ""),
-            epost=data.get("epost", ""),
-            user_id=user.id
+            navn=data.get("navn", ""), firmanavn=data.get("firma", ""),
+            adresse=data.get("adresse", ""), orgnr=data.get("orgnr", ""),
+            referanse=data.get("referanse", ""), telefon=data.get("telefon", ""),
+            epost=data.get("epost", ""), user_id=user.id
         )
         db.session.add(ny_kunde)
         db.session.commit()
-
-        return jsonify({
-            "success": True,
-            "kunde": {
-                "id": ny_kunde.id,
-                "navn": ny_kunde.navn,
-                "firma": ny_kunde.firmanavn,
-                "adresse": ny_kunde.adresse,
-                "orgnr": ny_kunde.orgnr,
-                "referanse": ny_kunde.referanse,
-                "telefon": ny_kunde.telefon,
-                "epost": ny_kunde.epost
-            }
-        })
+        return jsonify({"success": True, "kunde": {
+            "id": ny_kunde.id, "navn": ny_kunde.navn, "firma": ny_kunde.firmanavn,
+            "adresse": ny_kunde.adresse, "orgnr": ny_kunde.orgnr, "referanse": ny_kunde.referanse,
+            "telefon": ny_kunde.telefon, "epost": ny_kunde.epost
+        }})
     except Exception as e:
         db.session.rollback()
         return jsonify({"success": False, "message": str(e)}), 500
@@ -435,12 +400,8 @@ def delete_kunde(kunde_id):
         db.session.commit()
         return jsonify({"success": True, "message": "Kunde slettet."})
     except Exception as e:
-        print("Feil under sletting:", e)
         return jsonify({"success": False, "message": "En feil oppstod under sletting."}), 500
 
-# -------------------------------
-# PASSWORD RESET
-# -------------------------------
 # -------------------------------
 # PASSWORD RESET
 # -------------------------------
@@ -449,65 +410,41 @@ def forgot_password():
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()
         user = Bruker.query.filter_by(email=email).first()
-
         flash("Hvis e-posten finnes, har vi sendt en reset-link.", "info")
-
         if user:
             token = generate_reset_token(user.email)
             reset_link = url_for("reset_with_token", token=token, _external=True)
-
-            app.logger.info(f"[DEBUG] Reset-link for {user.email}: {reset_link}")
-
             html = f"""
                 <p>Hei {user.navn},</p>
                 <p>Klikk lenken under for å tilbakestille passordet ditt:</p>
                 <p><a href="{reset_link}">{reset_link}</a></p>
                 <p>Lenken er gyldig i 1 time.</p>
             """
-
-            send_email(
-                subject="Tilbakestill passord",
-                to_email=user.email,
-                html_content=html
-            )
-
+            send_email(subject="Tilbakestill passord", to_email=user.email, html_content=html)
         return redirect(url_for("login"))
-
     return render_template("forgot_password.html")
-
 
 @app.route("/reset/<token>", methods=["GET", "POST"])
 def reset_with_token(token):
     email = verify_reset_token(token)
-
     if not email:
         flash("Ugyldig eller utløpt token.", "error")
         return redirect(url_for("forgot_password"))
-
     user = Bruker.query.filter_by(email=email).first()
-
     if not user:
         flash("Bruker ikke funnet.", "error")
         return redirect(url_for("forgot_password"))
-
     if request.method == "POST":
         pw = request.form.get("password")
         pw2 = request.form.get("confirm_password")
-
         if not pw or pw != pw2:
             flash("Passordene må være like.", "error")
             return render_template("reset_password.html", token=token)
-
         user.password_hash = bcrypt.generate_password_hash(pw).decode("utf-8")
         db.session.commit()
-
         flash("Passord oppdatert! Du kan nå logge inn.", "success")
         return redirect(url_for("login"))
-
     return render_template("reset_password.html", token=token)
-
-
-
 
 # -------------------------------
 # KJØR APP LOKALT
