@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
   const sendBtn = document.getElementById("sendSelected");
   const fakturaContainer = document.getElementById("fakturaContainer");
-  const checkboxes = fakturaContainer.querySelectorAll(".faktura-checkbox");
 
   const sendPopup = document.getElementById("sendPopup");
   const cancelSend = document.getElementById("cancelSend");
@@ -21,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
   fakturaContainer.addEventListener("change", updateSendBtn);
   updateSendBtn();
 
+  // === POPUP LOGIKK ===
   sendBtn.addEventListener("click", () => {
     if(sendBtn.disabled) return;
     emailContainer.innerHTML = `<div class="email-field"><input type="email" placeholder="Skriv inn epost" class="email-input"></div>`;
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function() {
     cards.forEach(c => fakturaContainer.appendChild(c));
   });
 
-  // === PDF CLICK TO SELECT ===
+  // === CLICK PDF CARD FOR CHECKBOX ===
   document.querySelectorAll(".pdf-preview-card").forEach(card => {
     card.addEventListener("click", () => {
       const checkbox = card.closest(".faktura-card").querySelector(".faktura-checkbox");
@@ -90,5 +90,4 @@ document.addEventListener("DOMContentLoaded", function() {
       updateSendBtn();
     });
   });
-
 });
