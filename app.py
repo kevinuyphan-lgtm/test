@@ -1,12 +1,14 @@
 from flask import Flask
 from system.extensions import db, bcrypt, serializer, migrate
-from system.config import PDF_FOLDER, ADMIN_EMAILS
+from system.config import Config, PDF_FOLDER
 
-# Importer blueprints fra routes
+# Importer blueprints
 from routes.auth import auth_bp
 from routes.kunde import kunde_bp
 from routes.invoice import faktura_bp
 from routes.password_reset import password_reset_bp
+
+import os
 
 # -------------------------------
 # FLASK APP CONFIG
@@ -16,17 +18,12 @@ app = Flask(
     template_folder="nettside/templates",
     static_folder="nettside/static"
 )
-app.secret_key = "super_secret_key"
+
+# Bruk Config-klassen
+app.config.from_object(Config)
 
 # Opprett PDF-folder hvis ikke eksisterer
-import os
 os.makedirs(PDF_FOLDER, exist_ok=True)
-
-# -------------------------------
-# DATABASE CONFIG
-# -------------------------------
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/fakturaer.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # -------------------------------
 # INIT EXTENSIONS
