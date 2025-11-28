@@ -2,12 +2,6 @@ from flask import Flask
 from system.extensions import db, bcrypt, serializer, migrate
 from system.config import Config, PDF_FOLDER
 
-# Importer blueprints
-from routes.auth import auth_bp
-from routes.kunde import kunde_bp
-from routes.faktura import faktura_bp  # faktura.py bruker nå riktig import
-from routes.password_reset import password_reset_bp
-
 import os
 
 # -------------------------------
@@ -26,6 +20,24 @@ app.config.from_object(Config)
 os.makedirs(PDF_FOLDER, exist_ok=True)
 
 # -------------------------------
+# IMPORT BLUEPRINTS
+# -------------------------------
+# Auth
+from routes.auth import auth_bp
+
+# Kunde
+from routes.kunde import kunde_bp
+
+# Faktura / invoice
+from routes.faktura import faktura_bp
+
+# Services (om-oss, kontakt, tjenester)
+from routes.services import services_bp
+
+# Password reset
+from routes.password_reset import password_bp
+
+# -------------------------------
 # INIT EXTENSIONS
 # -------------------------------
 db.init_app(app)
@@ -38,7 +50,8 @@ migrate.init_app(app, db)
 app.register_blueprint(auth_bp)
 app.register_blueprint(kunde_bp)
 app.register_blueprint(faktura_bp)
-app.register_blueprint(password_reset_bp)
+app.register_blueprint(services_bp)
+app.register_blueprint(password_bp, url_prefix="/password")  # valgfritt prefix
 
 # -------------------------------
 # KJØR APP
