@@ -14,18 +14,6 @@ def current_user():
     return Bruker.query.get(uid) if uid else None
 
 # -------------------------------
-# Tjenester page
-# -------------------------------
-@faktura_bp.route("/tjenester")
-def tjenester():
-    user = current_user()
-    if not user:
-        flash("Du må logge inn for å få tilgang til tjenester", "error")
-        return redirect(url_for("auth.login"))
-    kunder = Kunde.query.filter_by(user_id=user.id).all()
-    return render_template("tjenester.html", kunder=kunder)
-
-# -------------------------------
 # Generate invoice
 # -------------------------------
 @faktura_bp.route("/generate-invoice", methods=["POST"])
@@ -133,7 +121,24 @@ def send_faktura_ajax():
     return jsonify({"success": True, "sent": sent_files})
 
 # -------------------------------
-# Download faktura
+# Send-faktura (vanlig GET)
+# -------------------------------
+@faktura_bp.route("/send-faktura/<int:faktura_id>")
+def send_faktura(faktura_id):
+    user = current_user()
+    if not user:
+        return redirect(url_for("auth.login"))
+    faktura = Faktura.query.get_or_404(faktura_id)
+    if faktura.user_id != user.id:
+        flash("Ingen tilgang!", "error")
+        return redirect(url_for("faktura.lagret_fakturaer"))
+    faktura.status = "sendt"
+    db.session.commit()
+    flash("Faktura markert som SENDT ✉️", "success")
+    return redirect(url_for("faktura.sendte"))
+
+# -------------------------------
+# Download faktura by filename
 # -------------------------------
 @faktura_bp.route("/download/<filename>")
 def download_faktura(filename):
@@ -142,6 +147,19 @@ def download_faktura(filename):
         return redirect(url_for("auth.login"))
     user_folder = os.path.join(Config.PDF_FOLDER, f"user_{user.id}")
     return send_from_directory(user_folder, filename, as_attachment=True)
+
+# -------------------------------
+# Download faktura by ID
+# -------------------------------
+@faktura_bp.route("/download-id/<int:faktura_id>")
+def download_faktura_by_id(faktura_id):
+    faktura = Faktura.query.get_or_404(faktura_id)
+    user = current_user()
+    if not user or faktura.user_id != user.id:
+        flash("Du har ikke tilgang til denne filen", "error")
+        return redirect(url_for("faktura.tjenester"))
+    user_folder = os.path.join(Config.PDF_FOLDER, f"user_{user.id}")
+    return send_from_directory(user_folder, faktura.filnavn, as_attachment=True)
 
 # -------------------------------
 # Sendte fakturaer
@@ -166,7 +184,7 @@ def mark_betalt(faktura_id):
     faktura = Faktura.query.get_or_404(faktura_id)
     if faktura.user_id != user.id:
         flash("Ingen tilgang!", "error")
-        return redirect(url_for("sendte"))
+        return redirect(url_for("faktura.sendte"))
     faktura.status = "betalt"
     faktura.betalt_dato = datetime.utcnow()
     db.session.commit()
