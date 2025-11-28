@@ -4,8 +4,8 @@
 <title>Ny Faktura</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style_tjenester.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
-<script src="/static/javascript/tjenester-java.js" defer></script>
-<script src="/static/javascript/sidebar-java.js" defer></script>
+<script src="{{ url_for('static', filename='javascript/tjenester-java.js') }}" defer></script>
+<script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -19,39 +19,39 @@
     </div>
 
     <nav class="sidebar-nav">
+      <!-- Ny faktura -->
       <a class="sidebar-link active" href="{{ url_for('services.tjenester') }}">➕ Ny faktura</a>
 
       <div class="sidebar-group">
         <button class="sidebar-toggle" type="button">📄 Faktura</button>
         <div class="sidebar-submenu">
-          <a href="{{ url_for('services.lagret_fakturaer') }}">Ubetalte</a>
-          <a href="{{ url_for('services.sendte') }}">Sendte</a>
-          <a href="{{ url_for('services.betalt') }}">Betalt</a>
+          <!-- Lagret fakturaer ligger i faktura_bp -->
+          <a href="{{ url_for('faktura.lagret_fakturaer') }}">Ubetalte</a>
+          <a href="{{ url_for('faktura.sendte') }}">Sendte</a>
+          <a href="{{ url_for('faktura.betalt') }}">Betalt</a>
         </div>
       </div>
 
-      
-      <a class="sidebar-link" href="{{ url_for('services.kundeliste') }}">👥 Kunder</a>
+      <!-- Kundeliste -->
+      <a class="sidebar-link" href="{{ url_for('kunde.kundeliste') }}">👥 Kunder</a>
 
-      
       <a class="sidebar-link" href="#">📦 Produkter</a>
       <a class="sidebar-link" href="#">📊 Rapporter</a>
       <a class="sidebar-link" href="#">💲 Transaksjoner</a>
     </nav>
   </aside>
 
-  <!-- HOVEDINNHOLD (SOM FØR) -->
+  <!-- HOVEDINNHOLD -->
   <div class="main-content">
     <div class="invoice-card">
       <h1 class="page-title">Opprett ny faktura</h1>
 
-      <form action="/generate-invoice" method="POST">
+      <form action="{{ url_for('faktura.generate_invoice') }}" method="POST">
 
         <!-- MOTTAKER -->
         <section class="form-section">
           <h2>Mottaker</h2>
           <div class="grid-2">
-
             <div>
               <label>Firmanavn</label>
               <input list="kunder_list" id="firmanavn" name="firmanavn" placeholder="Velg eller skriv inn" required>
@@ -82,7 +82,6 @@
               <label>Referanse</label>
               <input type="text" id="referanse" name="referanse">
             </div>
-
           </div>
         </section>
 
@@ -90,23 +89,19 @@
         <section class="form-section">
           <h2>Fakturadetaljer</h2>
           <div class="grid-3">
-
             <div>
               <label>Fakturadato</label>
               <input type="date" id="invoice_date" name="invoice_date" readonly>
             </div>
-
             <div>
               <label>Dager til forfall</label>
               <input type="number" id="forfalls_dager" name="forfalls_dager" value="7">
             </div>
-
             <div>
               <label>Forfallsdato</label>
               <input type="text" id="due_date_display" readonly>
               <input type="hidden" id="due_date" name="due_date">
             </div>
-
           </div>
         </section>
 
