@@ -18,16 +18,16 @@
       <span class="brand-sub">Dashboard</span>
     </div>
     <nav class="sidebar-nav">
-      <a class="sidebar-link" href="{{ url_for('tjenester') }}">➕ Ny faktura</a>
+      <a class="sidebar-link" href="{{ url_for('services.tjenester') }}">➕ Ny faktura</a>
       <div class="sidebar-group">
         <button class="sidebar-toggle dropdown-btn">📄 Faktura <i>›</i></button>
         <div class="sidebar-submenu">
-          <a href="{{ url_for('lagret_fakturaer') }}" class="active">Ubetalte</a>
-          <a href="{{ url_for('sendte') }}">Sendte</a>
-          <a href="{{ url_for('betalt') }}">Betalt</a>
+          <a href="{{ url_for('services.lagret_fakturaer') }}" class="active">Ubetalte</a>
+          <a href="{{ url_for('services.sendte') }}">Sendte</a>
+          <a href="{{ url_for('services.betalt') }}">Betalt</a>
         </div>
       </div>
-      <a class="sidebar-link" href="{{ url_for('kundeliste') }}">👥 Kunder</a>
+      <a class="sidebar-link" href="{{ url_for('services.kundeliste') }}">👥 Kunder</a>
       <a class="sidebar-link" href="#">📦 Produkter</a>
       <a class="sidebar-link" href="#">📊 Rapporter</a>
       <a class="sidebar-link" href="#">💲 Transaksjoner</a>
