@@ -1,14 +1,38 @@
-# mailer.py
+# system/utils/mailer.py
 import os
-from flask import render_template
+from flask import current_app
+from itsdangerous import URLSafeTimedSerializer
 
-# Try SendGrid first (recommended)
+# -------------------------------
+# TOKEN FUNKSJONER
+# -------------------------------
+
+def generate_reset_token(email: str) -> str:
+    """Generer en tidsbegrenset token for passordreset"""
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt='password-reset-salt')
+
+def verify_reset_token(token: str, expiration: int = 3600) -> str | None:
+    """Verifiser token og returner epost hvis gyldig, ellers None"""
+    serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    try:
+        email = serializer.loads(token, salt='password-reset-salt', max_age=expiration)
+        return email
+    except Exception:
+        return None
+
+# -------------------------------
+# SEND EMAIL
+# -------------------------------
+
 def send_email(subject: str, to_email: str, html_content: str):
+    """Send e-post via SendGrid først, fallback til SMTP"""
     sendgrid_api_key = os.getenv("SENDGRID_API_KEY")
     if sendgrid_api_key:
         try:
             from sendgrid import SendGridAPIClient
             from sendgrid.helpers.mail import Mail
+
             message = Mail(
                 from_email=os.getenv("MAIL_FROM", "noreply@example.com"),
                 to_emails=to_email,
@@ -16,10 +40,9 @@ def send_email(subject: str, to_email: str, html_content: str):
                 html_content=html_content,
             )
             sg = SendGridAPIClient(sendgrid_api_key)
-            resp = sg.send(message)
+            sg.send(message)
             return True
         except Exception as e:
-            # fall through to SMTP fallback if SendGrid fails
             print("SendGrid send failed:", e)
 
     # SMTP fallback
