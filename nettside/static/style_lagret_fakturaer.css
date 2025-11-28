@@ -1,81 +1,108 @@
-/* ===== GLOBAL PAGE LAYOUT ===== */
+/* ===== GLOBAL STIL ===== */
 body, html {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', sans-serif;
   background-color: #f5f7fa;
+  color: #333;
 }
 
-/* Main content offset for sidebar */
-.main-content {
-  margin-left: 260px;
-  padding: 40px;
+/* ===== TOP ACTIONS ===== */
+.top-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  align-items: center;
 }
 
-/* Page Title */
-.page-title {
-  text-align: center;
-  font-size: 28px;
-  margin-bottom: 25px;
-  color: #2c3e50;
+.search-bar {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
 }
 
-/* ===== TOP CONTROLS ===== */
-.top-controls {
+.sort-select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* ===== FAKTURA CONTAINER ===== */
+.faktura-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+/* ===== FAKTURA BOKSER ===== */
+.faktura-box {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.faktura-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+.faktura-info {
+  font-weight: 500;
+}
+
+.faktura-box label {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 25px;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-/* Search */
-.search-wrapper {
-  position: relative;
-  width: 280px;
-}
-
-.search-wrapper input {
-  width: 100%;
-  padding: 11px 14px 11px 40px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  background: white;
-  transition: 0.25s;
-}
-
-.search-wrapper input:focus {
-  border-color: #4a90e2;
-  box-shadow: 0 0 6px rgba(74,144,226,0.25);
-}
-
-.search-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0.6;
-}
-
-/* Sorting dropdown */
-.sort-select {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  background: white;
+  gap: 12px;
+  cursor: pointer;
   font-size: 15px;
 }
 
-/* Send button */
+.faktura-box input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #4a90e2;
+  cursor: pointer;
+}
+
+/* FAKTURA ACTIONS */
+.faktura-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.preview-btn, .download-btn {
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.preview-btn:hover, .download-btn:hover {
+  background-color: #e0e0e0;
+}
+
+/* SEND BUTTON */
 .send-btn {
-  background-color: #ccc;
-  padding: 11px 18px;
+  padding: 12px 24px;
   border-radius: 8px;
   border: none;
-  color: #fff;
+  background-color: #ccc;
+  color: white;
+  font-weight: 500;
   cursor: not-allowed;
-  transition: 0.2s;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 .send-btn.active {
@@ -83,142 +110,88 @@ body, html {
   cursor: pointer;
 }
 
-.send-btn.active:hover {
+.send-btn:hover.active {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(74,144,226,0.3);
+  box-shadow: 0 5px 15px rgba(74,144,226,0.3);
 }
 
-/* ===== INVOICE GRID ===== */
-.invoice-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 20px;
-}
-
-/* Invoice Card */
-.invoice-card {
-  background: white;
-  padding: 18px;
-  border-radius: 14px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.06);
-  cursor: pointer;
-  position: relative;
-  transition: 0.2s;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.invoice-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-}
-
-/* Highlight after search */
-.invoice-card.highlight {
-  animation: highlightFlash 0.6s ease;
-}
-
-@keyframes highlightFlash {
-  0% { box-shadow: 0 0 0 rgba(74,144,226,0); }
-  50% { box-shadow: 0 0 12px rgba(74,144,226,0.7); }
-  100% { box-shadow: 0 0 0 rgba(74,144,226,0); }
-}
-
-/* Inside card */
-.invoice-content {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
-.invoice-icon {
-  font-size: 32px;
-}
-
-.invoice-info h3 {
-  margin: 0;
-  font-size: 17px;
-}
-
-.invoice-info p {
-  margin: 2px 0 0;
-  color: #666;
-  font-size: 14px;
-}
-
-/* ===== PDF PREVIEW ===== */
-.invoice-preview {
-  position: absolute;
-  right: -10px;
-  top: -10px;
-  opacity: 0;
-  background: #fff;
-  padding: 8px 12px;
-  border-radius: 8px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-  transition: 0.15s ease-in-out;
-  pointer-events: none;
-}
-
-.invoice-card:hover .invoice-preview {
-  opacity: 1;
-  transform: translateY(-5px);
-}
-
-/* ===== POPUP ===== */
+/* POPUP */
 .popup-overlay {
-  display: none;
   position: fixed;
-  inset: 0;
+  top:0; left:0;
+  width: 100%; height: 100%;
   background: rgba(0,0,0,0.5);
+  display: none;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 2000;
 }
 
 .popup-box {
-  background: #fff;
-  padding: 28px;
-  border-radius: 12px;
-  width: 420px;
+  background-color: #fff;
+  width: 450px;
   max-width: 95%;
+  border-radius: 12px;
+  padding: 25px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
 .email-field input {
   width: 100%;
-  padding: 10px;
+  padding: 10px 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
 }
 
-/* Popup buttons */
-.popup-actions {
+.popup-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 15px;
 }
 
 .cancel-btn {
-  background: #e04b4b;
-  padding: 10px 14px;
-  border-radius: 6px;
-  border: none;
+  background-color: #e04b4b;
   color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-weight: 500;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.cancel-btn:hover {
+  background-color: #c0392b;
 }
 
 .confirm-btn {
-  background: #ccc;
-  padding: 10px 14px;
-  border-radius: 6px;
-  border: none;
+  background-color: #ccc;
   color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-weight: 500;
   cursor: not-allowed;
 }
 
 .confirm-btn.active {
-  background: #4a90e2;
+  background-color: #4a90e2;
   cursor: pointer;
+}
+
+/* PDF PREVIEW */
+.pdf-popup {
+  width: 80%;
+  max-width: 900px;
+  height: 80%;
+  padding: 0;
+}
+
+.pdf-popup iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px 12px 0 0;
 }
