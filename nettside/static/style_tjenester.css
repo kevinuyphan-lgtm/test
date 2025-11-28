@@ -4,6 +4,7 @@ body {
   margin: 0;
 }
 
+/* Layout for å få sidebar + innhold side ved side */
 .layout {
   display: flex;
   min-height: 100vh;
