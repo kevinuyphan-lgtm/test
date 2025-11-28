@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, flash, redirect, url_for, render_
 from system.models import Faktura, Bruker, Kunde
 from system.extensions import db
 from generate_pdf import generate_invoice_pdf
-from utils.mailer import send_email
+from system.utils.mailer import send_email
 from datetime import datetime, timedelta
 import os
 from system.config import Config
