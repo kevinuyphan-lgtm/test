@@ -1,31 +1,31 @@
 document.addEventListener("DOMContentLoaded", function() {
   const sendBtn = document.getElementById("sendSelected");
-  const fakturaContainer = document.querySelector(".faktura-container");
+  const fakturaContainer = document.getElementById("fakturaContainer");
+  const checkboxes = fakturaContainer.querySelectorAll('input[name="faktura"]');
+
   const sendPopup = document.getElementById("sendPopup");
   const cancelSend = document.getElementById("cancelSend");
   const confirmSend = document.getElementById("confirmSend");
   const addEmail = document.getElementById("addEmail");
   const emailContainer = document.getElementById("emailContainer");
+
   const searchInput = document.getElementById("searchInput");
   const sortSelect = document.getElementById("sortSelect");
 
+  const previewPopup = document.getElementById("previewPopup");
+  const pdfViewer = document.getElementById("pdfViewer");
+  const closePreview = document.getElementById("closePreview");
+
+  // === SEND KNAPP LOGIKK ===
   function updateSendBtn() {
-    const checkboxes = document.querySelectorAll('input[name="faktura"]');
-    const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
-    if(anyChecked) {
-      sendBtn.classList.add("active");
-      sendBtn.disabled = false;
-    } else {
-      sendBtn.classList.remove("active");
-      sendBtn.disabled = true;
-    }
+    const anyChecked = Array.from(fakturaContainer.querySelectorAll('input[name="faktura"]')).some(cb => cb.checked);
+    sendBtn.disabled = !anyChecked;
+    sendBtn.classList.toggle("active", anyChecked);
   }
 
-  // === Håndter checkbox clicks ===
   fakturaContainer.addEventListener("change", updateSendBtn);
   updateSendBtn();
 
-  // === Åpne send-popup ===
   sendBtn.addEventListener("click", () => {
     if(sendBtn.disabled) return;
     emailContainer.innerHTML = `<div class="email-field"><input type="email" placeholder="Skriv inn epost" class="email-input"></div>`;
@@ -34,10 +34,8 @@ document.addEventListener("DOMContentLoaded", function() {
     sendPopup.style.display = "flex";
   });
 
-  // === Avbryt popup ===
   cancelSend.addEventListener("click", () => sendPopup.style.display = "none");
 
-  // === Legg til email felt ===
   addEmail.addEventListener("click", () => {
     const div = document.createElement("div");
     div.classList.add("email-field");
@@ -45,67 +43,73 @@ document.addEventListener("DOMContentLoaded", function() {
     emailContainer.appendChild(div);
   });
 
-  // === Aktiver send-knapp ===
   emailContainer.addEventListener("input", () => {
     const inputs = emailContainer.querySelectorAll("input.email-input");
     const allFilled = Array.from(inputs).every(i => i.value.trim() !== "");
-    if(allFilled && inputs.length > 0) {
-      confirmSend.disabled = false;
-      confirmSend.classList.add("active");
-    } else {
-      confirmSend.disabled = true;
-      confirmSend.classList.remove("active");
-    }
+    confirmSend.disabled = !allFilled || inputs.length === 0;
+    confirmSend.classList.toggle("active", allFilled && inputs.length > 0);
   });
 
-  // === Send fakturaer ===
   confirmSend.addEventListener("click", () => {
-    if(confirmSend.disabled) return;
     const emails = Array.from(emailContainer.querySelectorAll("input.email-input")).map(i => i.value.trim());
-    const selected = Array.from(document.querySelectorAll('input[name="faktura"]:checked')).map(cb => cb.value);
-    console.log("Sender fakturaer:", selected, "til:", emails);
-    sendPopup.style.display = "none";
+    const selected = Array.from(fakturaContainer.querySelectorAll('input[name="faktura"]:checked')).map(cb => cb.value);
+
+    fetch("/send-faktura-ajax", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ faktura_ids: selected, emails })
+    })
+    .then(r => r.json())
+    .then(res => {
+      if(res.success) location.reload();
+      else alert("Noe gikk galt ved sending");
+    });
   });
 
-  // === Søkefunksjon ===
-  if(searchInput) {
-    searchInput.addEventListener("input", () => {
-      const filter = searchInput.value.toLowerCase();
-      const boxes = fakturaContainer.querySelectorAll(".faktura-box");
-      boxes.forEach(box => {
-        const text = box.querySelector(".faktura-info").textContent.toLowerCase();
-        box.style.display = text.includes(filter) ? "flex" : "none";
-      });
+  // === SØK ===
+  searchInput.addEventListener("input", () => {
+    const filter = searchInput.value.toLowerCase();
+    fakturaContainer.querySelectorAll(".faktura-box").forEach(box => {
+      const name = box.dataset.navn.toLowerCase();
+      box.style.display = name.includes(filter) ? "flex" : "none";
     });
-  }
+  });
 
-  // === Sortering ===
-  if(sortSelect) {
-    sortSelect.addEventListener("change", () => {
-      const boxes = Array.from(fakturaContainer.querySelectorAll(".faktura-box"));
-      const type = sortSelect.value;
-      boxes.sort((a,b) => {
-        const aText = a.querySelector(".faktura-info").textContent;
-        const bText = b.querySelector(".faktura-info").textContent;
-        if(type === "name") return aText.localeCompare(bText);
-        if(type === "date") {
-          const aDate = new Date(aText.match(/\d{2}\.\d{2}\.\d{4}/)[0].split(".").reverse().join("-"));
-          const bDate = new Date(bText.match(/\d{2}\.\d{2}\.\d{4}/)[0].split(".").reverse().join("-"));
-          return bDate - aDate; // nyeste først
-        }
-      });
-      boxes.forEach(box => fakturaContainer.appendChild(box));
+  // === SORTERING ===
+  sortSelect.addEventListener("change", () => {
+    const boxes = Array.from(fakturaContainer.querySelectorAll(".faktura-box"));
+    const val = sortSelect.value;
+
+    boxes.sort((a,b) => {
+      if(val.includes("dato")) {
+        const ad = new Date(a.dataset.dato), bd = new Date(b.dataset.dato);
+        return val === "dato_desc" ? bd - ad : ad - bd;
+      } else {
+        const an = a.dataset.navn.toLowerCase(), bn = b.dataset.navn.toLowerCase();
+        return val === "navn_asc" ? an.localeCompare(bn) : bn.localeCompare(an);
+      }
     });
-  }
+    boxes.forEach(b => fakturaContainer.appendChild(b));
+  });
 
-  // === Nedlast knapp ===
-  fakturaContainer.addEventListener("click", e => {
-    if(e.target.classList.contains("download-btn")) {
-      const parentBox = e.target.closest(".faktura-box");
-      const filename = parentBox.querySelector(".faktura-info").textContent;
-      console.log("Nedlast:", filename);
-      // TODO: Backend nedlast
-    }
+  // === PDF PREVIEW ===
+  document.querySelectorAll(".preview-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      pdfViewer.src = `/faktura/${btn.dataset.file}`;
+      previewPopup.style.display = "flex";
+    });
+  });
+
+  closePreview.addEventListener("click", () => {
+    pdfViewer.src = "";
+    previewPopup.style.display = "none";
+  });
+
+  // === DOWNLOAD ===
+  document.querySelectorAll(".download-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      window.open(`/faktura/${btn.dataset.file}`, "_blank");
+    });
   });
 
 });
