@@ -1,66 +1,111 @@
-/* ===== GLOBAL ===== */
+/* === GLOBAL === */
 body, html {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f5f7fa;
+  background: #f5f7fa;
   color: #333;
 }
 
-/* ===== MAIN CONTENT ===== */
+/* === SIDEBAR === */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100%;
+  background: #fff;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  z-index: 1000;
+}
+.sidebar-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+.sidebar-header .brand {
+  font-size: 22px;
+  font-weight: 700;
+  color: #4a90e2;
+}
+.sidebar-header .brand-sub {
+  font-size: 14px;
+  color: #777;
+}
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 10px;
+}
+.sidebar-link, .sidebar-submenu a {
+  padding: 10px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: 0.2s;
+}
+.sidebar-link:hover, .sidebar-submenu a:hover {
+  background-color: #eaf0fc;
+}
+.sidebar-link.active, .sidebar-submenu a.active {
+  background-color: #4a90e2;
+  color: #fff;
+}
+
+/* === MAIN CONTENT === */
 .main-content {
-  flex: 1;
   margin-left: 260px; /* Sidebar width */
   padding: 30px 40px;
   display: flex;
   flex-direction: column;
   gap: 25px;
+  max-width: calc(100% - 260px);
 }
 
-/* ===== TOP CONTROLS (SEARCH, SORT, SEND) ===== */
+/* === TOP CONTROLS (search, sort, send) === */
 .top-controls {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* sentrert */
+  justify-content: center; /* sentralisert */
   align-items: center;
   gap: 15px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
-
 .search-bar {
-  flex: 1 1 250px;
+  flex: 1 1 220px;
+  max-width: 300px;
   padding: 10px 14px;
   border-radius: 8px;
   border: 1px solid #ccc;
 }
-
 .sort-select {
+  flex: 0 0 150px;
   padding: 10px 14px;
   border-radius: 8px;
   border: 1px solid #ccc;
 }
-
 .send-btn {
-  padding: 10px 22px;
+  padding: 10px 20px;
   border-radius: 8px;
   border: none;
   background-color: #ccc;
   color: #fff;
-  font-weight: 500;
   cursor: not-allowed;
-  transition: all 0.2s;
+  transition: 0.2s;
 }
-
 .send-btn.active {
   background-color: #4a90e2;
   cursor: pointer;
 }
-
 .send-btn:hover.active {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(74,144,226,0.3);
 }
 
-/* ===== FAKTURA GRID ===== */
+/* === FAKTURA GRID === */
 .faktura-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -68,7 +113,7 @@ body, html {
   align-items: stretch;
 }
 
-/* ===== FAKTURA CARD ===== */
+/* === FAKTURA CARD === */
 .faktura-card {
   background: #fff;
   border-radius: 12px;
@@ -80,13 +125,12 @@ body, html {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .faktura-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 25px rgba(0,0,0,0.12);
 }
 
-/* ===== CHECKBOX ===== */
+/* === CHECKBOX === */
 .faktura-checkbox {
   position: absolute;
   top: 12px;
@@ -98,25 +142,24 @@ body, html {
   cursor: pointer;
 }
 
-/* ===== PDF PREVIEW CARD ===== */
+/* === PDF PREVIEW === */
 .pdf-preview-card {
   width: 100%;
   aspect-ratio: 4/3;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 8px;
   margin-top: 20px;
   background: #f0f0f0;
-  cursor: pointer;
+  position: relative;
 }
-
 .pdf-preview-card iframe {
   width: 100%;
   height: 100%;
-  pointer-events: none; /* hele kortet klikkbart via wrapper */
-  border-radius: 10px;
+  pointer-events: none; /* Hele kortet kan klikkes */
+  border-radius: 8px;
 }
 
-/* ===== FAKTURA FOOTER ===== */
+/* === FAKTURA FOOTER === */
 .faktura-footer {
   padding: 12px 14px;
   font-size: 14px;
@@ -125,10 +168,9 @@ body, html {
   font-weight: 500;
   border-top: 1px solid #eee;
   background-color: #fafafa;
-  border-radius: 0 0 10px 10px;
 }
 
-/* ===== EMPTY MESSAGE ===== */
+/* === EMPTY MESSAGE === */
 .empty-message {
   text-align: center;
   font-style: italic;
@@ -136,7 +178,7 @@ body, html {
   grid-column: 1/-1;
 }
 
-/* ===== POPUPS ===== */
+/* === POPUP === */
 .popup-overlay {
   position: fixed;
   inset: 0;
@@ -146,7 +188,6 @@ body, html {
   align-items: center;
   z-index: 2000;
 }
-
 .popup-box {
   background: #fff;
   width: 450px;
@@ -157,21 +198,18 @@ body, html {
   flex-direction: column;
   gap: 15px;
 }
-
 .email-field input {
   width: 100%;
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
 }
-
 .popup-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 15px;
 }
-
 .cancel-btn {
   background-color: #e04b4b;
   color: #fff;
@@ -179,12 +217,8 @@ body, html {
   border-radius: 6px;
   padding: 10px 18px;
   cursor: pointer;
-  font-weight: 500;
 }
-.cancel-btn:hover {
-  background-color: #c0392b;
-}
-
+.cancel-btn:hover { background-color: #c0392b; }
 .confirm-btn {
   background-color: #ccc;
   color: #fff;
@@ -192,14 +226,11 @@ body, html {
   border-radius: 6px;
   padding: 10px 18px;
   cursor: not-allowed;
-  font-weight: 500;
 }
 .confirm-btn.active {
   background-color: #4a90e2;
   cursor: pointer;
 }
-
-/* ===== ADD EMAIL BUTTON ===== */
 .add-email-btn {
   background-color: #f0f0f0;
   border: none;
@@ -207,30 +238,12 @@ body, html {
   padding: 6px 12px;
   cursor: pointer;
 }
-.add-email-btn:hover {
-  background-color: #e0e0e0;
-}
+.add-email-btn:hover { background-color: #e0e0e0; }
 
-/* ===== SIDEBAR ACTIVE STATE ===== */
-.sidebar-link.active,
-.sidebar-submenu a.active {
-  background-color: #4a90e2;
-  color: #fff;
-  border-radius: 6px;
-}
-
-/* ===== RESPONSIVE ===== */
+/* === RESPONSIVE === */
 @media (max-width: 900px) {
-  .main-content {
-    padding: 20px;
-  }
-  .faktura-grid {
-    grid-template-columns: 1fr;
-  }
-  .send-btn {
-    width: 100%;
-  }
-  .top-controls {
-    justify-content: stretch;
-  }
+  .main-content { margin-left: 0; padding: 20px; max-width: 100%; }
+  .faktura-grid { grid-template-columns: 1fr; }
+  .send-btn { width: 100%; }
+  .top-controls { justify-content: flex-start; gap: 10px; }
 }
