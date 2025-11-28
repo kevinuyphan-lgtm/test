@@ -9,9 +9,8 @@ body, html {
 /* === MAIN CONTENT === */
 .main-content {
   flex: 1;
-  margin-left: 260px;
+  margin-left: 260px; /* Sidebar width */
   padding: 30px 40px;
-  max-width: 1200px;
   display: flex;
   flex-direction: column;
   gap: 25px;
@@ -23,7 +22,6 @@ body, html {
   flex-wrap: wrap;
   gap: 15px;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 .search-bar {
@@ -44,7 +42,7 @@ body, html {
   border-radius: 8px;
   border: none;
   background-color: #ccc;
-  color: white;
+  color: #fff;
   cursor: not-allowed;
   transition: 0.2s;
 }
@@ -60,7 +58,8 @@ body, html {
 .faktura-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 22px;
+  gap: 20px;
+  align-items: stretch;
 }
 
 /* === FAKTURA CARD === */
@@ -68,7 +67,7 @@ body, html {
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -101,23 +100,24 @@ body, html {
   border-radius: 8px;
   margin-top: 30px;
   background: #f0f0f0;
-  position: relative;
 }
 
 .pdf-preview-card iframe {
   width: 100%;
   height: 100%;
-  pointer-events: none;
+  pointer-events: none; /* hele kortet klikkbart */
   border-radius: 8px;
 }
 
 /* === FOOTER INFO === */
 .faktura-footer {
-  padding: 10px 14px;
+  padding: 12px 14px;
   font-size: 14px;
   display: flex;
   justify-content: space-between;
   font-weight: 500;
+  border-top: 1px solid #eee;
+  background-color: #fafafa;
 }
 
 /* === EMPTY === */
@@ -125,6 +125,7 @@ body, html {
   text-align: center;
   font-style: italic;
   color: #777;
+  grid-column: 1/-1;
 }
 
 /* === POPUP === */
@@ -146,7 +147,6 @@ body, html {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 .email-field input {
   width: 100%;
@@ -189,6 +189,13 @@ body, html {
   cursor: pointer;
 }
 .add-email-btn:hover { background-color: #e0e0e0; }
+
+/* === SIDEBAR ACTIVE STATE === */
+.sidebar-link.active, .sidebar-submenu a.active {
+  background-color: #4a90e2;
+  color: #fff;
+  border-radius: 6px;
+}
 
 /* === RESPONSIVE === */
 @media (max-width: 900px) {
