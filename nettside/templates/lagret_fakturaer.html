@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block head %}
-<title>Dine lagrede fakturaer</title>
+<title>Lagrede Fakturaer</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='style_lagret_fakturaer.css') }}">
 <script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}" defer></script>
-<script src="{{ url_for('static', filename='javascript/lagret_fakturaer-java.js') }}" defer></script>
+<script src="{{ url_for('static', filename='javascript/lagret_fakturaer.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -37,8 +37,8 @@
   <!-- MAIN CONTENT -->
   <div class="main-content">
 
-    <div class="top-actions">
-      <input type="text" id="searchInput" placeholder="Søk etter faktura..." class="search-bar">
+    <div class="top-controls">
+      <input type="text" id="searchInput" placeholder="Søk faktura..." class="search-bar">
       <select id="sortSelect" class="sort-select">
         <option value="dato_desc">Nyeste først</option>
         <option value="dato_asc">Eldste først</option>
@@ -48,17 +48,17 @@
       <button id="sendSelected" class="send-btn" disabled>✉ Send valgte</button>
     </div>
 
-    <div class="faktura-container" id="fakturaContainer">
+    <div class="faktura-grid" id="fakturaContainer">
       {% if fakturaer %}
         {% for f in fakturaer %}
-        <div class="faktura-box" data-dato="{{ f.dato.strftime('%Y-%m-%d') }}" data-navn="{{ f.filnavn }}">
-          <label>
-            <input type="checkbox" name="faktura" value="{{ f.id }}">
-            <span class="faktura-info">{{ f.filnavn }} – Opprettet: {{ f.dato.strftime("%d.%m.%Y") }}</span>
-          </label>
-          <div class="faktura-actions">
-            <button class="preview-btn" data-file="{{ f.filnavn }}">👁 Preview</button>
-            <button class="download-btn" data-file="{{ f.filnavn }}">⬇</button>
+        <div class="faktura-card" data-dato="{{ f.dato.strftime('%Y-%m-%d') }}" data-navn="{{ f.filnavn }}">
+          <input type="checkbox" name="faktura" value="{{ f.id }}" class="faktura-checkbox">
+          <div class="pdf-preview-card" data-file="{{ f.filnavn }}">
+            <iframe src="/faktura/{{ f.filnavn }}" frameborder="0"></iframe>
+          </div>
+          <div class="faktura-footer">
+            <span>{{ f.filnavn }}</span>
+            <span>Opprettet: {{ f.dato.strftime("%d.%m.%Y") }}</span>
           </div>
         </div>
         {% endfor %}
@@ -88,11 +88,4 @@
   </div>
 </div>
 
-<!-- PDF PREVIEW POPUP -->
-<div class="popup-overlay" id="previewPopup">
-  <div class="popup-box pdf-popup">
-    <iframe id="pdfViewer" src="" frameborder="0"></iframe>
-    <button type="button" id="closePreview" class="cancel-btn">Lukk</button>
-  </div>
-</div>
 {% endblock %}
