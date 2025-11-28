@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from system.models import Bruker
 from system.extensions import db, bcrypt
-from utils.mailer import generate_reset_token, verify_reset_token, send_email
+from system.utils.mailer import generate_reset_token, verify_reset_token, send_email
 
 auth_bp = Blueprint("auth", __name__)
 
