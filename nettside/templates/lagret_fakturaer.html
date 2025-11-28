@@ -2,10 +2,8 @@
 
 {% block head %}
 <title>Lagrede Fakturaer</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='style_lagret_fakturaer.css') }}">
-<script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}" defer></script>
-<script src="{{ url_for('static', filename='javascript/lagret_fakturaer-java.js') }}" defer></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/lagret_fakturaer.css') }}">
+<script src="{{ url_for('static', filename='javascript/lagret_fakturaer.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -20,7 +18,7 @@
     <nav class="sidebar-nav">
       <a class="sidebar-link" href="{{ url_for('services.tjenester') }}">➕ Ny faktura</a>
       <div class="sidebar-group">
-        <button class="sidebar-toggle dropdown-btn">📄 Faktura <i>›</i></button>
+        <button class="sidebar-toggle">📄 Faktura</button>
         <div class="sidebar-submenu">
           <a href="{{ url_for('faktura.lagret_fakturaer') }}" class="active">Ubetalte</a>
           <a href="{{ url_for('faktura.sendte') }}">Sendte</a>
@@ -34,9 +32,10 @@
     </nav>
   </aside>
 
-  <!-- MAIN CONTENT -->
+  <!-- HOVEDINNHOLD -->
   <div class="main-content">
 
+    <!-- TOP CONTROLS -->
     <div class="top-controls">
       <input type="text" id="searchInput" placeholder="Søk faktura..." class="search-bar">
       <select id="sortSelect" class="sort-select">
@@ -48,17 +47,18 @@
       <button id="sendSelected" class="send-btn" disabled>✉ Send valgte</button>
     </div>
 
+    <!-- FAKTURA GRID -->
     <div class="faktura-grid" id="fakturaContainer">
       {% if fakturaer %}
         {% for f in fakturaer %}
         <div class="faktura-card" data-dato="{{ f.dato.strftime('%Y-%m-%d') }}" data-navn="{{ f.filnavn }}">
-          <input type="checkbox" name="faktura" value="{{ f.id }}" class="faktura-checkbox">
-          <div class="pdf-preview-card" data-file="{{ f.filnavn }}">
-            <iframe src="/faktura/{{ f.filnavn }}" frameborder="0"></iframe>
+          <input type="checkbox" class="faktura-checkbox" value="{{ f.id }}">
+          <div class="pdf-preview-card">
+            <iframe src="/faktura/{{ f.filnavn }}"></iframe>
           </div>
           <div class="faktura-footer">
-            <span class="faktura-name">{{ f.filnavn }}</span>
-            <span class="faktura-date">Opprettet: {{ f.dato.strftime("%d.%m.%Y") }}</span>
+            <span>{{ f.filnavn }}</span>
+            <span>{{ f.dato.strftime('%d.%m.%Y') }}</span>
           </div>
         </div>
         {% endfor %}
@@ -86,5 +86,7 @@
       <button type="button" id="confirmSend" class="confirm-btn" disabled>Send</button>
     </div>
   </div>
+</div>
+
 </div>
 {% endblock %}
