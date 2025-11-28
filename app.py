@@ -5,7 +5,7 @@ from system.config import Config, PDF_FOLDER
 # Importer blueprints
 from routes.auth import auth_bp
 from routes.kunde import kunde_bp
-from routes.invoice import faktura_bp
+from routes.faktura import faktura_bp
 from routes.password_reset import password_reset_bp
 
 import os
