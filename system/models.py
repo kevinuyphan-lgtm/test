@@ -1,4 +1,4 @@
-from extensions import db
+from system.extensions import db
 from datetime import datetime
 
 class Bruker(db.Model):
