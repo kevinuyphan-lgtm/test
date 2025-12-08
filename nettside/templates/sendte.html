@@ -4,7 +4,7 @@
 <title>Sendte fakturaer</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='style_lagret_fakturaer.css') }}">
-<script src="/static/javascript/sidebar-java.js"></script>
+<script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -54,7 +54,7 @@
             <td>
                 <a href="{{ url_for('faktura.download_faktura', faktura_id=f.id) }}">⬇ Last ned</a>
                 {% if f.status != 'betalt' %}
-                  <form method="GET" action="{{ url_for('mark_betalt', faktura_id=f.id) }}" 
+                  <form method="GET" action="{{ url_for('faktura.mark_betalt', faktura_id=f.id) }}" 
                         style="display:inline;">
                       <button type="submit" class="send-btn">✅ Markér betalt</button>
                   </form>
