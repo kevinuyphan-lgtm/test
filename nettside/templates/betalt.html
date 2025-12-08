@@ -57,7 +57,7 @@
             <td>{{ f.dato.strftime("%d.%m.%Y") }}</td>
             <td>{{ f.betalt_dato.strftime("%d.%m.%Y") }}</td>
             <td>
-              <a href="{{ url_for('download_faktura', faktura_id=f.id) }}">⬇ Last ned</a>
+              <a href="{{ url_for('faktura.download_faktura_by_id', faktura_id=f.id) }}">⬇ Last ned</a>
             </td>
           </tr>
         {% endfor %}
