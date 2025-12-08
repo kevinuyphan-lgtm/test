@@ -8,68 +8,71 @@
 {% endblock %}
 
 {% block body %}
+<div class="layout">
 
-<div class="sidebar">
-  <ul class="sidebar-links">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="brand">InvoicePro</h2>
+      <span class="brand-sub">Dashboard</span>
+    </div>
 
-    <li class="sidebar-item">
-      <a class="dropdown-btn" href="{{ url_for('services.tjenester') }}">+ Ny faktura</a>
-    </li>
+    <nav class="sidebar-nav">
+      <a class="sidebar-link" href="{{ url_for('services.tjenester') }}">➕ Ny faktura</a>
 
-    <li class="sidebar-item open">
-      <button class="dropdown-btn active">📄 Faktura</button>
-      <div class="dropdown-content" style="display: flex;">
-        <a href="{{ url_for('faktura.lagret_fakturaer') }}">Ubetalte</a>
-        <a href="{{ url_for('faktura.sendte') }}" class="active">Sendte</a>
-        <a href="{{ url_for('faktura.betalt') }}">Betalt</a>
+      <div class="sidebar-group open">
+        <button class="sidebar-toggle" type="button">📄 Faktura <i>›</i></button>
+        <div class="sidebar-submenu">
+          <a href="{{ url_for('faktura.lagret_fakturaer') }}">Ubetalte</a>
+          <a href="{{ url_for('faktura.sendte') }}" class="active">Sendte</a>
+          <a href="{{ url_for('faktura.betalt') }}">Betalt</a>
+        </div>
       </div>
-    </li>
 
-    <li class="sidebar-item">
-      <a class="dropdown-btn" href="{{ url_for('kunde.kundeliste') }}">👥 Kunder</a>
-    </li>
+      <a class="sidebar-link" href="{{ url_for('kunde.kundeliste') }}">👥 Kunder</a>
+      <a class="sidebar-link" href="#">📦 Produkter</a>
+      <a class="sidebar-link" href="#">📊 Rapporter</a>
+      <a class="sidebar-link" href="#">💲 Transaksjoner</a>
+    </nav>
+  </aside>
 
-    <li><a href="#">📦 Produkter</a></li>
-    <li><a href="#">📊 Rapporter</a></li>
-    <li><a href="#">💲 Transaksjoner</a></li>
-
-  </ul>
-</div>
-
-<div class="main-content">
+  <!-- HOVEDINNHOLD -->
+  <div class="main-content">
     <h1 class="page-title">Sendte fakturaer</h1>
 
     {% if fakturaer %}
-    <table class="invoice-table">
-        <tr>
+      <table class="invoice-table">
+        <thead>
+          <tr>
             <th>Faktura</th>
             <th>Sendt</th>
             <th>Handling</th>
-        </tr>
-
+          </tr>
+        </thead>
+        <tbody>
         {% for f in fakturaer %}
-        <tr>
+          <tr>
             <td>{{ f.filnavn }}</td>
             <td>{{ f.dato.strftime("%d.%m.%Y kl. %H:%M") }}</td>
             <td>
-                <a href="{{ url_for('faktura.download_faktura', faktura_id=f.id) }}">⬇ Last ned</a>
-                {% if f.status != 'betalt' %}
-                  <form method="GET" action="{{ url_for('faktura.mark_betalt', faktura_id=f.id) }}" 
-                        style="display:inline;">
-                      <button type="submit" class="send-btn">✅ Markér betalt</button>
-                  </form>
-                {% else %}
-                  <span>✅ Betalt {{ f.betalt_dato.strftime("%d.%m.%Y") }}</span>
-                {% endif %}
+              <a href="{{ url_for('faktura.download_faktura_by_id', faktura_id=f.id) }}">⬇ Last ned</a>
+              {% if f.status != 'betalt' %}
+                <form method="GET" action="{{ url_for('faktura.mark_betalt', faktura_id=f.id) }}" style="display:inline;">
+                  <button type="submit" class="send-btn">✅ Markér betalt</button>
+                </form>
+              {% else %}
+                <span>✅ Betalt {{ f.betalt_dato.strftime("%d.%m.%Y") }}</span>
+              {% endif %}
             </td>
-        </tr>
+          </tr>
         {% endfor %}
-    </table>
-
+        </tbody>
+      </table>
     {% else %}
-        <p class="empty-message">Ingen fakturaer er sendt enda.</p>
+      <p class="empty-message">Ingen fakturaer er sendt enda.</p>
     {% endif %}
 
-</div>
+  </div>
 
+</div>
 {% endblock %}
