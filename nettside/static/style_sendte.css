@@ -1,0 +1,102 @@
+/* ===== HOVEDLAYOUT ===== */
+.main-content {
+  flex: 1;
+  padding: 30px;
+  background-color: #f1f5f9; /* Lys bakgrunn */
+  min-height: 100vh;
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+/* ===== SIDE-TITLER ===== */
+.page-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: #1e293b;
+}
+
+/* ===== TABELL ===== */
+.invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.invoice-table th,
+.invoice-table td {
+  padding: 15px 20px;
+  text-align: left;
+  font-size: 15px;
+  color: #334155;
+}
+
+.invoice-table th {
+  background: #e2e8f0;
+  font-weight: 600;
+}
+
+.invoice-table tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.invoice-table tr:hover {
+  background: #e0f2fe;
+  transition: background 0.2s ease;
+}
+
+/* ===== KNAPPER ===== */
+.send-btn {
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.send-btn:hover {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+/* ===== LAST NED-LINK ===== */
+a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ===== TOMME TABELLER ===== */
+.empty-message {
+  font-size: 16px;
+  color: #64748b;
+  margin-top: 20px;
+}
+
+/* ===== RESPONSIVITET ===== */
+@media (max-width: 900px) {
+  .main-content {
+    padding: 20px;
+  }
+
+  .invoice-table th,
+  .invoice-table td {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .send-btn {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+}
