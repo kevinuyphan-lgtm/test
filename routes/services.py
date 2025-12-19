@@ -27,4 +27,4 @@ def tjenester():
         return redirect(url_for("auth.login"))
     user = Bruker.query.get(uid)
     kunder = Kunde.query.filter_by(user_id=user.id).all()
-    return render_template("tjenester.html", kunder=kunder)
+    return render_template("faktura_tjeneste/tjenester.html", kunder=kunder)
