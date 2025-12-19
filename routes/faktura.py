@@ -92,7 +92,7 @@ def lagret_fakturaer():
         return redirect(url_for("auth.login"))
 
     fakturaer = Faktura.query.filter_by(user_id=user.id, status="utkast").all()
-    return render_template("faktura_tjeneste/fakturalagret_fakturaer.html", fakturaer=fakturaer)
+    return render_template("faktura_tjeneste/lagret_fakturaer.html", fakturaer=fakturaer)
 
 
 # -------------------------------
