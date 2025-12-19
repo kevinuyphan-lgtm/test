@@ -1,11 +1,19 @@
 {% extends "base/base.html" %}
 
 {% block head %}
-<title>Ny Faktura</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='base/style_base.css') }}">
+
+  <!-- Sidebar CSS -->
 <link rel="stylesheet" href="{{ url_for('static', filename='base/style_sidebar.css') }}">
+
+  <!-- Side-spesifikk CSS -->
 <link rel="stylesheet" href="{{ url_for('static', filename='faktura_tjeneste/style_tjenester.css') }}">
+
+  <!-- JS -->
 <script src="{{ url_for('static', filename='javascript/tjenester-java.js') }}" defer></script>
 <script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}" defer></script>
+
+<title>Ny Faktura</title>
 {% endblock %}
 
 {% block body %}
