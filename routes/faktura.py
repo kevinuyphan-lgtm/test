@@ -92,7 +92,7 @@ def lagret_fakturaer():
         return redirect(url_for("auth.login"))
 
     fakturaer = Faktura.query.filter_by(user_id=user.id, status="utkast").all()
-    return render_template("lagret_fakturaer.html", fakturaer=fakturaer)
+    return render_template("faktura_tjeneste/fakturalagret_fakturaer.html", fakturaer=fakturaer)
 
 
 # -------------------------------
@@ -106,7 +106,7 @@ def sendte():
         return redirect(url_for("auth.login"))
 
     fakturaer = Faktura.query.filter_by(user_id=user.id, status="sendt").all()
-    return render_template("sendte.html", fakturaer=fakturaer)
+    return render_template("faktura_tjeneste/sendte.html", fakturaer=fakturaer)
 
 
 # -------------------------------
@@ -120,7 +120,7 @@ def betalt():
         return redirect(url_for("auth.login"))
 
     fakturaer = Faktura.query.filter_by(user_id=user.id, status="betalt").all()
-    return render_template("betalt.html", fakturaer=fakturaer)
+    return render_template("faktura_tjeneste/betalt.html", fakturaer=fakturaer)
 
 
 # -------------------------------

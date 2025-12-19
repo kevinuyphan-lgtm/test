@@ -37,7 +37,7 @@ def register():
         flash("Registrering vellykket! Du kan nå logge inn ✅", "success")
         return redirect(url_for("auth.login"))
 
-    return render_template("register.html")
+    return render_template("users/register.html")
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
@@ -52,7 +52,7 @@ def login():
             return redirect(url_for("faktura.sendte"))
         flash("Feil epost eller passord", "error")
         return redirect(url_for("auth.login"))
-    return render_template("login.html")
+    return render_template("users/login.html")
 
 @auth_bp.route("/logout")
 def logout():
@@ -63,25 +63,6 @@ def logout():
 # -------------------------------
 # PASSWORD RESET
 # -------------------------------
-@auth_bp.route("/forgot-password", methods=["GET", "POST"])
-def forgot_password():
-    if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()
-        user = Bruker.query.filter_by(email=email).first()
-        flash("Hvis e-posten finnes, har vi sendt en reset-link.", "info")
-        if user:
-            token = generate_reset_token(user.email)
-            reset_link = url_for("auth.reset_with_token", token=token, _external=True)
-            html = f"""
-                <p>Hei {user.navn},</p>
-                <p>Klikk lenken under for å tilbakestille passordet ditt:</p>
-                <p><a href="{reset_link}">{reset_link}</a></p>
-                <p>Lenken er gyldig i 1 time.</p>
-            """
-            send_email(subject="Tilbakestill passord", to_email=user.email, html_content=html)
-        return redirect(url_for("auth.login"))
-    return render_template("forgot_password.html")
-
 @auth_bp.route("/reset/<token>", methods=["GET", "POST"])
 def reset_with_token(token):
     email = verify_reset_token(token)

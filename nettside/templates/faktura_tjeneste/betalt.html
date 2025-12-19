@@ -1,16 +1,16 @@
 {% extends "base/base.html" %}
 
 {% block head %}
-<title>Sendte fakturaer</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style_sidebar.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='style_sendte.css') }}">
+<title>Betalte fakturaer</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='base/style_sidebar.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='faktura_tjeneste/style_lagret_fakturaer.css') }}">
 <script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}"></script>
 {% endblock %}
 
 {% block body %}
 <div class="layout">
 
-  <!-- SIDEBAR -->
+  <!-- MODERNE SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <h2 class="brand">InvoicePro</h2>
@@ -24,8 +24,8 @@
         <button class="sidebar-toggle" type="button">📄 Faktura <i>›</i></button>
         <div class="sidebar-submenu">
           <a href="{{ url_for('faktura.lagret_fakturaer') }}">Ubetalte</a>
-          <a href="{{ url_for('faktura.sendte') }}" class="active">Sendte</a>
-          <a href="{{ url_for('faktura.betalt') }}">Betalt</a>
+          <a href="{{ url_for('faktura.sendte') }}">Sendte</a>
+          <a href="{{ url_for('faktura.betalt') }}" class="active">Betalt</a>
         </div>
       </div>
 
@@ -38,7 +38,7 @@
 
   <!-- HOVEDINNHOLD -->
   <div class="main-content">
-    <h1 class="page-title">Sendte fakturaer</h1>
+    <h1 class="page-title">Betalte fakturaer</h1>
 
     {% if fakturaer %}
       <table class="invoice-table">
@@ -46,6 +46,7 @@
           <tr>
             <th>Faktura</th>
             <th>Sendt</th>
+            <th>Betalt</th>
             <th>Handling</th>
           </tr>
         </thead>
@@ -53,24 +54,17 @@
         {% for f in fakturaer %}
           <tr>
             <td>{{ f.filnavn }}</td>
-            <td>{{ f.dato.strftime("%d.%m.%Y kl. %H:%M") }}</td>
+            <td>{{ f.dato.strftime("%d.%m.%Y") }}</td>
+            <td>{{ f.betalt_dato.strftime("%d.%m.%Y") }}</td>
             <td>
-              <!-- Bruk korrekt endpoint med blueprint-prefiks -->
               <a href="{{ url_for('faktura.download_faktura_by_id', faktura_id=f.id) }}">⬇ Last ned</a>
-              {% if f.status != 'betalt' %}
-                <form method="GET" action="{{ url_for('faktura.mark_betalt', faktura_id=f.id) }}" style="display:inline;">
-                  <button type="submit" class="send-btn">✅ Markér betalt</button>
-                </form>
-              {% else %}
-                <span>✅ Betalt {{ f.betalt_dato.strftime("%d.%m.%Y") }}</span>
-              {% endif %}
             </td>
           </tr>
         {% endfor %}
         </tbody>
       </table>
     {% else %}
-      <p class="empty-message">Ingen fakturaer er sendt enda.</p>
+      <p class="empty-message">Ingen fakturaer er markert som betalt enda.</p>
     {% endif %}
 
   </div>
