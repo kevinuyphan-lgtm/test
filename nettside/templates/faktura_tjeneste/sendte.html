@@ -56,7 +56,7 @@
             <td>{{ f.dato.strftime("%d.%m.%Y kl. %H:%M") }}</td>
             <td>
               <!-- Bruk korrekt endpoint med blueprint-prefiks -->
-              <a href="{{ url_for('faktura.download_faktura_by_id', faktura_id=f.id) }}">⬇ Last ned</a>
+              <a href="{{ url_for('faktura.download_faktura', faktura_id=f.id) }}">⬇ Last ned</a>
               {% if f.status != 'betalt' %}
                 <form method="GET" action="{{ url_for('faktura.mark_betalt', faktura_id=f.id) }}" style="display:inline;">
                   <button type="submit" class="send-btn">✅ Markér betalt</button>

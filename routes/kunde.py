@@ -18,7 +18,7 @@ def kundeliste():
         flash("Du må være logget inn for å se kundelisten.", "error")
         return redirect(url_for("auth.login"))
     kunder = Kunde.query.filter_by(user_id=user.id).all()
-    return render_template("kundeliste.html", kunder=kunder)
+    return render_template("faktura_tjeneste/kundeliste.html", kunder=kunder)
 
 @kunde_bp.route("/update-kunde/<int:kunde_id>", methods=["POST"])
 def update_kunde(kunde_id):
