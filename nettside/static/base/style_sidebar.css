@@ -4,6 +4,40 @@
   min-height: 100vh;
 }
 
+/* ===== TYPOGRAPHY SYSTEM (GLOBAL) ===== */
+:root {
+  --font-main: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --brand-size: 26px;
+  --brand-weight: 700;
+  --brand-color: #004080;
+
+  --sub-brand-size: 14px;
+  --sub-brand-weight: 500;
+  --sub-brand-color: #6c757d;
+}
+
+/* Global font baseline */
+html,
+body {
+  font-family: var(--font-main);
+}
+
+/* Brand (GLOBAL – aldri override direkte) */
+.brand {
+  font-size: var(--brand-size);
+  font-weight: var(--brand-weight);
+  color: var(--brand-color);
+  line-height: 1.1;
+}
+
+/* Sub brand (GLOBAL) */
+.sub-brand {
+  font-size: var(--sub-brand-size);
+  font-weight: var(--sub-brand-weight);
+  color: var(--sub-brand-color);
+}
+
 /* ===== SIDEBAR ===== */
 .sidebar {
   width: 260px;
@@ -13,23 +47,23 @@
   box-sizing: border-box;
 }
 
-/* Header */
+/* ===== SIDEBAR HEADER ===== */
 .sidebar-header {
   margin-bottom: 30px;
 }
 
-.brand {
-  margin: 0;
-  font-size: 22px;
-  font-weight: 600;
+/* Sidebar-specific typografi (KUN kontekstjustering) */
+.sidebar .brand {
+  font-size: 22px; /* litt mindre i sidebar */
+  color: #ffffff;
 }
 
-.brand-sub {
+.sidebar .sub-brand {
   font-size: 13px;
   color: #94a3b8;
 }
 
-/* NAV */
+/* ===== NAV ===== */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
@@ -47,7 +81,7 @@
 }
 
 .sidebar-link:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-link.active {
@@ -55,7 +89,7 @@
   color: white;
 }
 
-/* Groups */
+/* ===== GROUPS ===== */
 .sidebar-group {
   display: flex;
   flex-direction: column;
@@ -75,15 +109,19 @@
 }
 
 .sidebar-toggle:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* Submenu */
+/* ===== SUBMENU ===== */
 .sidebar-submenu {
-  display: none;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  display: flex;
   flex-direction: column;
   margin-left: 15px;
   margin-top: 5px;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
 }
 
 .sidebar-submenu a {
@@ -95,37 +133,28 @@
 }
 
 .sidebar-submenu a:hover {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   color: white;
 }
 
 /* Åpen dropdown */
 .sidebar-group.open .sidebar-submenu {
-  display: flex;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-  .sidebar {
-    display: none;
-  }
-}
-.sidebar-submenu {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.3s ease;
-  opacity: 0;
-}
-
-.sidebar-group.open .sidebar-submenu {
   max-height: 300px;
   opacity: 1;
 }
 
+/* Chevron animation */
 .sidebar-toggle i {
   transition: transform 0.3s ease;
 }
 
 .sidebar-group.open .sidebar-toggle i {
   transform: rotate(90deg);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .sidebar {
+    display: none;
+  }
 }
