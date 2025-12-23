@@ -2,7 +2,6 @@
 .layout {
   display: flex;
   min-height: 100vh;
-  font-family: 'Inter', sans-serif;
   background-color: #f1f5f9;
   color: #1e293b;
 }
@@ -14,7 +13,7 @@
   background-color: #f8fafc;
 }
 
-/* Page title */
+/* Page title (IKKE brand) */
 .page-title {
   font-size: 28px;
   font-weight: 600;
@@ -96,9 +95,14 @@
   text-decoration: underline;
 }
 
-/* Responsive table */
+/* ===== RESPONSIVE TABLE ===== */
 @media (max-width: 900px) {
-  .invoice-table, .invoice-table thead, .invoice-table tbody, .invoice-table th, .invoice-table td, .invoice-table tr {
+  .invoice-table,
+  .invoice-table thead,
+  .invoice-table tbody,
+  .invoice-table th,
+  .invoice-table td,
+  .invoice-table tr {
     display: block;
     width: 100%;
   }
