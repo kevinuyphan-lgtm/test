@@ -17,8 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const iso = baseDate.toISOString().split("T")[0];
         hiddenField.value = iso;
         // Vis i norsk format dd.mm.yyyy
-        const lokal = baseDate.toLocaleDateString("no-NO");
-        displayField.value = lokal;
+        displayField.value = baseDate.toLocaleDateString("no-NO");
     }
 
     oppdaterForfallsDato();
@@ -32,12 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const referanseInput = document.getElementById("referanse");
 
     const datalist = document.getElementById("kunder_list");
-    // Map fra navn -> dataattr
     const kunderMap = {};
     if (datalist) {
         Array.from(datalist.options).forEach(opt => {
-            const val = opt.value;
-            kunderMap[val] = {
+            kunderMap[opt.value] = {
                 adresse: opt.dataset.adresse || "",
                 orgnr: opt.dataset.orgnr || "",
                 referanse: opt.dataset.referanse || ""
@@ -51,11 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
             adresseInput.value = kunderMap[v].adresse;
             orgnrInput.value = kunderMap[v].orgnr;
             referanseInput.value = kunderMap[v].referanse;
-        } else {
-            // beholde brukerinnskrevet verdi hvis ikke funnet
-            // adresseInput.value = "";
-            // orgnrInput.value = "";
-            // referanseInput.value = "";
         }
     });
 
@@ -104,18 +96,11 @@ document.addEventListener("DOMContentLoaded", () => {
         // Fjern-knapp
         const fjernBtn = document.createElement("button");
         fjernBtn.type = "button";
-        fjernBtn.className = "remove-product-btn";
         fjernBtn.textContent = "Fjern";
-        fjernBtn.style.background = "#e74c3c";
-        fjernBtn.style.color = "#fff";
-        fjernBtn.style.border = "none";
-        fjernBtn.style.padding = "6px 10px";
-        fjernBtn.style.borderRadius = "6px";
-        fjernBtn.style.cursor = "pointer";
+        fjernBtn.classList.add("secondary-btn", "remove-product-btn"); // ✅ CSS styrer styling
 
         fjernBtn.addEventListener("click", () => {
             row.remove();
-            // hvis du har totalsum: beregnTotal();
         });
 
         row.appendChild(navnInput);
@@ -126,50 +111,46 @@ document.addEventListener("DOMContentLoaded", () => {
         return row;
     }
 
-    // Hvis containeren er tom (f.eks. første innlasting) — sørg for minst én rad
-    if (produkterContainer && produkterContainer.children.length === 0) {
-        produkterContainer.appendChild(nyProduktRad());
-    } else {
-        // konverter eksisterende markup til samme struktur (valgfritt)
-        // Hvis du allerede har .produkt-row elementer, legger vi fjern-knapp på dem:
+    // Init eksisterende rader: legg til fjern-knapp hvis mangler
+    if (produkterContainer) {
         Array.from(produkterContainer.querySelectorAll(".produkt-row")).forEach(r => {
             if (!r.querySelector(".remove-product-btn")) {
                 const btn = document.createElement("button");
                 btn.type = "button";
-                btn.className = "remove-product-btn";
                 btn.textContent = "Fjern";
-                btn.style.marginLeft = "8px";
+                btn.classList.add("secondary-btn", "remove-product-btn");
                 btn.addEventListener("click", () => r.remove());
                 r.appendChild(btn);
             }
         });
+
+        // Hvis containeren er helt tom, legg til én rad
+        if (produkterContainer.children.length === 0) {
+            produkterContainer.appendChild(nyProduktRad());
+        }
     }
 
-    // Legg til ny rad ved klikk
+    // Legg til ny rad
     if (leggTilKnapp) {
         leggTilKnapp.addEventListener("click", () => {
-            // simple anti-double: disable i 200ms
             leggTilKnapp.disabled = true;
             setTimeout(() => leggTilKnapp.disabled = false, 200);
 
             const sisteRad = produkterContainer.querySelector(".produkt-row:last-child");
-            // Hvis siste rad er helt tom (ingen navn, pris), unngå å legge til flere
             if (sisteRad) {
                 const navnVal = sisteRad.querySelector('input[name="produkt_navn[]"]')?.value.trim();
                 const prisVal = sisteRad.querySelector('input[name="produkt_pris[]"]')?.value.trim();
                 if (!navnVal && !prisVal) {
-                    // Fokuser heller siste rad i stedet for å legge til ny
                     sisteRad.querySelector('input[name="produkt_navn[]"]')?.focus();
                     return;
                 }
             }
 
             produkterContainer.appendChild(nyProduktRad());
-            // hvis du har totalsum: beregnTotal();
         });
     }
 
-    // --- (VALGFRI) totalsum-funksjon som du kan kalle når du trenger ---
+    // Totalsum (valgfri)
     function beregnTotal() {
         const rader = Array.from(produkterContainer.querySelectorAll(".produkt-row"));
         let total = 0;
@@ -178,15 +159,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const p = parseFloat(r.querySelector('input[name="produkt_pris[]"]')?.value || 0);
             total += (a * p);
         });
-        // her kan du oppdatere en DOM-node med total, f.eks:
-        // document.getElementById("invoice_total").textContent = total.toFixed(2);
         return total;
     }
 
-    // Event-delegasjon: hvis noen endrer antall/pris, oppdater totalsum
     produkterContainer.addEventListener("input", (e) => {
         if (e.target.matches('input[name="produkt_antall[]"], input[name="produkt_pris[]"]')) {
-            // beregnTotal(); // aktiver hvis du viser totalsum
+            // beregnTotal(); // Aktiver hvis du viser total
         }
     });
 
