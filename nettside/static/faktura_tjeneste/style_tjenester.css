@@ -1,23 +1,59 @@
-body {
-  background: #f4f6fb;
-  margin: 0;
+/* ===== GLOBAL ===== */
+:root {
+  --font-main: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --brand-color: #004080;
+  --brand-size: 26px;
+  --brand-weight: 700;
+
+  --sub-brand-color: #6c757d;
+  --sub-brand-size: 14px;
+  --sub-brand-weight: 500;
+
+  --primary-color: #004080;
+  --primary-gradient: linear-gradient(135deg, #004080, #0073e6);
+  --secondary-color: #e9eef7;
+  --secondary-hover: #d1d9e6;
+  --danger-color: #e74c3c;
 }
 
-/* Layout for å få sidebar + innhold side ved side */
+/* Baseline font og body */
+html, body {
+  font-family: var(--font-main);
+  margin: 0;
+  background: #f4f6fb;
+  color: #1e293b;
+}
+
+/* ===== LAYOUT ===== */
 .layout {
   display: flex;
   min-height: 100vh;
 }
 
-/* MAIN CONTENT */
 .main-content {
   flex: 1;
   padding: 40px;
+  background: #f8fafc;
 }
 
-/* Invoice card */
+/* ===== BRANDING ===== */
+.brand {
+  font-size: var(--brand-size);
+  font-weight: var(--brand-weight);
+  color: var(--brand-color);
+  margin: 0;
+}
+
+.sub-brand, .brand-sub {
+  font-size: var(--sub-brand-size);
+  font-weight: var(--sub-brand-weight);
+  color: var(--sub-brand-color);
+}
+
+/* ===== INVOICE CARD ===== */
 .invoice-card {
-  background: white;
+  background: #fff;
   max-width: 900px;
   margin: auto;
   padding: 35px;
@@ -27,11 +63,10 @@ body {
 
 .page-title {
   font-size: 26px;
-  margin-bottom: 30px;
   font-weight: 600;
+  margin-bottom: 30px;
 }
 
-/* Sections */
 .form-section {
   margin-bottom: 35px;
 }
@@ -39,10 +74,10 @@ body {
 .form-section h2 {
   font-size: 18px;
   margin-bottom: 15px;
-  color: #004080;
+  color: var(--brand-color);
 }
 
-/* Grid */
+/* ===== GRID ===== */
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -55,7 +90,13 @@ body {
   gap: 15px 20px;
 }
 
-/* Inputs */
+@media (max-width: 768px) {
+  .grid-2, .grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== INPUTS ===== */
 label {
   display: block;
   font-weight: 500;
@@ -73,51 +114,145 @@ input {
 
 input:focus {
   outline: none;
-  border-color: #004080;
-  background: white;
+  border-color: var(--primary-color);
+  background: #fff;
 }
 
-/* Produkter */
+/* ===== PRODUKT ROW ===== */
 .produkt-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr auto;
   gap: 10px;
   margin-bottom: 10px;
+  align-items: center;
 }
 
-/* Buttons */
+/* ===== BUTTONS ===== */
 .primary-btn {
-  background: linear-gradient(135deg, #004080, #0073e6);
-  color: white;
+  background: var(--primary-gradient);
+  color: #fff;
   padding: 12px 25px;
   border-radius: 30px;
   border: none;
   font-size: 15px;
   cursor: pointer;
+  transition: 0.2s;
 }
 
 .primary-btn:hover {
   opacity: 0.9;
 }
 
-.secondary-btn {
-  background: #e9eef7;
+.secondary-btn, .remove-product-btn {
+  background: var(--secondary-color);
   border: none;
   padding: 8px 14px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
+  transition: 0.2s;
 }
 
-/* Submit area */
+.secondary-btn:hover, .remove-product-btn:hover {
+  background: var(--secondary-hover);
+}
+
+.remove-product-btn {
+  background: var(--danger-color);
+  color: #fff;
+}
+
+.remove-product-btn:hover {
+  opacity: 0.9;
+}
+
+/* ===== SUBMIT AREA ===== */
 .submit-area {
   text-align: right;
   margin-top: 30px;
 }
 
+/* ===== EMPTY MESSAGE ===== */
+.empty-message {
+  font-size: 16px;
+  color: #64748b;
+  padding: 20px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, #0f172a, #1e293b);
+  color: #fff;
+  padding: 25px 20px;
+  box-sizing: border-box;
+}
+
+.sidebar-header {
+  margin-bottom: 30px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-link, .sidebar-toggle {
+  color: #e2e8f0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 15px;
+  transition: 0.2s;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.sidebar-link:hover, .sidebar-toggle:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.sidebar-link.active {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: white;
+}
+
+.sidebar-submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+  flex-direction: column;
+  margin-left: 15px;
+}
+
+.sidebar-group.open .sidebar-submenu {
+  max-height: 300px;
+  opacity: 1;
+}
+
+.sidebar-submenu a {
+  color: #c7d2fe;
+  padding: 8px 10px;
+  text-decoration: none;
+  font-size: 14px;
+  border-radius: 8px;
+}
+
+.sidebar-submenu a:hover {
+  background: rgba(255,255,255,0.08);
+  color: white;
+}
+
 /* Responsive */
-@media (max-width: 768px) {
-  .grid-2, .grid-3 {
-    grid-template-columns: 1fr;
+@media (max-width: 900px) {
+  .sidebar {
+    display: none;
   }
 }
