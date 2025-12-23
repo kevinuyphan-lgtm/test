@@ -1,10 +1,13 @@
 /* === GLOBAL === */
-body, html {
+/* === GLOBAL === */
+body,
+html {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
   background: #f5f7fa;
   color: #333;
+  font-family: var(--font-main) !important;
 }
+
 
 /* === MAIN CONTENT === */
 .main-content {
