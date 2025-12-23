@@ -49,7 +49,7 @@ def login():
             session['user'] = user.navn
             session['user_id'] = user.id
             flash("Velkommen tilbake!", "success")
-            return redirect(url_for("faktura.sendte"))
+            return redirect(url_for("auth.index"))
         flash("Feil epost eller passord", "error")
         return redirect(url_for("auth.login"))
     return render_template("users/login.html")
