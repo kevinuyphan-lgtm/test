@@ -1,3 +1,59 @@
+/* ===== GLOBAL TYPOGRAFI BASE ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Font */
+  --font-main: 'Inter', Arial, sans-serif;
+
+  /* Font sizes */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 18px;
+  --text-xl: 22px;
+  --text-2xl: 28px;
+
+  /* Font weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Line height */
+  --line-normal: 1.6;
+}
+
+html, body {
+  font-family: var(--font-main);
+  font-size: var(--text-md);
+  font-weight: var(--weight-regular);
+  line-height: var(--line-normal);
+  color: #1e293b;
+}
+
+/* ===== HEADINGS ===== */
+h1 {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+}
+
+h2 {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+}
+
+h3 {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+}
+
+/* ===== TEXT ===== */
+p, span, td, th, li, label {
+  font-size: var(--text-md);
+}
+
+
+
 /* ===== LAYOUT ===== */
 .layout {
   display: flex;
