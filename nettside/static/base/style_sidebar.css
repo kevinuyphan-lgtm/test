@@ -4,25 +4,6 @@
   min-height: 100vh;
 }
 
-/* ===== TYPOGRAPHY SYSTEM (GLOBAL) ===== */
-:root {
-  --font-main: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-
-  --brand-size: 26px;
-  --brand-weight: 700;
-  --brand-color: #004080;
-
-  --sub-brand-size: 14px;
-  --sub-brand-weight: 500;
-  --sub-brand-color: #6c757d;
-}
-
-/* Global font baseline */
-html,
-body {
-  font-family: var(--font-main);
-}
-
 /* Brand (GLOBAL – aldri override direkte) */
 .brand {
   font-size: var(--brand-size);
