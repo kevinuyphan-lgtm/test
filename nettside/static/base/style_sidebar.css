@@ -4,6 +4,10 @@
   min-height: 100vh;
 }
 
+html, body {
+    font-family: Arial, sans-serif;
+}
+
 /* Brand (GLOBAL – aldri override direkte) */
 .brand {
   font-size: var(--brand-size);
