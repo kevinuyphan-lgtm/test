@@ -1,11 +1,3 @@
-/* ===== PAGE LAYOUT ===== */
-.layout {
-  display: flex;
-  min-height: 100vh;
-  background-color: #f4f6fb;
-  font-family: "Segoe UI", system-ui, sans-serif;
-}
-
 .main-content {
   flex: 1;
   padding: 40px;
