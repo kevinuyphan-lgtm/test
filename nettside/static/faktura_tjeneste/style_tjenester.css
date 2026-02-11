@@ -113,77 +113,68 @@
 }
 
 /* =====================================
-   PRODUCTS
+   PRODUCTS – PREMIUM VERSION
 ===================================== */
+
 .products-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .product-card {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 16px;
+  background: #f9fafc;
+  padding: 24px;
+  border-radius: 20px;
   display: grid;
   grid-template-columns: 2fr 1fr 1fr auto;
-  gap: 14px;
+  gap: 18px;
   align-items: center;
   border: 1px solid #e5e7eb;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 .product-card:hover {
+  background: #ffffff;
   border-color: #4a90e2;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 30px rgba(74,144,226,0.12);
 }
 
+/* INPUT FIX */
 .product-card input {
-  background: #fff;
-}
-
-/* =====================================
-   BUTTONS
-===================================== */
-.primary-btn {
-  background: linear-gradient(135deg, #4a90e2, #357abd);
-  color: #fff;
-  padding: 12px 28px;
-  border-radius: 30px;
-  border: none;
+  background: #f9fafc;
+  border: 1px solid #dbe3ec;
+  border-radius: 12px;
+  padding: 12px 14px;
   font-size: 14px;
-  cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.primary-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 15px rgba(74,144,226,0.25);
+.product-card input:focus {
+  outline: none;
+  border-color: #4a90e2;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(74,144,226,0.15);
 }
 
+/* ADD BUTTON */
 .secondary-btn {
   background: #ffffff;
   border: 1px solid #dbe3ec;
   padding: 10px 18px;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  transition: all 0.25s ease;
 }
 
 .secondary-btn:hover {
-  background: #f1f5f9;
+  background: #4a90e2;
   border-color: #4a90e2;
-  color: #4a90e2;
-  transform: translateY(-1px);
-}
-
-.secondary-btn:active {
-  transform: translateY(0);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(74,144,226,0.25);
 }
 
 /* Remove product */
@@ -210,6 +201,24 @@
   transform: scale(0.95);
 }
 
+/* =====================================
+   BUTTONS
+===================================== */
+.primary-btn {
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 30px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(74,144,226,0.25);
+}
 
 /* =====================================
    STICKY SUBMIT BAR
