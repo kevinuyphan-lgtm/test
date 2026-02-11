@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 
   const popup = document.getElementById("popup");
   const deletePopup = document.getElementById("deletePopup");
@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const cancelPopup = document.getElementById("cancelPopupBtn");
   const confirmDelete = document.getElementById("confirmDelete");
   const cancelDelete = document.getElementById("cancelDelete");
+  const newKundeBtn = document.getElementById("newKundeBtn");
 
   let editMode = false;
   let currentKundeId = null;
@@ -21,88 +22,127 @@ document.addEventListener("DOMContentLoaded", function () {
     epost: document.getElementById("popupEpost"),
   };
 
+  /* -----------------------------
+     HELPERS
+  ----------------------------- */
+
+  function openPopup() {
+    popup.style.display = "flex";
+  }
+
+  function closePopup() {
+    popup.style.display = "none";
+  }
+
+  function openDeletePopup() {
+    deletePopup.style.display = "flex";
+  }
+
+  function closeDeletePopup() {
+    deletePopup.style.display = "none";
+  }
+
   function resetForm() {
-    Object.values(inputs).forEach((i) => (i.value = ""));
+    Object.values(inputs).forEach(i => i.value = "");
     saveChanges.disabled = true;
     saveChanges.classList.remove("active");
   }
 
   function collectData() {
     return Object.fromEntries(
-      Object.entries(inputs).map(([k, v]) => [k, v.value])
+      Object.entries(inputs).map(([k, v]) => [k, v.value.trim()])
     );
   }
 
-  function enableButtonIfValid() {
+  function validateForm() {
     const allFilled = Object.values(inputs).every(
-      (i) => i.value.trim() !== ""
+      i => i.value.trim() !== ""
     );
+
     saveChanges.disabled = !allFilled;
     saveChanges.classList.toggle("active", allFilled);
   }
 
-  Object.values(inputs).forEach((input) => {
-    input.addEventListener("input", enableButtonIfValid);
+  Object.values(inputs).forEach(input => {
+    input.addEventListener("input", validateForm);
   });
 
-  // ---------------------------
-  // NY KUNDE
-  // ---------------------------
-  document.getElementById("newKundeBtn").addEventListener("click", () => {
+  /* -----------------------------
+     NY KUNDE
+  ----------------------------- */
+
+  newKundeBtn?.addEventListener("click", () => {
     editMode = false;
     currentKundeId = null;
     popupTitle.textContent = "Ny Kunde";
     resetForm();
-    popup.style.display = "flex";
+    openPopup();
   });
 
-  cancelPopup.addEventListener("click", () => {
-    popup.style.display = "none";
+  cancelPopup?.addEventListener("click", closePopup);
+
+  /* -----------------------------
+     REDIGER (EVENT DELEGATION)
+  ----------------------------- */
+
+  document.addEventListener("click", (e) => {
+    const editBtn = e.target.closest(".edit-icon");
+    if (!editBtn) return;
+
+    const row = editBtn.closest("tr");
+    if (!row) return;
+
+    editMode = true;
+    currentKundeId = row.dataset.id;
+    popupTitle.textContent = "Rediger Kunde";
+
+    inputs.navn.value = row.dataset.navn || "";
+    inputs.firma.value = row.dataset.firma || "";
+    inputs.adresse.value = row.dataset.adresse || "";
+    inputs.orgnr.value = row.dataset.orgnr || "";
+    inputs.referanse.value = row.dataset.referanse || "";
+    inputs.telefon.value = row.dataset.telefon || "";
+    inputs.epost.value = row.dataset.epost || "";
+
+    validateForm();
+    openPopup();
   });
 
-  // ---------------------------
-  // REDIGER
-  // ---------------------------
-  document.querySelectorAll(".edit-icon").forEach((icon) => {
-    icon.addEventListener("click", (e) => {
-      const row = e.target.closest("tr");
+  /* -----------------------------
+     SLETT (EVENT DELEGATION)
+  ----------------------------- */
 
-      editMode = true;
-      currentKundeId = row.dataset.id;
-      popupTitle.textContent = "Rediger Kunde";
+  document.addEventListener("click", (e) => {
+    const deleteBtn = e.target.closest(".delete-btn");
+    if (!deleteBtn) return;
 
-      inputs.navn.value = row.dataset.navn || "";
-      inputs.firma.value = row.dataset.firma || "";
-      inputs.adresse.value = row.dataset.adresse || "";
-      inputs.orgnr.value = row.dataset.orgnr || "";
-      inputs.referanse.value = row.dataset.referanse || "";
-      inputs.telefon.value = row.dataset.telefon || "";
-      inputs.epost.value = row.dataset.epost || "";
+    const row = deleteBtn.closest("tr");
+    if (!row) return;
 
-      enableButtonIfValid();
-      popup.style.display = "flex";
-    });
+    currentKundeId = row.dataset.id;
+    openDeletePopup();
   });
 
-  // ---------------------------
-  // LAGRE (ADD / UPDATE)
-  // ---------------------------
-  saveChanges.addEventListener("click", async () => {
+  cancelDelete?.addEventListener("click", closeDeletePopup);
+
+  /* -----------------------------
+     LAGRE
+  ----------------------------- */
+
+  saveChanges?.addEventListener("click", async () => {
     if (saveChanges.disabled) return;
 
     const data = collectData();
+    const url = editMode && currentKundeId
+      ? `/update-kunde/${currentKundeId}`
+      : `/add-kunde`;
 
     try {
-      let url = "/add-kunde";
-      if (editMode && currentKundeId) {
-        url = `/update-kunde/${currentKundeId}`;
-      }
+      saveChanges.disabled = true;
 
       const response = await fetch(url, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
@@ -112,29 +152,21 @@ document.addEventListener("DOMContentLoaded", function () {
         location.reload();
       } else {
         alert(result.message || "Noe gikk galt");
+        saveChanges.disabled = false;
       }
+
     } catch (error) {
       console.error("Serverfeil:", error);
       alert("Serverfeil");
+      saveChanges.disabled = false;
     }
   });
 
-  // ---------------------------
-  // SLETT
-  // ---------------------------
-  document.querySelectorAll(".delete-btn").forEach((icon) => {
-    icon.addEventListener("click", (e) => {
-      const row = e.target.closest("tr");
-      currentKundeId = row.dataset.id;
-      deletePopup.style.display = "flex";
-    });
-  });
+  /* -----------------------------
+     BEKREFT SLETT
+  ----------------------------- */
 
-  cancelDelete.addEventListener("click", () => {
-    deletePopup.style.display = "none";
-  });
-
-  confirmDelete.addEventListener("click", async () => {
+  confirmDelete?.addEventListener("click", async () => {
     if (!currentKundeId) return;
 
     try {
@@ -149,9 +181,11 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         alert(result.message || "Kunne ikke slette");
       }
+
     } catch (error) {
       console.error("Serverfeil:", error);
       alert("Serverfeil");
     }
   });
+
 });
