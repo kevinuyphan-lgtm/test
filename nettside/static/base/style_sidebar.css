@@ -143,3 +143,44 @@ html, body {
     display: none;
   }
 }
+
+/* ===============================
+   COLLAPSIBLE SIDEBAR
+=================================*/
+
+/* Smooth width animation */
+.sidebar {
+  transition: width 0.3s ease, padding 0.3s ease;
+}
+
+/* Collapsed state */
+.sidebar.collapsed {
+  width: 80px;
+  padding: 25px 10px;
+}
+
+/* Hide text when collapsed */
+.sidebar.collapsed .brand,
+.sidebar.collapsed .sub-brand,
+.sidebar.collapsed .sidebar-link span,
+.sidebar.collapsed .sidebar-toggle span {
+  display: none;
+}
+
+/* Center icons when collapsed */
+.sidebar.collapsed .sidebar-link,
+.sidebar.collapsed .sidebar-toggle {
+  text-align: center;
+  justify-content: center;
+  padding: 12px 0;
+}
+
+/* Rotate toggle icon */
+.sidebar.collapsed .collapse-btn {
+  transform: rotate(180deg);
+}
+
+/* Smooth content shift */
+.main-content {
+  transition: margin-left 0.3s ease;
+}

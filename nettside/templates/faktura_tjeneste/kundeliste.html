@@ -79,7 +79,12 @@
                 <td data-field="referanse">{{ kunde.referanse }}</td>
                 <td class="action-cell">
                   <img src="{{ url_for('static', filename='bilder/edit.jpeg') }}" class="edit-icon" title="Rediger">
-                  <img src="{{ url_for('static', filename='bilder/delete.png') }}" class="delete-icon" title="Slett">
+                  <button class="delete-btn" title="Slett">
+                    <svg class="trash-icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M9 3h6l1 2h4v2H4V5h4l1-2zM7 9h2v9H7V9zm4 0h2v9h-2V9zm4 0h2v9h-2V9z"/>
+                    </svg>
+                  </button>
+
                 </td>
               </tr>
               {% endfor %}
