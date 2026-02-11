@@ -1,23 +1,7 @@
-{% extends "base/base.html" %}
-
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='base/style_base.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='base/style_sidebar.css') }}">
-
-  <!-- Side-spesifikk CSS -->
-<link rel="stylesheet" href="{{ url_for('static', filename='faktura_tjeneste/style_tjenester.css') }}">
-
-  <!-- JS -->
-<script src="{{ url_for('static', filename='javascript/tjenester-java.js') }}" defer></script>
-<script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}" defer></script>
-
-<title>Ny Faktura</title>
-{% endblock %}
-
 {% block body %}
 <div class="layout">
 
-  <!-- MODERNE SIDEBAR -->
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <h2 class="brand">InvoicePro</h2>
@@ -25,40 +9,43 @@
     </div>
 
     <nav class="sidebar-nav">
-      <!-- Ny faktura -->
       <a class="sidebar-link active" href="{{ url_for('services.tjenester') }}">➕ Ny faktura</a>
 
       <div class="sidebar-group">
         <button class="sidebar-toggle" type="button">📄 Faktura</button>
         <div class="sidebar-submenu">
-          <!-- Lagret fakturaer ligger i faktura_bp -->
           <a href="{{ url_for('faktura.lagret_fakturaer') }}">Ubetalte</a>
           <a href="{{ url_for('faktura.sendte') }}">Sendte</a>
           <a href="{{ url_for('faktura.betalt') }}">Betalt</a>
         </div>
       </div>
 
-      <!-- Kundeliste -->
       <a class="sidebar-link" href="{{ url_for('kunde.kundeliste') }}">👥 Kunder</a>
-
       <a class="sidebar-link" href="#">📦 Produkter</a>
       <a class="sidebar-link" href="#">📊 Rapporter</a>
       <a class="sidebar-link" href="#">💲 Transaksjoner</a>
     </nav>
   </aside>
 
-  <!-- HOVEDINNHOLD -->
+  <!-- MAIN -->
   <div class="main-content">
-    <div class="invoice-card">
-      <h1 class="page-title">Opprett ny faktura</h1>
+    <div class="invoice-wrapper">
 
-      <form action="{{ url_for('faktura.generate_invoice') }}" method="POST">
+      <div class="invoice-header">
+        <h1>Opprett ny faktura</h1>
+        <p class="subtitle">Fyll inn informasjonen under for å generere en ny faktura</p>
+      </div>
+
+      <form action="{{ url_for('faktura.generate_invoice') }}" method="POST" class="invoice-form">
 
         <!-- MOTTAKER -->
-        <section class="form-section">
-          <h2>Mottaker</h2>
+        <section class="form-card">
+          <div class="card-header">
+            <h2>Mottaker</h2>
+          </div>
+
           <div class="grid-2">
-            <div>
+            <div class="form-group">
               <label>Firmanavn</label>
               <input list="kunder_list" id="firmanavn" name="firmanavn" placeholder="Velg eller skriv inn" required>
 
@@ -74,36 +61,41 @@
               </datalist>
             </div>
 
-            <div>
+            <div class="form-group">
               <label>Org.nr</label>
               <input type="text" id="orgnr" name="orgnr">
             </div>
 
-            <div>
+            <div class="form-group">
               <label>Adresse</label>
               <input type="text" id="firmaadresse" name="firmaadresse">
             </div>
 
-            <div>
+            <div class="form-group">
               <label>Referanse</label>
               <input type="text" id="referanse" name="referanse">
             </div>
           </div>
         </section>
 
-        <!-- FAKTURA -->
-        <section class="form-section">
-          <h2>Fakturadetaljer</h2>
+        <!-- FAKTURADETALJER -->
+        <section class="form-card">
+          <div class="card-header">
+            <h2>Fakturadetaljer</h2>
+          </div>
+
           <div class="grid-3">
-            <div>
+            <div class="form-group">
               <label>Fakturadato</label>
               <input type="date" id="invoice_date" name="invoice_date" readonly>
             </div>
-            <div>
+
+            <div class="form-group">
               <label>Dager til forfall</label>
               <input type="number" id="forfalls_dager" name="forfalls_dager" value="7">
             </div>
-            <div>
+
+            <div class="form-group">
               <label>Forfallsdato</label>
               <input type="text" id="due_date_display" readonly>
               <input type="hidden" id="due_date" name="due_date">
@@ -112,44 +104,52 @@
         </section>
 
         <!-- PRODUKTER -->
-        <section class="form-section">
-          <h2>Produkter</h2>
-          <div id="produkter-container">
-            <div class="produkt-row">
+        <section class="form-card">
+          <div class="card-header space-between">
+            <h2>Produkter</h2>
+            <button type="button" class="secondary-btn">+ Legg til produkt</button>
+          </div>
+
+          <div id="produkter-container" class="products-container">
+            <div class="produkt-row product-card">
               <input type="text" name="produkt_navn[]" placeholder="Produkt">
               <input type="number" name="produkt_antall[]" placeholder="Antall">
               <input type="number" step="0.01" name="produkt_pris[]" placeholder="Pris">
             </div>
           </div>
-          <button type="button" class="secondary-btn">+ Legg til produkt</button>
         </section>
 
         <!-- AVSENDER -->
-        <section class="form-section">
-          <h2>Avsender</h2>
+        <section class="form-card">
+          <div class="card-header">
+            <h2>Avsender</h2>
+          </div>
+
           <div class="grid-2">
-            <div>
+            <div class="form-group">
               <label>Firmanavn</label>
-              <input type="text" name="avsender_firmanavn" value="">
+              <input type="text" name="avsender_firmanavn">
             </div>
-            <div>
+
+            <div class="form-group">
               <label>Org.nr</label>
-              <input type="text" name="avsender_orgnr" value="">
+              <input type="text" name="avsender_orgnr">
             </div>
-            <div>
+
+            <div class="form-group">
               <label>Adresse</label>
-              <input type="text" name="avsender_adresse" value="">
+              <input type="text" name="avsender_adresse">
             </div>
           </div>
         </section>
 
-        <div class="submit-area">
+        <!-- STICKY SUBMIT -->
+        <div class="submit-bar">
           <button type="submit" class="primary-btn">Lag faktura</button>
         </div>
 
       </form>
     </div>
   </div>
-
 </div>
 {% endblock %}
