@@ -122,14 +122,20 @@
 }
 
 .product-card {
-  background: #f9fafc;
-  padding: 15px;
-  border-radius: 12px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
   display: grid;
   grid-template-columns: 2fr 1fr 1fr auto;
-  gap: 12px;
+  gap: 14px;
   align-items: center;
-  border: 1px solid #edf0f5;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.product-card:hover {
+  border-color: #4a90e2;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
 }
 
 .product-card input {
@@ -182,18 +188,28 @@
 
 /* Remove product */
 .remove-product-btn {
-  background: #e53935;
-  color: white;
-  border: none;
-  padding: 7px 12px;
-  border-radius: 8px;
+  background: transparent;
+  border: 1px solid #fecaca;
+  color: #e53935;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .remove-product-btn:hover {
-  opacity: 0.9;
+  background: #e53935;
+  color: white;
+  border-color: #e53935;
+  transform: scale(1.05);
 }
+
+.remove-product-btn:active {
+  transform: scale(0.95);
+}
+
 
 /* =====================================
    STICKY SUBMIT BAR
