@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // ---------------------------
   // SLETT
   // ---------------------------
-  document.querySelectorAll(".delete-icon").forEach((icon) => {
+  document.querySelectorAll(".delete-btn").forEach((icon) => {
     icon.addEventListener("click", (e) => {
       const row = e.target.closest("tr");
       currentKundeId = row.dataset.id;

@@ -125,16 +125,14 @@
 }
 
 /* ===============================
-   DELETE BUTTON (FORCED SIZE)
+   DELETE BUTTON (WORKING VERSION)
 =================================*/
 .delete-btn {
-  all: unset;               /* fjerner ALL arvet styling */
   width: 36px;
   height: 36px;
-  min-width: 36px;
-  min-height: 36px;
 
   border-radius: 50%;
+  border: none;
   background: #ffe8e8;
 
   display: inline-flex;
@@ -142,20 +140,17 @@
   justify-content: center;
 
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: 0.2s ease;
+
+  padding: 0;
 }
 
-/* FORCE SVG SIZE */
+/* SVG size lock */
 .delete-btn .trash-icon {
-  width: 18px !important;
-  height: 18px !important;
-  min-width: 18px;
-  min-height: 18px;
-  max-width: 18px;
-  max-height: 18px;
+  width: 18px;
+  height: 18px;
   fill: #e53935;
-  pointer-events: none;
-  display: block;
+  pointer-events: none; /* viktig */
 }
 
 /* Hover */
