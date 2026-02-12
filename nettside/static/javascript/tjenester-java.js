@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ===============================
      DATO / FORFALL
   =============================== */
+
   const invoiceDateInput = document.getElementById("invoice_date");
   const daysInput = document.getElementById("forfalls_dager");
   const displayField = document.getElementById("due_date_display");
@@ -13,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const today = new Date();
     invoiceDateInput.value = today.toISOString().split("T")[0];
 
-    function oppdaterForfallsDato() {
+    function updateDueDate() {
       const baseDate = new Date(invoiceDateInput.value);
       const days = parseInt(daysInput.value) || 7;
       baseDate.setDate(baseDate.getDate() + days);
@@ -22,10 +23,45 @@ document.addEventListener("DOMContentLoaded", () => {
       displayField.value = baseDate.toLocaleDateString("no-NO");
     }
 
-    oppdaterForfallsDato();
-    daysInput.addEventListener("input", oppdaterForfallsDato);
-    invoiceDateInput.addEventListener("change", oppdaterForfallsDato);
+    updateDueDate();
+    daysInput.addEventListener("input", updateDueDate);
+    invoiceDateInput.addEventListener("change", updateDueDate);
   }
+
+
+  /* ===============================
+     AUTOFYLL KUNDE (FIXED)
+  =============================== */
+
+  const firmanavnInput = document.getElementById("firmanavn");
+  const adresseInput = document.getElementById("firmaadresse");
+  const orgnrInput = document.getElementById("orgnr");
+  const referanseInput = document.getElementById("referanse");
+  const datalist = document.getElementById("kunder_list");
+
+  if (firmanavnInput && datalist) {
+
+    function fillCustomerData(selectedName) {
+
+      const options = Array.from(datalist.options);
+      const match = options.find(opt => opt.value === selectedName);
+
+      if (match) {
+        adresseInput.value = match.dataset.adresse || "";
+        orgnrInput.value = match.dataset.orgnr || "";
+        referanseInput.value = match.dataset.referanse || "";
+      }
+    }
+
+    firmanavnInput.addEventListener("change", () => {
+      fillCustomerData(firmanavnInput.value);
+    });
+
+    firmanavnInput.addEventListener("input", () => {
+      fillCustomerData(firmanavnInput.value);
+    });
+  }
+
 
   /* ===============================
      PRODUKTER
@@ -35,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const addProductBtn = document.getElementById("addProductBtn");
 
   function createProductRow() {
+
     const row = document.createElement("div");
     row.className = "produkt-row product-card";
 
@@ -53,12 +90,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (produkterContainer) {
-    produkterContainer.appendChild(createProductRow());
+
+    // Bare legg til hvis tom
+    if (produkterContainer.children.length === 0) {
+      produkterContainer.appendChild(createProductRow());
+    }
+
+    addProductBtn?.addEventListener("click", () => {
+      produkterContainer.appendChild(createProductRow());
+    });
   }
 
-  addProductBtn?.addEventListener("click", () => {
-    produkterContainer.appendChild(createProductRow());
-  });
 
   /* ===============================
      SENDER LOGIC
@@ -92,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
         senderFields.adresse.value = data.adresse;
       }
     } catch (err) {
-      console.error("Kunne ikke hente avsender", err);
+      console.error("Kunne ikke hente avsender:", err);
     }
   }
 
@@ -133,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
         senderPopup.style.display = "none";
       }
     } catch (err) {
-      console.error("Kunne ikke lagre sender", err);
+      console.error("Kunne ikke lagre sender:", err);
     }
   });
 
