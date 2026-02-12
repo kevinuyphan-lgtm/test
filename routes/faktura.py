@@ -27,10 +27,14 @@ def generate_invoice():
         flash("Du må logge inn for å generere faktura", "error")
         return redirect(url_for("auth.login"))
 
+    from tjenester import STANDARD_VAART_FIRMA
+
+    # Fakturanummer
     fakturanummer = user.faktura_teller
     user.faktura_teller += 1
     db.session.commit()
 
+    # Datoer
     invoice_date_str = request.form.get("invoice_date")
     invoice_date = (
         datetime.strptime(invoice_date_str, "%Y-%m-%d").date()
@@ -45,6 +49,32 @@ def generate_invoice():
         else invoice_date + timedelta(days=10)
     )
 
+    # Produkter
+    produkter = [
+        {"navn": n, "antall": a, "pris": p}
+        for n, a, p in zip(
+            request.form.getlist("produkt_navn[]"),
+            request.form.getlist("produkt_antall[]"),
+            request.form.getlist("produkt_pris[]"),
+        )
+    ]
+
+    # Vårt firma (merge standard + skjema)
+    vårt_firma = STANDARD_VAART_FIRMA.copy()
+
+    vårt_firma.update({
+        "navn": request.form.get("avsender_firmanavn") or vårt_firma["navn"],
+        "orgnr": request.form.get("avsender_orgnr") or vårt_firma["orgnr"],
+        "addresse": request.form.get("avsender_adresse") or vårt_firma["addresse"],
+        "navn_på_bank": request.form.get("avsender_bank") or vårt_firma["navn_på_bank"],
+        "telefon": request.form.get("avsender_telefon") or vårt_firma["telefon"],
+        "IBAN": request.form.get("avsender_iban") or vårt_firma["IBAN"],
+        "swift_bic": request.form.get("avsender_swift") or vårt_firma["swift_bic"],
+        "vår_referanse": request.form.get("avsender_referanse") or vårt_firma["vår_referanse"],
+        "KID": request.form.get("avsender_kid") or vårt_firma["KID"],
+    })
+
+    # Samle invoice_data
     invoice_data = {
         "invoice_number": fakturanummer,
         "firmanavn": request.form.get("firmanavn"),
@@ -53,16 +83,11 @@ def generate_invoice():
         "referanse": request.form.get("referanse"),
         "invoice_date": invoice_date.strftime("%Y-%m-%d"),
         "due_date": due_date.strftime("%Y-%m-%d"),
-        "produkter": [
-            {"navn": n, "antall": a, "pris": p}
-            for n, a, p in zip(
-                request.form.getlist("produkt_navn[]"),
-                request.form.getlist("produkt_antall[]"),
-                request.form.getlist("produkt_pris[]"),
-            )
-        ],
+        "produkter": produkter,
+        "vårt_firma": vårt_firma
     }
 
+    # Lagre PDF
     user_folder = os.path.join(Config.PDF_FOLDER, f"user_{user.id}")
     os.makedirs(user_folder, exist_ok=True)
 
@@ -70,10 +95,16 @@ def generate_invoice():
     filepath = os.path.join(user_folder, filename)
 
     pdf_buffer = generate_invoice_pdf(invoice_data)
+
     with open(filepath, "wb") as f:
         f.write(pdf_buffer.getbuffer())
 
-    faktura = Faktura(filnavn=filename, user_id=user.id, status="utkast")
+    faktura = Faktura(
+        filnavn=filename,
+        user_id=user.id,
+        status="utkast"
+    )
+
     db.session.add(faktura)
     db.session.commit()
 
@@ -124,7 +155,7 @@ def betalt():
 
 
 # -------------------------------
-# Download (kun ID - enkel logikk)
+# Download
 # -------------------------------
 @faktura_bp.route("/download/<int:faktura_id>")
 def download_faktura(faktura_id):
