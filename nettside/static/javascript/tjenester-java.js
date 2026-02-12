@@ -4,8 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
        DATO / FORFALL
     =============================== */
     const invoiceDateInput = document.getElementById("invoice_date");
-    const today = new Date();
-    invoiceDateInput.value = today.toISOString().split("T")[0];
+    if (invoiceDateInput) {
+        const today = new Date();
+        invoiceDateInput.value = today.toISOString().split("T")[0];
+    }
 
     const daysInput = document.getElementById("forfalls_dager");
     const displayField = document.getElementById("due_date_display");
