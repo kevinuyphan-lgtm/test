@@ -32,6 +32,16 @@ class Faktura(db.Model):
 
 class Sender(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+
     firmanavn = db.Column(db.String(150))
     orgnr = db.Column(db.String(50))
     adresse = db.Column(db.String(200))
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('bruker.id'),
+        nullable=False
+    )
+
+    bruker = db.relationship('Bruker', backref='sender', lazy=True)
+
