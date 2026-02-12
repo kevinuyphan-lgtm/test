@@ -21,8 +21,10 @@
     </div>
 
     <nav class="sidebar-nav">
-      <a class="sidebar-link active" href="{{ url_for('services.tjenester') }}">➕ Ny faktura</a>
-
+      <a class="sidebar-link active" href="{{ url_for('services.tjenester') }}">
+        ➕ Ny faktura
+      </a>
+    
       <div class="sidebar-group">
         <button class="sidebar-toggle" type="button">📄 Faktura</button>
         <div class="sidebar-submenu">
@@ -31,8 +33,15 @@
           <a href="{{ url_for('faktura.betalt') }}">Betalt</a>
         </div>
       </div>
-
-      <a class="sidebar-link" href="{{ url_for('kunde.kundeliste') }}">👥 Kunder</a>
+    
+      <a class="sidebar-link" href="{{ url_for('kunde.kundeliste') }}">
+        👥 Kunder
+      </a>
+    
+      <!-- NY KNAPP -->
+      <a class="sidebar-link" href="{{ url_for('faktura.firma_innstillinger') }}">
+        ⚙️ Firma-innstillinger
+      </a>
     </nav>
   </aside>
 
