@@ -39,7 +39,7 @@
         👥 Kunder
       </a>
 
-      <a class="sidebar-link" href="{{ url_for('settings.firma_innstillinger') }}">
+      <a class="sidebar-link" href="{{ url_for('faktura.firma_innstillinger') }}">
         ⚙️ Firma-innstillinger
       </a>
     </nav>
@@ -144,7 +144,7 @@
         <section class="form-card">
           <div class="card-header space-between">
             <h2>Avsender</h2>
-            <a href="{{ url_for('settings.firma_innstillinger') }}" class="secondary-btn">
+            <a href="{{ url_for('faktura.firma_innstillinger') }}" class="secondary-btn">
               Rediger
             </a>
           </div>
@@ -201,7 +201,7 @@
           {% else %}
             <div style="padding:20px;">
               <p>Du har ikke satt opp firma-innstillinger enda.</p>
-              <a href="{{ url_for('settings.firma_innstillinger') }}" class="primary-btn">
+              <a href="{{ url_for('faktura.firma_innstillinger') }}" class="primary-btn">
                 Sett opp firma
               </a>
             </div>
