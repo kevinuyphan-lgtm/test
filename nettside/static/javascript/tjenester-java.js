@@ -164,3 +164,77 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+// =======================
+// SENDER LOGIC
+// =======================
+
+const senderPopup = document.getElementById("senderPopup");
+const editSenderBtn = document.getElementById("editSenderBtn");
+const cancelSenderBtn = document.getElementById("cancelSenderBtn");
+const saveSenderBtn = document.getElementById("saveSenderBtn");
+
+const senderFields = {
+  firmanavn: document.getElementById("avsender_firmanavn"),
+  orgnr: document.getElementById("avsender_orgnr"),
+  adresse: document.getElementById("avsender_adresse")
+};
+
+const popupFields = {
+  firmanavn: document.getElementById("popup_sender_firmanavn"),
+  orgnr: document.getElementById("popup_sender_orgnr"),
+  adresse: document.getElementById("popup_sender_adresse")
+};
+
+// Hent lagret avsender når siden lastes
+async function loadSender() {
+  const res = await fetch("/get-sender");
+  const data = await res.json();
+
+  if (data.exists) {
+    senderFields.firmanavn.value = data.firmanavn;
+    senderFields.orgnr.value = data.orgnr;
+    senderFields.adresse.value = data.adresse;
+  }
+}
+
+loadSender();
+
+// Åpne popup
+editSenderBtn.addEventListener("click", () => {
+  popupFields.firmanavn.value = senderFields.firmanavn.value;
+  popupFields.orgnr.value = senderFields.orgnr.value;
+  popupFields.adresse.value = senderFields.adresse.value;
+  senderPopup.style.display = "flex";
+});
+
+// Lukk popup
+cancelSenderBtn.addEventListener("click", () => {
+  senderPopup.style.display = "none";
+});
+
+// Lagre
+saveSenderBtn.addEventListener("click", async () => {
+
+  const data = {
+    firmanavn: popupFields.firmanavn.value,
+    orgnr: popupFields.orgnr.value,
+    adresse: popupFields.adresse.value
+  };
+
+  const res = await fetch("/save-sender", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  });
+
+  const result = await res.json();
+
+  if (result.success) {
+    senderFields.firmanavn.value = data.firmanavn;
+    senderFields.orgnr.value = data.orgnr;
+    senderFields.adresse.value = data.adresse;
+    senderPopup.style.display = "none";
+  }
+});
+
