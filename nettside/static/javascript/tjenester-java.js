@@ -1,31 +1,65 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* ===============================
-     DATO / FORFALL
-  =============================== */
+  /* ======================================
+     DATO SYNK (2-veis system)
+  ====================================== */
 
   const invoiceDateInput = document.getElementById("invoice_date");
   const daysInput = document.getElementById("forfalls_dager");
-  const displayField = document.getElementById("due_date_display");
-  const hiddenField = document.getElementById("due_date");
+  const dueDateDisplay = document.getElementById("due_date_display");
+  const hiddenDueDate = document.getElementById("due_date");
 
-  if (invoiceDateInput && daysInput && displayField && hiddenField) {
+  if (invoiceDateInput && daysInput && dueDateDisplay && hiddenDueDate) {
 
     const today = new Date();
     invoiceDateInput.value = today.toISOString().split("T")[0];
 
-    function updateDueDate() {
-      const baseDate = new Date(invoiceDateInput.value);
-      const days = parseInt(daysInput.value) || 7;
-      baseDate.setDate(baseDate.getDate() + days);
-
-      hiddenField.value = baseDate.toISOString().split("T")[0];
-      displayField.value = baseDate.toLocaleDateString("no-NO");
+    function formatDisplay(date) {
+      const d = String(date.getDate()).padStart(2, "0");
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const y = date.getFullYear();
+      return `${d}/${m}/${y}`;
     }
 
-    updateDueDate();
-    daysInput.addEventListener("input", updateDueDate);
-    invoiceDateInput.addEventListener("change", updateDueDate);
+    function parseDisplay(str) {
+      const parts = str.split("/");
+      if (parts.length !== 3) return null;
+
+      const [d, m, y] = parts.map(Number);
+      if (!d || !m || !y) return null;
+
+      return new Date(y, m - 1, d);
+    }
+
+    function updateFromDays() {
+      const base = new Date(invoiceDateInput.value);
+      const days = parseInt(daysInput.value) || 0;
+      base.setDate(base.getDate() + days);
+
+      hiddenDueDate.value = base.toISOString().split("T")[0];
+      dueDateDisplay.value = formatDisplay(base);
+    }
+
+    function updateFromDueDate() {
+      const base = new Date(invoiceDateInput.value);
+      const due = parseDisplay(dueDateDisplay.value);
+      if (!due) return;
+
+      hiddenDueDate.value = due.toISOString().split("T")[0];
+
+      const diff = Math.round((due - base) / (1000 * 60 * 60 * 24));
+      daysInput.value = diff >= 0 ? diff : 0;
+    }
+
+    function updateFromInvoiceDate() {
+      updateFromDays();
+    }
+
+    updateFromDays();
+
+    daysInput.addEventListener("input", updateFromDays);
+    invoiceDateInput.addEventListener("change", updateFromInvoiceDate);
+    dueDateDisplay.addEventListener("input", updateFromDueDate);
   }
 
 
