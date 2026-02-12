@@ -14,7 +14,6 @@
 {% block body %}
 <div class="layout">
 
-  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <h2 class="brand">InvoicePro</h2>
@@ -34,25 +33,20 @@
       </div>
 
       <a class="sidebar-link" href="{{ url_for('kunde.kundeliste') }}">👥 Kunder</a>
-      <a class="sidebar-link" href="#">📦 Produkter</a>
-      <a class="sidebar-link" href="#">📊 Rapporter</a>
-      <a class="sidebar-link" href="#">💲 Transaksjoner</a>
     </nav>
   </aside>
 
-  <!-- MAIN CONTENT -->
   <div class="main-content">
     <div class="invoice-wrapper">
 
-      <!-- HEADER -->
       <div class="invoice-header">
         <h1>Opprett ny faktura</h1>
-        <p class="subtitle">Fyll inn informasjonen under for å generere en ny faktura</p>
+        <p class="subtitle">Fyll inn informasjonen under</p>
       </div>
 
-      <form action="{{ url_for('faktura.generate_invoice') }}" method="POST" class="invoice-form">
+      <form action="{{ url_for('faktura.generate_invoice') }}" method="POST">
 
-        <!-- MOTTAKER -->
+        <!-- Mottaker -->
         <section class="form-card">
           <div class="card-header">
             <h2>Mottaker</h2>
@@ -61,15 +55,13 @@
           <div class="grid-2">
             <div class="form-group">
               <label>Firmanavn</label>
-              <input list="kunder_list" id="firmanavn" name="firmanavn" placeholder="Velg eller skriv inn" required>
-
+              <input list="kunder_list" id="firmanavn" name="firmanavn" required>
               <datalist id="kunder_list">
                 {% for kunde in kunder %}
-                <option 
-                  value="{{ kunde.navn }}"
-                  data-adresse="{{ kunde.adresse }}"
-                  data-orgnr="{{ kunde.orgnr }}"
-                  data-referanse="{{ kunde.referanse }}">
+                <option value="{{ kunde.navn }}"
+                        data-adresse="{{ kunde.adresse }}"
+                        data-orgnr="{{ kunde.orgnr }}"
+                        data-referanse="{{ kunde.referanse }}">
                 </option>
                 {% endfor %}
               </datalist>
@@ -92,12 +84,8 @@
           </div>
         </section>
 
-        <!-- FAKTURADETALJER -->
+        <!-- Faktura detaljer -->
         <section class="form-card">
-          <div class="card-header">
-            <h2>Fakturadetaljer</h2>
-          </div>
-
           <div class="grid-3">
             <div class="form-group">
               <label>Fakturadato</label>
@@ -117,23 +105,19 @@
           </div>
         </section>
 
-        <!-- PRODUKTER -->
+        <!-- Produkter -->
         <section class="form-card">
           <div class="card-header space-between">
             <h2>Produkter</h2>
-            <button type="button" class="secondary-btn">+ Legg til produkt</button>
+            <button type="button" id="addProductBtn" class="secondary-btn">
+              + Legg til produkt
+            </button>
           </div>
 
-          <div id="produkter-container" class="products-container">
-            <div class="produkt-row product-card">
-              <input type="text" name="produkt_navn[]" placeholder="Produkt">
-              <input type="number" name="produkt_antall[]" placeholder="Antall">
-              <input type="number" step="0.01" name="produkt_pris[]" placeholder="Pris">
-            </div>
-          </div>
+          <div id="produkter-container" class="products-container"></div>
         </section>
 
-        <!-- AVSENDER (LAGRES I DATABASE) -->
+        <!-- Avsender -->
         <section class="form-card">
           <div class="card-header space-between">
             <h2>Avsender</h2>
@@ -145,38 +129,23 @@
           <div class="grid-2">
             <div class="form-group">
               <label>Firmanavn</label>
-              <input type="text"
-                     id="avsender_firmanavn"
-                     name="avsender_firmanavn"
-                     value="{{ avsender.firmanavn if avsender else '' }}"
-                     readonly>
+              <input type="text" id="avsender_firmanavn" name="avsender_firmanavn" readonly>
             </div>
 
             <div class="form-group">
               <label>Org.nr</label>
-              <input type="text"
-                     id="avsender_orgnr"
-                     name="avsender_orgnr"
-                     value="{{ avsender.orgnr if avsender else '' }}"
-                     readonly>
+              <input type="text" id="avsender_orgnr" name="avsender_orgnr" readonly>
             </div>
 
             <div class="form-group">
               <label>Adresse</label>
-              <input type="text"
-                     id="avsender_adresse"
-                     name="avsender_adresse"
-                     value="{{ avsender.adresse if avsender else '' }}"
-                     readonly>
+              <input type="text" id="avsender_adresse" name="avsender_adresse" readonly>
             </div>
           </div>
         </section>
 
-        <!-- SUBMIT -->
         <div class="submit-bar">
-          <button type="submit" class="primary-btn">
-            Lag faktura
-          </button>
+          <button type="submit" class="primary-btn">Lag faktura</button>
         </div>
 
       </form>
@@ -184,11 +153,9 @@
   </div>
 </div>
 
-
-<!-- AVSENDER POPUP -->
+<!-- Sender popup -->
 <div class="popup-overlay" id="senderPopup">
   <div class="popup-box">
-
     <h2>Rediger Avsender</h2>
 
     <div class="popup-field">
@@ -208,11 +175,8 @@
 
     <div class="popup-actions">
       <button type="button" id="cancelSenderBtn">Avbryt</button>
-      <button type="button" id="saveSenderBtn" class="primary-btn">
-        Lagre
-      </button>
+      <button type="button" id="saveSenderBtn" class="primary-btn">Lagre</button>
     </div>
-
   </div>
 </div>
 
