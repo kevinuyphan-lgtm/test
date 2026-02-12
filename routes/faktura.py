@@ -27,7 +27,11 @@ def generate_invoice():
         flash("Du må logge inn for å generere faktura", "error")
         return redirect(url_for("auth.login"))
 
-    from tjenester import STANDARD_VAART_FIRMA
+    # Hent sender fra DB
+    sender = user.sender
+    if not sender:
+        flash("Du må sette opp firma-innstillinger først.", "error")
+        return redirect(url_for("faktura.firma_innstillinger"))
 
     # Fakturanummer
     fakturanummer = user.faktura_teller
@@ -59,22 +63,19 @@ def generate_invoice():
         )
     ]
 
-    # Vårt firma (merge standard + skjema)
-    vårt_firma = STANDARD_VAART_FIRMA.copy()
+    # Bygg vårt_firma fra DB
+    vårt_firma = {
+        "navn": sender.firmanavn,
+        "orgnr": sender.orgnr,
+        "addresse": sender.adresse,
+        "navn_på_bank": sender.bank,
+        "telefon": sender.telefon,
+        "IBAN": sender.iban,
+        "swift_bic": sender.swift,
+        "vår_referanse": sender.referanse,
+        "KID": sender.kid,
+    }
 
-    vårt_firma.update({
-        "navn": request.form.get("avsender_firmanavn") or vårt_firma["navn"],
-        "orgnr": request.form.get("avsender_orgnr") or vårt_firma["orgnr"],
-        "addresse": request.form.get("avsender_adresse") or vårt_firma["addresse"],
-        "navn_på_bank": request.form.get("avsender_bank") or vårt_firma["navn_på_bank"],
-        "telefon": request.form.get("avsender_telefon") or vårt_firma["telefon"],
-        "IBAN": request.form.get("avsender_iban") or vårt_firma["IBAN"],
-        "swift_bic": request.form.get("avsender_swift") or vårt_firma["swift_bic"],
-        "vår_referanse": request.form.get("avsender_referanse") or vårt_firma["vår_referanse"],
-        "KID": request.form.get("avsender_kid") or vårt_firma["KID"],
-    })
-
-    # Samle invoice_data
     invoice_data = {
         "invoice_number": fakturanummer,
         "firmanavn": request.form.get("firmanavn"),
@@ -110,7 +111,6 @@ def generate_invoice():
 
     pdf_buffer.seek(0)
     return send_file(pdf_buffer, as_attachment=True, download_name=filename)
-
 
 # -------------------------------
 # Lagret fakturaer
