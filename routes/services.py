@@ -36,17 +36,21 @@ from system.models import Sender
 
 @services_bp.route("/get-sender", methods=["GET"])
 def get_sender():
-    sender = Sender.query.first()
+    uid = session.get("user_id")
+    if not uid:
+        return jsonify({"exists": False})
+
+    sender = Sender.query.filter_by(user_id=uid).first()
+
     if not sender:
         return jsonify({"exists": False})
-    
+
     return jsonify({
         "exists": True,
         "firmanavn": sender.firmanavn,
         "orgnr": sender.orgnr,
         "adresse": sender.adresse
     })
-
 
 @services_bp.route("/save-sender", methods=["POST"])
 def save_sender():
