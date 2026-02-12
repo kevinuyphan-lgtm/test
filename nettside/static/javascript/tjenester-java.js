@@ -1,67 +1,78 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* ======================================
-     DATO SYNK (2-veis system)
-  ====================================== */
+ /* ======================================
+   DATO SYNK (DD/MM/YYYY SYSTEM)
+====================================== */
 
-  const invoiceDateInput = document.getElementById("invoice_date");
-  const daysInput = document.getElementById("forfalls_dager");
-  const dueDateDisplay = document.getElementById("due_date_display");
-  const hiddenDueDate = document.getElementById("due_date");
+const invoiceDisplay = document.getElementById("invoice_date_display");
+const invoiceHidden = document.getElementById("invoice_date");
+const daysInput = document.getElementById("forfalls_dager");
+const dueDisplay = document.getElementById("due_date_display");
+const dueHidden = document.getElementById("due_date");
 
-  if (invoiceDateInput && daysInput && dueDateDisplay && hiddenDueDate) {
+function formatDisplay(date) {
+  const d = String(date.getDate()).padStart(2, "0");
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const y = date.getFullYear();
+  return `${d}/${m}/${y}`;
+}
 
-    const today = new Date();
-    invoiceDateInput.value = today.toISOString().split("T")[0];
+function parseDisplay(str) {
+  const parts = str.split("/");
+  if (parts.length !== 3) return null;
 
-    function formatDisplay(date) {
-      const d = String(date.getDate()).padStart(2, "0");
-      const m = String(date.getMonth() + 1).padStart(2, "0");
-      const y = date.getFullYear();
-      return `${d}/${m}/${y}`;
-    }
+  const [d, m, y] = parts.map(Number);
+  if (!d || !m || !y) return null;
 
-    function parseDisplay(str) {
-      const parts = str.split("/");
-      if (parts.length !== 3) return null;
+  return new Date(y, m - 1, d);
+}
 
-      const [d, m, y] = parts.map(Number);
-      if (!d || !m || !y) return null;
+// Sett dagens dato ved load
+if (invoiceDisplay && invoiceHidden) {
+  const today = new Date();
+  invoiceDisplay.value = formatDisplay(today);
+  invoiceHidden.value = today.toISOString().split("T")[0];
+}
 
-      return new Date(y, m - 1, d);
-    }
+// Når bruker skriver fakturadato
+invoiceDisplay?.addEventListener("input", () => {
+  const date = parseDisplay(invoiceDisplay.value);
+  if (!date) return;
 
-    function updateFromDays() {
-      const base = new Date(invoiceDateInput.value);
-      const days = parseInt(daysInput.value) || 0;
-      base.setDate(base.getDate() + days);
+  invoiceHidden.value = date.toISOString().split("T")[0];
+  updateDueFromDays();
+});
 
-      hiddenDueDate.value = base.toISOString().split("T")[0];
-      dueDateDisplay.value = formatDisplay(base);
-    }
+// Regn forfall basert på dager
+function updateDueFromDays() {
+  const base = parseDisplay(invoiceDisplay.value);
+  if (!base) return;
 
-    function updateFromDueDate() {
-      const base = new Date(invoiceDateInput.value);
-      const due = parseDisplay(dueDateDisplay.value);
-      if (!due) return;
+  const days = parseInt(daysInput.value) || 0;
+  const due = new Date(base);
+  due.setDate(due.getDate() + days);
 
-      hiddenDueDate.value = due.toISOString().split("T")[0];
+  dueDisplay.value = formatDisplay(due);
+  dueHidden.value = due.toISOString().split("T")[0];
+}
 
-      const diff = Math.round((due - base) / (1000 * 60 * 60 * 24));
-      daysInput.value = diff >= 0 ? diff : 0;
-    }
+// Når dager endres
+daysInput?.addEventListener("input", updateDueFromDays);
 
-    function updateFromInvoiceDate() {
-      updateFromDays();
-    }
+// Når bruker skriver forfallsdato direkte
+dueDisplay?.addEventListener("input", () => {
+  const base = parseDisplay(invoiceDisplay.value);
+  const due = parseDisplay(dueDisplay.value);
+  if (!base || !due) return;
 
-    updateFromDays();
+  dueHidden.value = due.toISOString().split("T")[0];
 
-    daysInput.addEventListener("input", updateFromDays);
-    invoiceDateInput.addEventListener("change", updateFromInvoiceDate);
-    dueDateDisplay.addEventListener("input", updateFromDueDate);
-  }
+  const diff = Math.round((due - base) / (1000 * 60 * 60 * 24));
+  daysInput.value = diff >= 0 ? diff : 0;
+});
 
+// Init
+updateDueFromDays();
 
   /* ===============================
      AUTOFYLL KUNDE (FIXED)
