@@ -29,3 +29,9 @@ class Faktura(db.Model):
     status = db.Column(db.String(20), default="utkast")
     betalt_dato = db.Column(db.DateTime, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('bruker.id'), nullable=False)
+
+class Sender(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    firmanavn = db.Column(db.String(150))
+    orgnr = db.Column(db.String(50))
+    adresse = db.Column(db.String(200))
