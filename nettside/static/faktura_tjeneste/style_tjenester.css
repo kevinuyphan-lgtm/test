@@ -314,3 +314,61 @@
     padding: 25px;
   }
 }
+
+/* =====================================
+   POPUP OVERLAY (AVSENDER)
+===================================== */
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.65);
+  backdrop-filter: blur(6px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-overlay.active {
+  display: flex;
+}
+
+/* Popup box */
+.popup-box {
+  background: white;
+  width: 500px;
+  max-width: 95%;
+  padding: 30px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.2);
+  animation: fadeUp 0.25s ease;
+}
+
+@keyframes fadeUp {
+  from { transform: translateY(15px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Popup fields */
+.popup-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.popup-field input {
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
