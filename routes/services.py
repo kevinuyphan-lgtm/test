@@ -1,21 +1,21 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, session, request, jsonify
+from flask import Blueprint, render_template, redirect, url_for, session, request, jsonify
 from system.extensions import db
 from system.models import Kunde, Bruker, Sender
 
 services_bp = Blueprint("services", __name__)
 
 
-# -------------------------------
-# Hent innlogget bruker
-# -------------------------------
+# ---------------------------------------------------
+# HENT INNLOGGET BRUKER
+# ---------------------------------------------------
 def current_user():
     uid = session.get("user_id")
     return Bruker.query.get(uid) if uid else None
 
 
-# -------------------------------
-# Static / service pages
-# -------------------------------
+# ---------------------------------------------------
+# STATIC SIDENE (IKKE RØRT)
+# ---------------------------------------------------
 @services_bp.route("/om-oss")
 def om_oss():
     return render_template("om-oss.html")
@@ -26,24 +26,28 @@ def kontakt():
     return render_template("kontakt.html")
 
 
+# ---------------------------------------------------
+# TJENESTER (NY FAKTURA SIDE)
+# ---------------------------------------------------
 @services_bp.route("/tjenester")
 def tjenester():
     user = current_user()
     if not user:
         return redirect(url_for("auth.login"))
 
-    # Hent sender riktig (relationship returnerer liste)
-    sender = user.sender
-    
+    # 🔥 HENT SENDER DIREKTE FRA DB (STABIL LØSNING)
+    sender = Sender.query.filter_by(user_id=user.id).first()
+
     return render_template(
         "faktura_tjeneste/tjenester.html",
         kunder=user.kunder,
         sender=sender
     )
 
-# -------------------------------
-# HENT AVSENDER
-# -------------------------------
+
+# ---------------------------------------------------
+# HENT AVSENDER (AJAX)
+# ---------------------------------------------------
 @services_bp.route("/get-sender", methods=["GET"])
 def get_sender():
     user = current_user()
@@ -59,18 +63,24 @@ def get_sender():
         "exists": True,
         "firmanavn": sender.firmanavn,
         "orgnr": sender.orgnr,
-        "adresse": sender.adresse
+        "adresse": sender.adresse,
+        "bank": sender.bank,
+        "telefon": sender.telefon,
+        "iban": sender.iban,
+        "swift": sender.swift,
+        "referanse": sender.referanse,
+        "kid": sender.kid
     })
 
 
-# -------------------------------
-# LAGRE AVSENDER
-# -------------------------------
+# ---------------------------------------------------
+# LAGRE AVSENDER (AJAX)
+# ---------------------------------------------------
 @services_bp.route("/save-sender", methods=["POST"])
 def save_sender():
     user = current_user()
     if not user:
-        return jsonify({"success": False})
+        return jsonify({"success": False}), 401
 
     data = request.get_json()
 
@@ -83,6 +93,12 @@ def save_sender():
     sender.firmanavn = data.get("firmanavn")
     sender.orgnr = data.get("orgnr")
     sender.adresse = data.get("adresse")
+    sender.bank = data.get("bank")
+    sender.telefon = data.get("telefon")
+    sender.iban = data.get("iban")
+    sender.swift = data.get("swift")
+    sender.referanse = data.get("referanse")
+    sender.kid = data.get("kid")
 
     db.session.commit()
 
