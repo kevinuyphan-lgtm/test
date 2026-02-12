@@ -36,7 +36,7 @@ def tjenester():
     sender = user.sender
     
     return render_template(
-        "faktura_tjeneste/tjeneste.html",
+        "faktura_tjeneste/tjenester.html",
         kunder=user.kunder,
         sender=sender
     )
