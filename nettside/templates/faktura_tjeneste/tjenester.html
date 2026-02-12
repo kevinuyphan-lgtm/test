@@ -14,6 +14,7 @@
 {% block body %}
 <div class="layout">
 
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <h2 class="brand">InvoicePro</h2>
@@ -37,14 +38,15 @@
       <a class="sidebar-link" href="{{ url_for('kunde.kundeliste') }}">
         👥 Kunder
       </a>
-    
-      <!-- NY KNAPP -->
-      <a class="sidebar-link" href="{{ url_for('faktura.firma_innstillinger') }}">
+
+      <a class="sidebar-link" href="{{ url_for('settings.firma_innstillinger') }}">
         ⚙️ Firma-innstillinger
       </a>
     </nav>
   </aside>
 
+
+  <!-- MAIN CONTENT -->
   <div class="main-content">
     <div class="invoice-wrapper">
 
@@ -55,7 +57,9 @@
 
       <form action="{{ url_for('faktura.generate_invoice') }}" method="POST">
 
-        <!-- Mottaker -->
+        <!-- ========================= -->
+        <!-- MOTTAKER -->
+        <!-- ========================= -->
         <section class="form-card">
           <div class="card-header">
             <h2>Mottaker</h2>
@@ -93,7 +97,10 @@
           </div>
         </section>
 
-        <!-- Faktura detaljer -->
+
+        <!-- ========================= -->
+        <!-- DATOER -->
+        <!-- ========================= -->
         <section class="form-card">
           <div class="grid-3">
             <div class="form-group">
@@ -115,7 +122,10 @@
           </div>
         </section>
 
-        <!-- Produkter -->
+
+        <!-- ========================= -->
+        <!-- PRODUKTER -->
+        <!-- ========================= -->
         <section class="form-card">
           <div class="card-header space-between">
             <h2>Produkter</h2>
@@ -123,77 +133,91 @@
               + Legg til produkt
             </button>
           </div>
+
           <div id="produkter-container" class="products-container"></div>
         </section>
 
-        <!-- Avsender -->
+
+        <!-- ========================= -->
+        <!-- AVSENDER (READ ONLY) -->
+        <!-- ========================= -->
         <section class="form-card">
           <div class="card-header space-between">
             <h2>Avsender</h2>
-            <button type="button" id="editSenderBtn" class="secondary-btn">
+            <a href="{{ url_for('settings.firma_innstillinger') }}" class="secondary-btn">
               Rediger
-            </button>
+            </a>
           </div>
 
+          {% if sender %}
           <div class="grid-2">
+
             <div class="form-group">
               <label>Firmanavn</label>
-              <input type="text" id="avsender_firmanavn" name="avsender_firmanavn">
+              <input type="text" value="{{ sender.firmanavn }}" readonly>
             </div>
 
             <div class="form-group">
               <label>Org.nr</label>
-              <input type="text" id="avsender_orgnr" name="avsender_orgnr">
+              <input type="text" value="{{ sender.orgnr }}" readonly>
             </div>
 
             <div class="form-group">
               <label>Adresse</label>
-              <input type="text" id="avsender_adresse" name="avsender_adresse">
+              <input type="text" value="{{ sender.adresse }}" readonly>
             </div>
-          </div>
 
-          <!-- Hidden fields -->
-          <input type="hidden" name="avsender_bank" id="avsender_bank">
-          <input type="hidden" name="avsender_telefon" id="avsender_telefon">
-          <input type="hidden" name="avsender_iban" id="avsender_iban">
-          <input type="hidden" name="avsender_swift" id="avsender_swift">
-          <input type="hidden" name="avsender_referanse" id="avsender_referanse">
-          <input type="hidden" name="avsender_kid" id="avsender_kid">
+            <div class="form-group">
+              <label>Bank</label>
+              <input type="text" value="{{ sender.bank }}" readonly>
+            </div>
+
+            <div class="form-group">
+              <label>Telefon</label>
+              <input type="text" value="{{ sender.telefon }}" readonly>
+            </div>
+
+            <div class="form-group">
+              <label>IBAN</label>
+              <input type="text" value="{{ sender.iban }}" readonly>
+            </div>
+
+            <div class="form-group">
+              <label>SWIFT</label>
+              <input type="text" value="{{ sender.swift }}" readonly>
+            </div>
+
+            <div class="form-group">
+              <label>Vår referanse</label>
+              <input type="text" value="{{ sender.referanse }}" readonly>
+            </div>
+
+            <div class="form-group">
+              <label>KID</label>
+              <input type="text" value="{{ sender.kid }}" readonly>
+            </div>
+
+          </div>
+          {% else %}
+            <div style="padding:20px;">
+              <p>Du har ikke satt opp firma-innstillinger enda.</p>
+              <a href="{{ url_for('settings.firma_innstillinger') }}" class="primary-btn">
+                Sett opp firma
+              </a>
+            </div>
+          {% endif %}
         </section>
 
+
+        <!-- SUBMIT -->
         <div class="submit-bar">
-          <button type="submit" class="primary-btn">Lag faktura</button>
+          <button type="submit" class="primary-btn">
+            Lag faktura
+          </button>
         </div>
 
       </form>
 
-    </div>
-  </div>
-</div>
-
-<!-- Popup OUTSIDE form -->
-<div class="popup-overlay" id="senderPopup">
-  <div class="popup-box">
-    <h2>Rediger Avsender</h2>
-
-    <div class="popup-field">
-      <label>Firmanavn</label>
-      <input type="text" id="popup_sender_firmanavn">
-    </div>
-
-    <div class="popup-field">
-      <label>Org.nr</label>
-      <input type="text" id="popup_sender_orgnr">
-    </div>
-
-    <div class="popup-field">
-      <label>Adresse</label>
-      <input type="text" id="popup_sender_adresse">
-    </div>
-
-    <div class="popup-actions">
-      <button type="button" id="cancelSenderBtn">Avbryt</button>
-      <button type="button" id="saveSenderBtn" class="primary-btn">Lagre</button>
     </div>
   </div>
 </div>
