@@ -87,21 +87,23 @@
         <!-- Faktura detaljer -->
         <section class="form-card">
           <div class="grid-3">
+        
             <div class="form-group">
               <label>Fakturadato</label>
-              <input type="date" id="invoice_date" name="invoice_date" readonly>
+              <input type="date" id="invoice_date" name="invoice_date">
             </div>
-
+        
             <div class="form-group">
               <label>Dager til forfall</label>
-              <input type="number" id="forfalls_dager" name="forfalls_dager" value="7">
+              <input type="number" id="forfalls_dager" name="forfalls_dager" value="7" min="0">
             </div>
-
+        
             <div class="form-group">
-              <label>Forfallsdato</label>
-              <input type="text" id="due_date_display" readonly>
+              <label>Forfallsdato (dd/mm/åååå)</label>
+              <input type="text" id="due_date_display" placeholder="dd/mm/åååå">
               <input type="hidden" id="due_date" name="due_date">
             </div>
+        
           </div>
         </section>
 
