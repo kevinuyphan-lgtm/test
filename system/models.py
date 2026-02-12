@@ -37,11 +37,17 @@ class Sender(db.Model):
     orgnr = db.Column(db.String(50))
     adresse = db.Column(db.String(200))
 
+    bank = db.Column(db.String(100))
+    telefon = db.Column(db.String(50))
+    iban = db.Column(db.String(100))
+    swift = db.Column(db.String(100))
+    referanse = db.Column(db.String(100))
+    kid = db.Column(db.String(100))
+
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('bruker.id'),
         nullable=False
     )
 
-    bruker = db.relationship('Bruker', backref='sender', lazy=True)
-
+    bruker = db.relationship('Bruker', backref=db.backref('sender', uselist=False))
