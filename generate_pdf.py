@@ -128,18 +128,26 @@ def generate_invoice_pdf(invoice_data):
     pdf.ln(5)
 
     # --- Vårt firma info ---
-    vf_data = invoice_data.get("vårt_firma", {})
+    from tjenester import STANDARD_VAART_FIRMA
+    
+    # Merge defaults + eventuelle overrides fra invoice_data
+    vf_data = {
+        **STANDARD_VAART_FIRMA,
+        **invoice_data.get("vårt_firma", {})
+    }
+    
     vf = Vårt_firma(
-        vf_data.get("navn", "KIT Consult AS"),
-        vf_data.get("addresse", "Vollebekkveien 2L, 0598 Oslo"),
-        vf_data.get("navn_på_bank", "DNB"),
-        vf_data.get("orgnr", "999888777"),
-        vf_data.get("telefon", "+47 455 61 585"),
-        vf_data.get("IBAN", "123 123 123"),
-        vf_data.get("swift_bic", "DNBANOKKXXX"),
-        vf_data.get("vår_referanse", "Kevin"),
-        vf_data.get("KID", "123456789")
+        vf_data["navn"],
+        vf_data["addresse"],
+        vf_data["navn_på_bank"],
+        vf_data["orgnr"],
+        vf_data["telefon"],
+        vf_data["IBAN"],
+        vf_data["swift_bic"],
+        vf_data["vår_referanse"],
+        vf_data["KID"]
     )
+
 
     pdf.set_font("Arial", "B", 12)
     pdf.cell(60, 7, vf.navn, ln=False)
