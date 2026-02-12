@@ -33,8 +33,8 @@ def tjenester():
         return redirect(url_for("auth.login"))
 
     # Hent sender riktig (relationship returnerer liste)
-    sender = user.sender[0] if user.sender else None
-
+    sender = user.sender
+    
     return render_template(
         "faktura_tjeneste/ny_faktura.html",
         kunder=user.kunder,
