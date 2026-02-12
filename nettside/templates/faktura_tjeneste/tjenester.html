@@ -87,23 +87,21 @@
         <!-- Faktura detaljer -->
         <section class="form-card">
           <div class="grid-3">
-        
             <div class="form-group">
               <label>Fakturadato</label>
               <input type="date" id="invoice_date" name="invoice_date">
             </div>
-        
+
             <div class="form-group">
               <label>Dager til forfall</label>
               <input type="number" id="forfalls_dager" name="forfalls_dager" value="7" min="0">
             </div>
-        
+
             <div class="form-group">
-              <label>Forfallsdato (dd/mm/åååå)</label>
+              <label>Forfallsdato</label>
               <input type="text" id="due_date_display" placeholder="dd/mm/åååå">
               <input type="hidden" id="due_date" name="due_date">
             </div>
-        
           </div>
         </section>
 
@@ -115,7 +113,6 @@
               + Legg til produkt
             </button>
           </div>
-
           <div id="produkter-container" class="products-container"></div>
         </section>
 
@@ -131,19 +128,27 @@
           <div class="grid-2">
             <div class="form-group">
               <label>Firmanavn</label>
-              <input type="text" id="avsender_firmanavn" name="avsender_firmanavn" readonly>
+              <input type="text" id="avsender_firmanavn" name="avsender_firmanavn">
             </div>
 
             <div class="form-group">
               <label>Org.nr</label>
-              <input type="text" id="avsender_orgnr" name="avsender_orgnr" readonly>
+              <input type="text" id="avsender_orgnr" name="avsender_orgnr">
             </div>
 
             <div class="form-group">
               <label>Adresse</label>
-              <input type="text" id="avsender_adresse" name="avsender_adresse" readonly>
+              <input type="text" id="avsender_adresse" name="avsender_adresse">
             </div>
           </div>
+
+          <!-- Hidden fields -->
+          <input type="hidden" name="avsender_bank" id="avsender_bank">
+          <input type="hidden" name="avsender_telefon" id="avsender_telefon">
+          <input type="hidden" name="avsender_iban" id="avsender_iban">
+          <input type="hidden" name="avsender_swift" id="avsender_swift">
+          <input type="hidden" name="avsender_referanse" id="avsender_referanse">
+          <input type="hidden" name="avsender_kid" id="avsender_kid">
         </section>
 
         <div class="submit-bar">
@@ -151,11 +156,12 @@
         </div>
 
       </form>
+
     </div>
   </div>
 </div>
 
-<!-- Sender popup -->
+<!-- Popup OUTSIDE form -->
 <div class="popup-overlay" id="senderPopup">
   <div class="popup-box">
     <h2>Rediger Avsender</h2>
