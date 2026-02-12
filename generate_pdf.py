@@ -19,17 +19,17 @@ class Produkt:
         self.sum = self.antall * self.pris
 
 
-class Vårt_firma:
-    def __init__(self, navn, addresse, navn_på_bank, orgnr, telefon, IBAN, swift_bic, vår_referanse, KID):
-        self.navn = navn
-        self.addresse = addresse
-        self.navn_på_bank = navn_på_bank
-        self.orgnr = orgnr
-        self.telefon = telefon
-        self.iban = IBAN
-        self.swift_bic = swift_bic
-        self.vår_referanse = vår_referanse
-        self.kid = KID
+class VartFirma:
+    def __init__(self, data: dict):
+        self.navn = data.get("navn", "")
+        self.addresse = data.get("addresse", "")
+        self.navn_på_bank = data.get("navn_på_bank", "")
+        self.orgnr = data.get("orgnr", "")
+        self.telefon = data.get("telefon", "")
+        self.iban = data.get("IBAN", "")
+        self.swift_bic = data.get("swift_bic", "")
+        self.vår_referanse = data.get("vår_referanse", "")
+        self.kid = data.get("KID", "")
 
 
 def generate_invoice_pdf(invoice_data):
@@ -38,7 +38,7 @@ def generate_invoice_pdf(invoice_data):
     pdf.set_auto_page_break(auto=True, margin=15)
 
     # -----------------------
-    # Logo
+    # Logo (kan senere bli bruker-spesifikk)
     # -----------------------
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     image_path = os.path.join(BASE_DIR, "nettside", "static", "bilder", "placeholder.jpeg")
@@ -129,26 +129,9 @@ def generate_invoice_pdf(invoice_data):
     pdf.ln(5)
 
     # -----------------------
-    # Vårt firma
+    # Vårt firma (KUN fra backend)
     # -----------------------
-    from tjenester import STANDARD_VAART_FIRMA
-
-    vf_data = {
-        **STANDARD_VAART_FIRMA,
-        **invoice_data.get("vårt_firma", {})
-    }
-
-    vf = Vårt_firma(
-        vf_data["navn"],
-        vf_data["addresse"],
-        vf_data["navn_på_bank"],
-        vf_data["orgnr"],
-        vf_data["telefon"],
-        vf_data["IBAN"],
-        vf_data["swift_bic"],
-        vf_data["vår_referanse"],
-        vf_data["KID"]
-    )
+    vf = VartFirma(invoice_data.get("vårt_firma", {}))
 
     pdf.set_font("Arial", "B", 12)
     pdf.cell(60, 7, vf.navn, ln=False)
