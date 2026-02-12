@@ -30,12 +30,16 @@ def kontakt():
 def tjenester():
     user = current_user()
     if not user:
-        flash("Du må logge inn for å få tilgang til tjenester", "error")
         return redirect(url_for("auth.login"))
 
-    kunder = Kunde.query.filter_by(user_id=user.id).all()
-    return render_template("faktura_tjeneste/tjenester.html", kunder=kunder)
+    # Hent sender riktig (relationship returnerer liste)
+    sender = user.sender[0] if user.sender else None
 
+    return render_template(
+        "faktura_tjeneste/ny_faktura.html",
+        kunder=user.kunder,
+        sender=sender
+    )
 
 # -------------------------------
 # HENT AVSENDER
