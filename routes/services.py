@@ -54,12 +54,16 @@ def get_sender():
 
 @services_bp.route("/save-sender", methods=["POST"])
 def save_sender():
+    uid = session.get("user_id")
+    if not uid:
+        return jsonify({"success": False})
+
     data = request.get_json()
 
-    sender = Sender.query.first()
+    sender = Sender.query.filter_by(user_id=uid).first()
 
     if not sender:
-        sender = Sender()
+        sender = Sender(user_id=uid)
         db.session.add(sender)
 
     sender.firmanavn = data.get("firmanavn")
