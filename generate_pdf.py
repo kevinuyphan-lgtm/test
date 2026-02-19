@@ -130,47 +130,51 @@ def generate_invoice_pdf(invoice_data):
     pdf.cell(90, 8, "Beskrivelse")
     pdf.cell(25, 8, "Antall", 0, 0, "C")
     pdf.cell(30, 8, "Pris", 0, 0, "R")
-    pdf.cell(0, 8, "Sum", 0, 1, "R")
+    pdf.cell(0, 8, "Sum inkl. mva", 0, 1, "R")
 
     pdf.line(25, pdf.get_y(), 185, pdf.get_y())
     pdf.ln(3)
 
     pdf.set_font("Arial", "", 12)
 
-    total = 0
     produkter = (invoice_data.get("produkter") or [])[:100]
+
+    total_ex_mva = 0
+    total_mva = 0
 
     if not produkter:
         pdf.cell(0, 8, "Ingen produkter registrert.", ln=True)
     else:
         for p in produkter:
+
             produkt = Produkt(
                 p.get("navn"),
                 p.get("antall"),
                 p.get("pris"),
             )
 
+            mva_sats = safe_float(p.get("mva"), 25)
+
+            mva_belop = round(produkt.sum * (mva_sats / 100), 2)
+            linje_total = round(produkt.sum + mva_belop, 2)
+
             pdf.cell(90, 8, produkt.navn)
             pdf.cell(25, 8, str(produkt.antall), 0, 0, "C")
             pdf.cell(30, 8, format_currency(produkt.pris), 0, 0, "R")
-            pdf.cell(0, 8, format_currency(produkt.sum), 0, 1, "R")
+            pdf.cell(0, 8, format_currency(linje_total), 0, 1, "R")
 
-            total += produkt.sum
+            total_ex_mva += produkt.sum
+            total_mva += mva_belop
 
-    total = round(total, 2)
+    total_ex_mva = round(total_ex_mva, 2)
+    total_mva = round(total_mva, 2)
+    total_sum = round(total_ex_mva + total_mva, 2)
 
     pdf.ln(5)
 
-    # -----------------------
-    # TOTALER
-    # -----------------------
-    mva_sats = safe_float(invoice_data.get("mva_sats"), 25)
-    mva = round(total * (mva_sats / 100), 2)
-    total_sum = round(total + mva, 2)
-
     pdf.set_font("Arial", "", 12)
-    pdf.cell(0, 7, f"Sum eks. mva: {format_currency(total)} kr", ln=True, align="R")
-    pdf.cell(0, 7, f"MVA ({mva_sats}%): {format_currency(mva)} kr", ln=True, align="R")
+    pdf.cell(0, 7, f"Sum eks. mva: {format_currency(total_ex_mva)} kr", ln=True, align="R")
+    pdf.cell(0, 7, f"Total MVA: {format_currency(total_mva)} kr", ln=True, align="R")
 
     pdf.ln(3)
 
