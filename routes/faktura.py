@@ -138,6 +138,7 @@ def generate_invoice():
         "due_date": due_date.strftime("%Y-%m-%d"),
         "produkter": produkter,
         "vårt_firma": vårt_firma,
+        "mva_sats": request.form.get("mva_sats"),
     }
 
     # Lagre PDF
