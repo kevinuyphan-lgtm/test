@@ -113,16 +113,18 @@ def generate_invoice_pdf(invoice_data):
         total += produkt.sum
 
     pdf.ln(5)
-
-    mva = total * 0.25
+    
+    mva_sats = float(invoice_data.get("mva_sats", 25))
+    mva = total * (mva_sats / 100)
     total_sum = total + mva
-
+    
     pdf.set_font("Arial", "", 12)
     pdf.cell(0, 7, f"Sum: {total:.2f}", 0, 1, "R")
-    pdf.cell(0, 7, f"MVA (25%): {mva:.2f}", 0, 1, "R")
-
+    pdf.cell(0, 7, f"MVA ({mva_sats}%): {mva:.2f}", 0, 1, "R")
+    
     pdf.set_font("Arial", "B", 12)
     pdf.cell(0, 7, f"Sum å betale: {total_sum:.2f}", 0, 1, "R")
+
 
     pdf.ln(5)
     pdf.line(25, pdf.get_y(), 185, pdf.get_y())
