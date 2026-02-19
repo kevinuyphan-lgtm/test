@@ -77,45 +77,82 @@ def generate_invoice():
         flash("Du må logge inn for å generere faktura", "error")
         return redirect(url_for("auth.login"))
 
-    # Hent firma
     sender = Sender.query.filter_by(user_id=user.id).first()
     if not sender:
         flash("Du må sette opp firma-innstillinger først.", "error")
         return redirect(url_for("faktura.firma_innstillinger"))
 
-    # Fakturanummer
+    # -------------------------
+    # FAKTURANUMMER (tryggere)
+    # -------------------------
     fakturanummer = user.faktura_teller
-    user.faktura_teller += 1
-    db.session.commit()
+    user.faktura_teller = user.faktura_teller + 1
+    db.session.add(user)
 
-    # Datoer
+    # -------------------------
+    # DATOER
+    # -------------------------
     invoice_date_str = request.form.get("invoice_date")
 
-    invoice_date = (
-        datetime.strptime(invoice_date_str, "%Y-%m-%d").date()
-        if invoice_date_str
-        else datetime.utcnow().date()
-    )
+    try:
+        invoice_date = datetime.strptime(invoice_date_str, "%Y-%m-%d").date()
+    except:
+        invoice_date = datetime.utcnow().date()
 
     days_to_due = request.form.get("forfalls_dager")
 
-    due_date = (
-        invoice_date + timedelta(days=int(days_to_due))
-        if days_to_due and days_to_due.isdigit()
-        else invoice_date + timedelta(days=10)
-    )
+    try:
+        days_to_due = int(days_to_due)
+        days_to_due = max(days_to_due, 0)
+    except:
+        days_to_due = 10
 
-    # Produkter
-    produkter = [
-        {"navn": n, "antall": a, "pris": p}
-        for n, a, p in zip(
-            request.form.getlist("produkt_navn[]"),
-            request.form.getlist("produkt_antall[]"),
-            request.form.getlist("produkt_pris[]"),
-        )
-    ]
+    due_date = invoice_date + timedelta(days=days_to_due)
 
-    # Firma-data fra DB
+    # -------------------------
+    # PRODUKTER (MED VALIDERING)
+    # -------------------------
+    navn_liste = request.form.getlist("produkt_navn[]")
+    antall_liste = request.form.getlist("produkt_antall[]")
+    pris_liste = request.form.getlist("produkt_pris[]")
+    mva_liste = request.form.getlist("produkt_mva[]")
+
+    produkter = []
+
+    for i in range(len(navn_liste)):
+
+        navn = navn_liste[i].strip() if i < len(navn_liste) else ""
+
+        try:
+            antall = int(antall_liste[i])
+            antall = max(antall, 1)
+        except:
+            antall = 1
+
+        try:
+            pris = float(str(pris_liste[i]).replace(",", "."))
+            pris = max(pris, 0)
+        except:
+            pris = 0
+
+        mva_raw = mva_liste[i] if i < len(mva_liste) else "25"
+        mva = mva_raw if mva_raw in ["0", "12", "15", "25"] else "25"
+
+        if navn:
+            produkter.append({
+                "navn": navn,
+                "antall": antall,
+                "pris": pris,
+                "mva": mva
+            })
+
+    if not produkter:
+        flash("Du må legge til minst ett produkt.", "error")
+        return redirect(url_for("services.tjenester"))
+
+    # -------------------------
+    # FIRMA-DATA
+    # -------------------------
     vårt_firma = {
         "navn": sender.firmanavn,
         "orgnr": sender.orgnr,
@@ -138,17 +175,18 @@ def generate_invoice():
         "due_date": due_date.strftime("%Y-%m-%d"),
         "produkter": produkter,
         "vårt_firma": vårt_firma,
-        "mva_sats": request.form.get("mva_sats"),
     }
 
-    # Lagre PDF
+    # -------------------------
+    # GENERER PDF
+    # -------------------------
+    pdf_buffer = generate_invoice_pdf(invoice_data)
+
     user_folder = os.path.join(Config.PDF_FOLDER, f"user_{user.id}")
     os.makedirs(user_folder, exist_ok=True)
 
     filename = f"faktura_{fakturanummer}.pdf"
     filepath = os.path.join(user_folder, filename)
-
-    pdf_buffer = generate_invoice_pdf(invoice_data)
 
     with open(filepath, "wb") as f:
         f.write(pdf_buffer.getbuffer())
@@ -164,7 +202,6 @@ def generate_invoice():
 
     pdf_buffer.seek(0)
     return send_file(pdf_buffer, as_attachment=True, download_name=filename)
-
 
 # ---------------------------------------------------
 # LISTER
