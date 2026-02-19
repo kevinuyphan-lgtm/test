@@ -114,38 +114,48 @@ updateDueFromDays();
 
   const produkterContainer = document.getElementById("produkter-container");
   const addProductBtn = document.getElementById("addProductBtn");
-
+ 
   function createProductRow() {
-
+  
     const row = document.createElement("div");
     row.className = "produkt-row product-card";
-
+  
     row.innerHTML = `
       <input type="text" name="produkt_navn[]" placeholder="Produkt" required>
-      <input type="number" name="produkt_antall[]" placeholder="Antall" min="1" required>
+  
+      <input type="number" name="produkt_antall[]" placeholder="Antall" min="1" value="1" required>
+  
       <input type="number" name="produkt_pris[]" placeholder="Pris" step="0.01" min="0" required>
+  
+      <select name="produkt_mva[]" required>
+        <option value="25" selected>25%</option>
+        <option value="15">15%</option>
+        <option value="12">12%</option>
+        <option value="0">0%</option>
+      </select>
+  
       <button type="button" class="remove-product-btn">Fjern</button>
     `;
-
+  
     row.querySelector(".remove-product-btn").addEventListener("click", () => {
       row.remove();
     });
-
+  
     return row;
   }
-
+ 
   if (produkterContainer) {
-
-    // Bare legg til hvis tom
+  
+    // Legg til én rad ved oppstart
     if (produkterContainer.children.length === 0) {
       produkterContainer.appendChild(createProductRow());
     }
-
+  
+    // Legg til ny rad når knapp trykkes
     addProductBtn?.addEventListener("click", () => {
       produkterContainer.appendChild(createProductRow());
     });
   }
-
 
   /* ===============================
      SENDER LOGIC
