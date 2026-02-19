@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
 /* ======================================
-   DATO SYNK (DD/MM/YYYY SYSTEM)
+   DATO SYNK (UTEN UTC-BUG)
 ====================================== */
 
 const invoiceDisplay = document.getElementById("invoice_date_display");
@@ -17,6 +17,13 @@ function formatDisplay(date) {
   return `${d}/${m}/${y}`;
 }
 
+function formatISO(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
 function parseDisplay(str) {
   const parts = str.split("/");
   if (parts.length !== 3) return null;
@@ -28,13 +35,13 @@ function parseDisplay(str) {
 if (invoiceDisplay && invoiceHidden) {
   const today = new Date();
   invoiceDisplay.value = formatDisplay(today);
-  invoiceHidden.value = today.toISOString().split("T")[0];
+  invoiceHidden.value = formatISO(today);
 }
 
 invoiceDisplay?.addEventListener("input", () => {
   const date = parseDisplay(invoiceDisplay.value);
   if (!date) return;
-  invoiceHidden.value = date.toISOString().split("T")[0];
+  invoiceHidden.value = formatISO(date);
   updateDueFromDays();
 });
 
@@ -47,7 +54,7 @@ function updateDueFromDays() {
   due.setDate(due.getDate() + days);
 
   dueDisplay.value = formatDisplay(due);
-  dueHidden.value = due.toISOString().split("T")[0];
+  dueHidden.value = formatISO(due);
 }
 
 daysInput?.addEventListener("input", updateDueFromDays);
@@ -57,7 +64,7 @@ dueDisplay?.addEventListener("input", () => {
   const due = parseDisplay(dueDisplay.value);
   if (!base || !due) return;
 
-  dueHidden.value = due.toISOString().split("T")[0];
+  dueHidden.value = formatISO(due);
 
   const diff = Math.round((due - base) / (1000 * 60 * 60 * 24));
   daysInput.value = diff >= 0 ? diff : 0;
