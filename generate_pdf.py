@@ -114,7 +114,7 @@ def generate_invoice_pdf(invoice_data):
 
     pdf.ln(5)
     
-    mva_sats = float(invoice_data.get("mva_sats", 25))
+    mva_sats = float(invoice_data.get("mva_sats" or 25))
     mva = total * (mva_sats / 100)
     total_sum = total + mva
     
