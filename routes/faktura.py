@@ -95,7 +95,7 @@ def generate_invoice():
     invoice_date_str = request.form.get("invoice_date")
 
     try:
-        invoice_date = datetime.strptime(invoice_date_str, "%Y-%m-%d").date()
+        invoice_date = datetime.strptime(invoice_date_str, "%d-%m-%Y").date()
     except:
         invoice_date = datetime.utcnow().date()
 
