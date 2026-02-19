@@ -241,4 +241,29 @@ saveSenderBtn?.addEventListener("click", async () => {
   }
 });
 
+
+   /* ===============================
+      GLOBAL MVA
+   =============================== */
+   
+   const globalMvaInput = document.getElementById("global_mva");
+   const globalChips = document.querySelectorAll(".global-mva-chip");
+   
+   if (globalMvaInput && globalChips.length > 0) {
+     globalChips.forEach(chip => {
+       chip.addEventListener("click", () => {
+   
+         // Fjern active fra alle
+         globalChips.forEach(c => c.classList.remove("active"));
+   
+         // Sett active på valgt
+         chip.classList.add("active");
+   
+         // Oppdater hidden input
+         globalMvaInput.value = chip.dataset.value;
+   
+         console.log("Global MVA valgt:", chip.dataset.value);
+       });
+     });
+   }
 });
