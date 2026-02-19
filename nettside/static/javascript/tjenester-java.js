@@ -118,12 +118,12 @@ function createProductRow() {
 
     <div class="mva-group">
       <div class="mva-row">
-        <button type="button" class="mva-chip" data-value="12">12%</button>
         <button type="button" class="mva-chip" data-value="0">0%</button>
+        <button type="button" class="mva-chip" data-value="12">12%</button>
       </div>
       <div class="mva-row">
-        <button type="button" class="mva-chip active" data-value="25">25%</button>
         <button type="button" class="mva-chip" data-value="15">15%</button>
+        <button type="button" class="mva-chip active" data-value="25">25%</button>
       </div>
       <input type="hidden" name="produkt_mva[]" value="25">
     </div>
