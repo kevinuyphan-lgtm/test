@@ -25,7 +25,7 @@
       <a class="sidebar-link active" href="{{ url_for('services.tjenester') }}">
         ➕ Ny faktura
       </a>
-    
+
       <div class="sidebar-group">
         <button class="sidebar-toggle" type="button">📄 Faktura</button>
         <div class="sidebar-submenu">
@@ -34,7 +34,7 @@
           <a href="{{ url_for('faktura.betalt') }}">Betalt</a>
         </div>
       </div>
-    
+
       <a class="sidebar-link" href="{{ url_for('kunde.kundeliste') }}">
         👥 Kunder
       </a>
@@ -44,7 +44,6 @@
       </a>
     </nav>
   </aside>
-
 
   <!-- MAIN CONTENT -->
   <div class="main-content">
@@ -97,7 +96,6 @@
           </div>
         </section>
 
-
         <!-- ========================= -->
         <!-- DATOER -->
         <!-- ========================= -->
@@ -122,7 +120,6 @@
           </div>
         </section>
 
-
         <!-- ========================= -->
         <!-- PRODUKTER -->
         <!-- ========================= -->
@@ -134,12 +131,20 @@
             </button>
           </div>
 
+          <!-- Header row -->
+          <div class="product-header">
+            <div>Produkt</div>
+            <div>Antall</div>
+            <div>Pris</div>
+            <div>MVA</div>
+            <div></div>
+          </div>
+
           <div id="produkter-container" class="products-container"></div>
         </section>
 
-
         <!-- ========================= -->
-        <!-- AVSENDER (READ ONLY) -->
+        <!-- AVSENDER -->
         <!-- ========================= -->
         <section class="form-card">
           <div class="card-header space-between">
@@ -151,7 +156,6 @@
 
           {% if sender %}
           <div class="grid-2">
-
             <div class="form-group">
               <label>Firmanavn</label>
               <input type="text" value="{{ sender.firmanavn }}" readonly>
@@ -196,37 +200,9 @@
               <label>KID</label>
               <input type="text" value="{{ sender.kid }}" readonly>
             </div>
-
           </div>
-          {% else %}
-            <div style="padding:20px;">
-              <p>Du har ikke satt opp firma-innstillinger enda.</p>
-              <a href="{{ url_for('faktura.firma_innstillinger') }}" class="primary-btn">
-                Sett opp firma
-              </a>
-            </div>
           {% endif %}
         </section>
-        
-        <!-- MVA -->
-        <section class="form-card">
-          <div class="card-header">
-            <h2>MVA</h2>
-          </div>
-        
-          <div class="grid-2">
-            <div class="form-group">
-              <label>MVA-sats</label>
-              <select name="mva_sats" required>
-                <option value="25" selected>25% (Standard)</option>
-                <option value="15">15%</option>
-                <option value="12">12%</option>
-                <option value="0">0% (MVA-fri)</option>
-              </select>
-            </div>
-          </div>
-        </section>
-
 
         <!-- SUBMIT -->
         <div class="submit-bar">
@@ -236,7 +212,6 @@
         </div>
 
       </form>
-
     </div>
   </div>
 </div>
