@@ -116,7 +116,6 @@
    PRODUCTS – PREMIUM VERSION
 ===================================== */
 
-/* Product header row */
 .product-header {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 0.8fr auto;
@@ -152,27 +151,8 @@
   box-shadow: 0 10px 30px rgba(74,144,226,0.12);
 }
 
-/* Product select (MVA dropdown) */
-.product-card select {
-  background: #f9fafc;
-  border: 1px solid #dbe3ec;
-  border-radius: 12px;
-  padding: 12px 14px;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.product-card select:focus {
-  outline: none;
-  border-color: #4a90e2;
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(74,144,226,0.15);
-}
-
-/* INPUT FIX */
 .product-card input {
-  background: #f9fafc;
+  background: #ffffff;
   border: 1px solid #dbe3ec;
   border-radius: 12px;
   padding: 12px 14px;
@@ -183,11 +163,59 @@
 .product-card input:focus {
   outline: none;
   border-color: #4a90e2;
-  background: #ffffff;
   box-shadow: 0 0 0 3px rgba(74,144,226,0.15);
 }
 
-/* ADD BUTTON */
+/* =====================================
+   MVA CHIP GROUP (SaaS)
+===================================== */
+
+.mva-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mva-row {
+  display: flex;
+  gap: 6px;
+}
+
+.mva-chip {
+  flex: 1;
+  padding: 6px 0;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid #dbe3ec;
+  background: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.mva-chip:hover {
+  background: #f1f5ff;
+  border-color: #4a90e2;
+  transform: translateY(-1px);
+}
+
+.mva-chip.active {
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+  color: white;
+  border-color: #4a90e2;
+  box-shadow: 0 4px 10px rgba(74,144,226,0.25);
+  transform: scale(1.03);
+}
+
+.mva-chip:active {
+  transform: scale(0.97);
+}
+
+/* =====================================
+   BUTTONS
+===================================== */
+
 .secondary-btn {
   background: #ffffff;
   border: 1px solid #dbe3ec;
@@ -207,7 +235,6 @@
   box-shadow: 0 8px 20px rgba(74,144,226,0.25);
 }
 
-/* Remove product */
 .remove-product-btn {
   background: transparent;
   border: 1px solid #fecaca;
@@ -231,9 +258,6 @@
   transform: scale(0.95);
 }
 
-/* =====================================
-   BUTTONS
-===================================== */
 .primary-btn {
   background: linear-gradient(135deg, #4a90e2, #357abd);
   color: #fff;
@@ -253,6 +277,7 @@
 /* =====================================
    STICKY SUBMIT BAR
 ===================================== */
+
 .submit-bar {
   position: sticky;
   bottom: 0;
@@ -262,18 +287,15 @@
 }
 
 /* =====================================
-   SIDEBAR (UNCHANGED STYLE)
+   SIDEBAR
 ===================================== */
+
 .sidebar {
   width: 260px;
   background: linear-gradient(180deg, #0f172a, #1e293b);
   color: #fff;
   padding: 25px 20px;
   box-sizing: border-box;
-}
-
-.sidebar-header {
-  margin-bottom: 30px;
 }
 
 .sidebar-nav {
@@ -304,101 +326,4 @@
 .sidebar-link.active {
   background: linear-gradient(135deg, #2563eb, #3b82f6);
   color: white;
-}
-
-.sidebar-submenu {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.3s ease;
-  opacity: 0;
-  margin-left: 15px;
-}
-
-.sidebar-group.open .sidebar-submenu {
-  max-height: 300px;
-  opacity: 1;
-}
-
-.sidebar-submenu a {
-  color: #c7d2fe;
-  padding: 8px 10px;
-  text-decoration: none;
-  font-size: 14px;
-  border-radius: 8px;
-}
-
-.sidebar-submenu a:hover {
-  background: rgba(255,255,255,0.08);
-  color: white;
-}
-
-/* =====================================
-   RESPONSIVE
-===================================== */
-@media (max-width: 900px) {
-  .sidebar {
-    display: none;
-  }
-
-  .main-content {
-    padding: 25px;
-  }
-}
-
-/* =====================================
-   POPUP OVERLAY (AVSENDER)
-===================================== */
-
-.popup-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15,23,42,0.65);
-  backdrop-filter: blur(6px);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.popup-overlay.active {
-  display: flex;
-}
-
-/* Popup box */
-.popup-box {
-  background: white;
-  width: 500px;
-  max-width: 95%;
-  padding: 30px;
-  border-radius: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  box-shadow: 0 30px 70px rgba(0,0,0,0.2);
-  animation: fadeUp 0.25s ease;
-}
-
-@keyframes fadeUp {
-  from { transform: translateY(15px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-/* Popup fields */
-.popup-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.popup-field input {
-  padding: 12px 14px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  font-size: 14px;
-}
-
-.popup-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
 }
