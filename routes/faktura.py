@@ -95,7 +95,7 @@ def generate_invoice():
     invoice_date_str = request.form.get("invoice_date")
 
     try:
-        invoice_date = datetime.strptime(invoice_date_str, "%d-%m-%Y").date()
+        invoice_date = datetime.strptime(invoice_date_str, "%Y-%m-%d").date()
     except:
         invoice_date = datetime.utcnow().date()
 
@@ -171,8 +171,8 @@ def generate_invoice():
         "firmaadresse": request.form.get("firmaadresse"),
         "orgnr": request.form.get("orgnr"),
         "referanse": request.form.get("referanse"),
-        "invoice_date": invoice_date.strftime("%Y-%m-%d"),
-        "due_date": due_date.strftime("%Y-%m-%d"),
+        "invoice_date": invoice_date.strftime("%d.%m.%Y"),
+        "due_date": due_date.strftime("%d.%m.%Y"),
         "produkter": produkter,
         "vårt_firma": vårt_firma,
     }
