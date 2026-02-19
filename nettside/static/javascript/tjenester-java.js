@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
- /* ======================================
+/* ======================================
    DATO SYNK (DD/MM/YYYY SYSTEM)
 ====================================== */
 
@@ -20,30 +20,24 @@ function formatDisplay(date) {
 function parseDisplay(str) {
   const parts = str.split("/");
   if (parts.length !== 3) return null;
-
   const [d, m, y] = parts.map(Number);
   if (!d || !m || !y) return null;
-
   return new Date(y, m - 1, d);
 }
 
-// Sett dagens dato ved load
 if (invoiceDisplay && invoiceHidden) {
   const today = new Date();
   invoiceDisplay.value = formatDisplay(today);
   invoiceHidden.value = today.toISOString().split("T")[0];
 }
 
-// Når bruker skriver fakturadato
 invoiceDisplay?.addEventListener("input", () => {
   const date = parseDisplay(invoiceDisplay.value);
   if (!date) return;
-
   invoiceHidden.value = date.toISOString().split("T")[0];
   updateDueFromDays();
 });
 
-// Regn forfall basert på dager
 function updateDueFromDays() {
   const base = parseDisplay(invoiceDisplay.value);
   if (!base) return;
@@ -56,10 +50,8 @@ function updateDueFromDays() {
   dueHidden.value = due.toISOString().split("T")[0];
 }
 
-// Når dager endres
 daysInput?.addEventListener("input", updateDueFromDays);
 
-// Når bruker skriver forfallsdato direkte
 dueDisplay?.addEventListener("input", () => {
   const base = parseDisplay(invoiceDisplay.value);
   const due = parseDisplay(dueDisplay.value);
@@ -71,167 +63,182 @@ dueDisplay?.addEventListener("input", () => {
   daysInput.value = diff >= 0 ? diff : 0;
 });
 
-// Init
 updateDueFromDays();
 
-  /* ===============================
-     AUTOFYLL KUNDE (FIXED)
-  =============================== */
+/* ===============================
+   AUTOFYLL KUNDE
+=============================== */
 
-  const firmanavnInput = document.getElementById("firmanavn");
-  const adresseInput = document.getElementById("firmaadresse");
-  const orgnrInput = document.getElementById("orgnr");
-  const referanseInput = document.getElementById("referanse");
-  const datalist = document.getElementById("kunder_list");
+const firmanavnInput = document.getElementById("firmanavn");
+const adresseInput = document.getElementById("firmaadresse");
+const orgnrInput = document.getElementById("orgnr");
+const referanseInput = document.getElementById("referanse");
+const datalist = document.getElementById("kunder_list");
 
-  if (firmanavnInput && datalist) {
+if (firmanavnInput && datalist) {
 
-    function fillCustomerData(selectedName) {
+  function fillCustomerData(selectedName) {
+    const options = Array.from(datalist.options);
+    const match = options.find(opt => opt.value === selectedName);
 
-      const options = Array.from(datalist.options);
-      const match = options.find(opt => opt.value === selectedName);
-
-      if (match) {
-        adresseInput.value = match.dataset.adresse || "";
-        orgnrInput.value = match.dataset.orgnr || "";
-        referanseInput.value = match.dataset.referanse || "";
-      }
+    if (match) {
+      adresseInput.value = match.dataset.adresse || "";
+      orgnrInput.value = match.dataset.orgnr || "";
+      referanseInput.value = match.dataset.referanse || "";
     }
-
-    firmanavnInput.addEventListener("change", () => {
-      fillCustomerData(firmanavnInput.value);
-    });
-
-    firmanavnInput.addEventListener("input", () => {
-      fillCustomerData(firmanavnInput.value);
-    });
   }
 
+  firmanavnInput.addEventListener("change", () => {
+    fillCustomerData(firmanavnInput.value);
+  });
 
-  /* ===============================
-     PRODUKTER
-  =============================== */
+  firmanavnInput.addEventListener("input", () => {
+    fillCustomerData(firmanavnInput.value);
+  });
+}
 
-  const produkterContainer = document.getElementById("produkter-container");
-  const addProductBtn = document.getElementById("addProductBtn");
- 
-  function createProductRow() {
-  
-    const row = document.createElement("div");
-    row.className = "produkt-row product-card";
-  
-    row.innerHTML = `
-      <input type="text" name="produkt_navn[]" placeholder="Produkt" required>
-  
-      <input type="number" name="produkt_antall[]" placeholder="Antall" min="1" value="1" required>
-  
-      <input type="number" name="produkt_pris[]" placeholder="Pris" step="0.01" min="0" required>
-  
-      <select name="produkt_mva[]" required>
-        <option value="25" selected>25%</option>
-        <option value="15">15%</option>
-        <option value="12">12%</option>
-        <option value="0">0%</option>
-      </select>
-  
-      <button type="button" class="remove-product-btn">Fjern</button>
-    `;
-  
-    row.querySelector(".remove-product-btn").addEventListener("click", () => {
+/* ===============================
+   PRODUKTER – CHIP VERSION
+=============================== */
+
+const produkterContainer = document.getElementById("produkter-container");
+const addProductBtn = document.getElementById("addProductBtn");
+
+function createProductRow() {
+
+  const row = document.createElement("div");
+  row.className = "produkt-row product-card";
+
+  row.innerHTML = `
+    <input type="text" name="produkt_navn[]" placeholder="Produkt" required>
+
+    <input type="number" name="produkt_antall[]" placeholder="Antall" min="1" value="1" required>
+
+    <input type="number" name="produkt_pris[]" placeholder="Pris" step="0.01" min="0" required>
+
+    <div class="mva-group">
+      <div class="mva-row">
+        <button type="button" class="mva-chip" data-value="12">12%</button>
+        <button type="button" class="mva-chip" data-value="0">0%</button>
+      </div>
+      <div class="mva-row">
+        <button type="button" class="mva-chip active" data-value="25">25%</button>
+        <button type="button" class="mva-chip" data-value="15">15%</button>
+      </div>
+      <input type="hidden" name="produkt_mva[]" value="25">
+    </div>
+
+    <button type="button" class="remove-product-btn">Fjern</button>
+  `;
+
+  const chips = row.querySelectorAll(".mva-chip");
+  const hiddenInput = row.querySelector("input[name='produkt_mva[]']");
+
+  chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+
+      chips.forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+
+      hiddenInput.value = chip.dataset.value;
+    });
+  });
+
+  row.querySelector(".remove-product-btn").addEventListener("click", () => {
+    if (produkterContainer.children.length > 1) {
       row.remove();
-    });
-  
-    return row;
-  }
- 
-  if (produkterContainer) {
-  
-    // Legg til én rad ved oppstart
-    if (produkterContainer.children.length === 0) {
-      produkterContainer.appendChild(createProductRow());
     }
-  
-    // Legg til ny rad når knapp trykkes
-    addProductBtn?.addEventListener("click", () => {
-      produkterContainer.appendChild(createProductRow());
-    });
+  });
+
+  return row;
+}
+
+if (produkterContainer) {
+
+  if (produkterContainer.children.length === 0) {
+    produkterContainer.appendChild(createProductRow());
   }
 
-  /* ===============================
-     SENDER LOGIC
-  =============================== */
+  addProductBtn?.addEventListener("click", () => {
+    produkterContainer.appendChild(createProductRow());
+  });
+}
 
-  const senderPopup = document.getElementById("senderPopup");
-  const editSenderBtn = document.getElementById("editSenderBtn");
-  const cancelSenderBtn = document.getElementById("cancelSenderBtn");
-  const saveSenderBtn = document.getElementById("saveSenderBtn");
+/* ===============================
+   SENDER LOGIC
+=============================== */
 
-  const senderFields = {
-    firmanavn: document.getElementById("avsender_firmanavn"),
-    orgnr: document.getElementById("avsender_orgnr"),
-    adresse: document.getElementById("avsender_adresse")
+const senderPopup = document.getElementById("senderPopup");
+const editSenderBtn = document.getElementById("editSenderBtn");
+const cancelSenderBtn = document.getElementById("cancelSenderBtn");
+const saveSenderBtn = document.getElementById("saveSenderBtn");
+
+const senderFields = {
+  firmanavn: document.getElementById("avsender_firmanavn"),
+  orgnr: document.getElementById("avsender_orgnr"),
+  adresse: document.getElementById("avsender_adresse")
+};
+
+const popupFields = {
+  firmanavn: document.getElementById("popup_sender_firmanavn"),
+  orgnr: document.getElementById("popup_sender_orgnr"),
+  adresse: document.getElementById("popup_sender_adresse")
+};
+
+async function loadSender() {
+  try {
+    const res = await fetch("/get-sender");
+    const data = await res.json();
+
+    if (data.exists) {
+      senderFields.firmanavn.value = data.firmanavn;
+      senderFields.orgnr.value = data.orgnr;
+      senderFields.adresse.value = data.adresse;
+    }
+  } catch (err) {
+    console.error("Kunne ikke hente avsender:", err);
+  }
+}
+
+loadSender();
+
+editSenderBtn?.addEventListener("click", () => {
+  popupFields.firmanavn.value = senderFields.firmanavn.value;
+  popupFields.orgnr.value = senderFields.orgnr.value;
+  popupFields.adresse.value = senderFields.adresse.value;
+  senderPopup.style.display = "flex";
+});
+
+cancelSenderBtn?.addEventListener("click", () => {
+  senderPopup.style.display = "none";
+});
+
+saveSenderBtn?.addEventListener("click", async () => {
+
+  const data = {
+    firmanavn: popupFields.firmanavn.value,
+    orgnr: popupFields.orgnr.value,
+    adresse: popupFields.adresse.value
   };
 
-  const popupFields = {
-    firmanavn: document.getElementById("popup_sender_firmanavn"),
-    orgnr: document.getElementById("popup_sender_orgnr"),
-    adresse: document.getElementById("popup_sender_adresse")
-  };
+  try {
+    const res = await fetch("/save-sender", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
 
-  async function loadSender() {
-    try {
-      const res = await fetch("/get-sender");
-      const data = await res.json();
+    const result = await res.json();
 
-      if (data.exists) {
-        senderFields.firmanavn.value = data.firmanavn;
-        senderFields.orgnr.value = data.orgnr;
-        senderFields.adresse.value = data.adresse;
-      }
-    } catch (err) {
-      console.error("Kunne ikke hente avsender:", err);
+    if (result.success) {
+      senderFields.firmanavn.value = data.firmanavn;
+      senderFields.orgnr.value = data.orgnr;
+      senderFields.adresse.value = data.adresse;
+      senderPopup.style.display = "none";
     }
+  } catch (err) {
+    console.error("Kunne ikke lagre sender:", err);
   }
-
-  loadSender();
-
-  editSenderBtn?.addEventListener("click", () => {
-    popupFields.firmanavn.value = senderFields.firmanavn.value;
-    popupFields.orgnr.value = senderFields.orgnr.value;
-    popupFields.adresse.value = senderFields.adresse.value;
-    senderPopup.style.display = "flex";
-  });
-
-  cancelSenderBtn?.addEventListener("click", () => {
-    senderPopup.style.display = "none";
-  });
-
-  saveSenderBtn?.addEventListener("click", async () => {
-
-    const data = {
-      firmanavn: popupFields.firmanavn.value,
-      orgnr: popupFields.orgnr.value,
-      adresse: popupFields.adresse.value
-    };
-
-    try {
-      const res = await fetch("/save-sender", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-
-      const result = await res.json();
-
-      if (result.success) {
-        senderFields.firmanavn.value = data.firmanavn;
-        senderFields.orgnr.value = data.orgnr;
-        senderFields.adresse.value = data.adresse;
-        senderPopup.style.display = "none";
-      }
-    } catch (err) {
-      console.error("Kunne ikke lagre sender:", err);
-    }
-  });
+});
 
 });
