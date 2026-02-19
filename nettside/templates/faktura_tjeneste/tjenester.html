@@ -53,8 +53,11 @@
         <h1>Opprett ny faktura</h1>
         <p class="subtitle">Fyll inn informasjonen under</p>
       </div>
-
+      
       <form action="{{ url_for('faktura.generate_invoice') }}" method="POST">
+      
+        <!-- GLOBAL MVA -->
+        <input type="hidden" name="mva_sats" id="global_mva" value="25">
 
         <!-- ========================= -->
         <!-- MOTTAKER -->
@@ -117,6 +120,23 @@
               <input type="text" id="due_date_display" placeholder="dd/mm/åååå">
               <input type="hidden" id="due_date" name="due_date">
             </div>
+          </div>
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- GLOBAL MVA -->
+        <!-- ========================= -->
+        <section class="form-card">
+          <div class="card-header">
+            <h2>MVA-sats</h2>
+          </div>
+        
+          <div class="mva-global-group">
+            <button type="button" class="global-mva-chip active" data-value="25">25%</button>
+            <button type="button" class="global-mva-chip" data-value="15">15%</button>
+            <button type="button" class="global-mva-chip" data-value="12">12%</button>
+            <button type="button" class="global-mva-chip" data-value="0">0%</button>
           </div>
         </section>
 
