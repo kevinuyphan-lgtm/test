@@ -222,6 +222,25 @@ def lagret_fakturaer():
         fakturaer=fakturaer
     )
 
+@faktura_bp.route("/view/<int:faktura_id>")
+def view_faktura(faktura_id):
+
+    user = current_user()
+    if not user:
+        return redirect(url_for("auth.login"))
+
+    faktura = Faktura.query.get_or_404(faktura_id)
+
+    if faktura.user_id != user.id:
+        return redirect(url_for("faktura.lagret_fakturaer"))
+
+    user_folder = os.path.join(Config.PDF_FOLDER, f"user_{user.id}")
+
+    return send_from_directory(
+        user_folder,
+        faktura.filnavn,
+        as_attachment=False
+    )
 
 @faktura_bp.route("/sendte")
 def sendte():
