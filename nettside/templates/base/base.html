@@ -88,7 +88,13 @@
 
 <!-- MAIN INNHOLD STARTER HER -->
 <main>
+  <div class="layout">
+    
+    {% include "base/sidebar.html" %}
+    
     {% block body %}{% endblock %}
+    
+  </div>
 </main>
 <!-- MAIN INNHOLD SLUTTER HER -->
 
