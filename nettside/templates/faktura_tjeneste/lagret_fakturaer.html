@@ -1,7 +1,7 @@
 {% extends "base/base_faktura.html" %}
 
 {% block head %}
-<title>Lagrede Fakturaer</title>
+<title>Fakturaarkiv</title>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='base/style_base.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='base/style_sidebar.css') }}">
@@ -14,65 +14,136 @@
 {% block body %}
 <div class="main-content">
 
-  <!-- TOP CONTROLS -->
-  <div class="top-controls">
-    <input type="text" id="searchInput" placeholder="Søk faktura..." class="search-bar">
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <h1>Fakturaarkiv</h1>
+      <p class="subtitle">Oversikt over opprettede fakturaer</p>
+    </div>
+
+    <div class="header-actions">
+      <button id="downloadSelected" class="secondary-btn" disabled>
+        ⬇ Last ned valgte
+      </button>
+
+      <button id="sendSelected" class="primary-btn" disabled>
+        ✉ Send på e-post
+      </button>
+    </div>
+  </div>
+
+
+  <!-- FILTER / SEARCH BAR -->
+  <div class="table-controls">
+    <input type="text" id="searchInput" placeholder="Søk etter faktura..." class="search-input">
+
     <select id="sortSelect" class="sort-select">
       <option value="dato_desc">Nyeste først</option>
       <option value="dato_asc">Eldste først</option>
       <option value="navn_asc">Navn A → Å</option>
       <option value="navn_desc">Navn Å → A</option>
     </select>
-    <button id="sendSelected" class="send-btn" disabled>✉ Send valgte</button>
   </div>
 
-  <!-- FAKTURA GRID -->
-  <div class="faktura-grid" id="fakturaContainer">
-    {% if fakturaer %}
-      {% for f in fakturaer %}
-      <div class="faktura-card"
-           data-dato="{{ f.dato.strftime('%Y-%m-%d') }}"
-           data-navn="{{ f.filnavn }}">
-        
-        <input type="checkbox" class="faktura-checkbox" value="{{ f.id }}">
 
-        <div class="pdf-preview-card">
-          <iframe src="/faktura/{{ f.filnavn }}"></iframe>
-        </div>
+  <!-- TABLE LIST VIEW -->
+  <div class="invoice-table-wrapper">
+    <table class="invoice-table">
+      <thead>
+        <tr>
+          <th>
+            <input type="checkbox" id="selectAll">
+          </th>
+          <th>Fakturanummer</th>
+          <th>Dato</th>
+          <th>Status</th>
+          <th>Handling</th>
+        </tr>
+      </thead>
 
-        <div class="faktura-footer">
-          <span>{{ f.filnavn }}</span>
-          <span>{{ f.dato.strftime('%d.%m.%Y') }}</span>
-        </div>
-      </div>
-      {% endfor %}
-    {% else %}
-      <p class="empty-message">Ingen lagrede fakturaer.</p>
-    {% endif %}
+      <tbody id="invoiceTableBody">
+        {% if fakturaer %}
+          {% for f in fakturaer %}
+          <tr data-dato="{{ f.dato.strftime('%Y-%m-%d') }}"
+              data-navn="{{ f.filnavn }}">
+
+            <td>
+              <input type="checkbox"
+                     class="invoice-checkbox"
+                     value="{{ f.id }}">
+            </td>
+
+            <td>{{ f.filnavn }}</td>
+
+            <td>{{ f.dato.strftime('%d.%m.%Y') }}</td>
+
+            <td>
+              <span class="status-badge unpaid">
+                Ubetalt
+              </span>
+            </td>
+
+            <td class="action-buttons">
+              <a href="/faktura/{{ f.filnavn }}"
+                 target="_blank"
+                 class="icon-btn">
+                 👁 Vis
+              </a>
+
+              <a href="/lastned/{{ f.id }}"
+                 class="icon-btn">
+                 ⬇ Last ned
+              </a>
+            </td>
+
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="5" class="empty-message">
+              Ingen fakturaer funnet.
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
   </div>
 
 </div>
 
-<!-- SEND POPUP -->
-<div class="popup-overlay" id="sendPopup">
-  <div class="popup-box">
-    <h2>Send fakturaer</h2>
+
+<!-- SEND MODAL -->
+<div class="modal-overlay" id="sendModal">
+  <div class="modal-box">
+    <h2>Send faktura(er)</h2>
+
+    <p>Velg e-postadresse(r):</p>
 
     <div id="emailContainer">
       <div class="email-field">
-        <input type="email" placeholder="Skriv inn epost" class="email-input">
+        <input type="email"
+               placeholder="Skriv inn e-post"
+               class="email-input">
       </div>
     </div>
 
-    <button type="button" id="addEmail" class="add-email-btn">
+    <button type="button"
+            id="addEmail"
+            class="secondary-btn small-btn">
       + Legg til flere
     </button>
 
-    <div class="popup-buttons">
-      <button type="button" id="cancelSend" class="cancel-btn">
+    <div class="modal-actions">
+      <button type="button"
+              id="cancelSend"
+              class="secondary-btn">
         Avbryt
       </button>
-      <button type="button" id="confirmSend" class="confirm-btn" disabled>
+
+      <button type="button"
+              id="confirmSend"
+              class="primary-btn"
+              disabled>
         Send
       </button>
     </div>
