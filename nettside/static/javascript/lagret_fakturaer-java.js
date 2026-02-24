@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const selected = getSelected().map(cb => cb.value);
 
-    fetch("/send-faktura-ajax", {
+    fetch("/send-ajax", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
