@@ -212,10 +212,12 @@ def lagret_fakturaer():
     if not user:
         return redirect(url_for("auth.login"))
 
-    fakturaer = Faktura.query.filter_by(
-        user_id=user.id,
-        status="utkast"
-    ).all()
+    fakturaer = (
+        Faktura.query
+        .filter_by(user_id=user.id, status="utkast")
+        .order_by(Faktura.dato.desc())
+        .all()
+    )
 
     return render_template(
         "faktura_tjeneste/lagret_fakturaer.html",
