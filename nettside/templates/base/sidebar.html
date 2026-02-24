@@ -1,0 +1,38 @@
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <h2 class="brand">InvoicePro</h2>
+    <span class="brand-sub">Dashboard</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-link {% if request.endpoint == 'services.tjenester' %}active{% endif %}"
+       href="{{ url_for('services.tjenester') }}">
+      ➕ Ny faktura
+    </a>
+
+    <div class="sidebar-group">
+      <button class="sidebar-toggle" type="button">📄 Faktura</button>
+      <div class="sidebar-submenu">
+        <a href="{{ url_for('faktura.lagret_fakturaer') }}">
+          Ubetalte
+        </a>
+        <a href="{{ url_for('faktura.sendte') }}">
+          Sendte
+        </a>
+        <a href="{{ url_for('faktura.betalt') }}">
+          Betalt
+        </a>
+      </div>
+    </div>
+
+    <a class="sidebar-link {% if request.endpoint == 'kunde.kundeliste' %}active{% endif %}"
+       href="{{ url_for('kunde.kundeliste') }}">
+      👥 Kunder
+    </a>
+
+    <a class="sidebar-link {% if request.endpoint == 'faktura.firma_innstillinger' %}active{% endif %}"
+       href="{{ url_for('faktura.firma_innstillinger') }}">
+      ⚙️ Firma-innstillinger
+    </a>
+  </nav>
+</aside>
