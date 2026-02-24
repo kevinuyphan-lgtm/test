@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/base/style_base.css">
+    <script src="/static/javascript/base-java.js"></script>
+    {% block head %}{% endblock %}
+
+    <style>
+        /* === FLEX LAYOUT FOR STICKY FOOTER === */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* hele skjermhøyden */
+        }
+
+        main {
+            flex: 1; /* tar all tilgjengelig plass mellom navbar og footer */
+        }
+    </style>
+</head>
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- 🚀 NY, REN NAVBAR -->
+<nav class="navbar">
+  <div class="nav-container">
+
+    <!-- VENSTRE SIDE -->
+    <div class="nav-left">
+      <a href="/" class="nav-logo">
+        <img src="{{ url_for('static', filename='bilder/skibidi.jpeg') }}" alt="Logo">
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/">Hjem</a></li>
+
+        <li class="dropdown">
+          <a href="#">Tjenester</a>
+          <div class="dropdown-menu">
+            <a href="/tjenester">Faktura</a>
+            <a href="#">Lønn</a>
+            <a href="#">Regnskap</a>
+          </div>
+        </li>
+
+        <li><a href="/om-oss">Om oss</a></li>
+        <li><a href="/kontakt">Kontakt</a></li>
+      </ul>
+    </div>
+
+    <!-- HØYRE SIDE -->
+    <div class="nav-right">
+      <div class="nav-search">
+        <input type="text" placeholder="Søk...">
+        <button type="submit">Søk</button>
+      </div>
+
+      {% if session.get('user') %}
+      <div class="user-info">
+        👋 Hei, {{ session['user'] }}
+        <a href="/logout" class="logout-btn">Logg ut</a>
+      </div>
+      {% else %}
+      <a href="/login" class="login-btn">Login</a>
+      <a href="/register" class="register-btn">Registrer</a>
+      {% endif %}
+    </div>
+
+  </div>
+</nav>
+
+<!-- MAIN INNHOLD STARTER HER -->
+<main>
+  <div class="layout">
+    
+    {% include "base/sidebar.html" %}
+    
+    {% block body %}{% endblock %}
+    
+  </div>
+</main>
+<!-- MAIN INNHOLD SLUTTER HER -->
+
+<footer class="footer-bunn">
+<div id="grid-container">
+  <div>
+      <div class="footer-logo">
+      <a href="/">
+          <img src="{{ url_for('static', filename='bilder/skibidi.jpeg') }}" alt="Logo" style="max-width: 50px; height: auto;">
+      </a>
+      </div>
+  </div>
+      <div class="big-font">KOM I GANG</div>
+      <div class="big-font">SYSTEMET</div>  
+      <div class="big-font">OM OSS</div>
+      <div class="big-font">RESSURSER</div>
+  <div><p id="addresse">Vollebekkveien 2L, 0598 Oslo</p></div>  
+  <div class="small-font">Link 1</div>
+  <div class="small-font">Link 1</div>
+  <div class="small-font">Link 1</div>
+  <div class="small-font">Link 1</div>
+  <div></div>
+  <div class="small-font">Link 2</div>
+  <div class="small-font">Link 2</div>
+  <div class="small-font">Link 2</div>
+  <div class="small-font">Link 2</div>
+  <div></div>
+  <div class="small-font">Link 3</div>
+  <div class="small-font">Link 3</div>
+  <div class="small-font">Link 3</div>
+  <div class="small-font">Link 3</div>
+</div>
+</footer>
+
+</body>
+</html>
