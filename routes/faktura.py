@@ -300,50 +300,6 @@ def download_faktura(faktura_id):
         as_attachment=True
     )
 
-
-# ---------------------------------------------------
-# STATUS-ENDRING
-# ---------------------------------------------------
-@faktura_bp.route("/mark-send/<int:faktura_id>")
-def mark_sendt(faktura_id):
-
-    user = current_user()
-    if not user:
-        return redirect(url_for("auth.login"))
-
-    faktura = Faktura.query.get_or_404(faktura_id)
-
-    if faktura.user_id != user.id:
-        return redirect(url_for("faktura.lagret_fakturaer"))
-
-    faktura.status = "sendt"
-    db.session.commit()
-
-    flash("Faktura markert som sendt ✅", "success")
-    return redirect(url_for("faktura.sendte"))
-
-
-@faktura_bp.route("/mark-betalt/<int:faktura_id>")
-def mark_betalt(faktura_id):
-
-    user = current_user()
-    if not user:
-        return redirect(url_for("auth.login"))
-
-    faktura = Faktura.query.get_or_404(faktura_id)
-
-    if faktura.user_id != user.id:
-        return redirect(url_for("faktura.sendte"))
-
-    faktura.status = "betalt"
-    faktura.betalt_dato = datetime.utcnow()
-
-    db.session.commit()
-
-    flash("Faktura markert som betalt ✅", "success")
-    return redirect(url_for("faktura.sendte"))
-
-
 # ---------------------------------------------------
 # SEND VIA EMAIL (AJAX)
 # ---------------------------------------------------
