@@ -64,38 +64,40 @@
       <tbody id="invoiceTableBody">
         {% if fakturaer %}
           {% for f in fakturaer %}
-          <tr data-dato="{{ f.dato.strftime('%Y-%m-%d') }}"
+          <tr data-dato="{{ f.created_at.strftime('%Y-%m-%d') }}"
               data-navn="{{ f.filnavn }}">
-
+      
             <td>
               <input type="checkbox"
                      class="invoice-checkbox"
                      value="{{ f.id }}">
             </td>
-
+      
             <td>{{ f.filnavn }}</td>
-
-            <td>{{ f.dato.strftime('%d.%m.%Y') }}</td>
-
+      
+            <td>{{ f.created_at.strftime('%d.%m.%Y') }}</td>
+      
             <td>
               <span class="status-badge unpaid">
                 Ubetalt
               </span>
             </td>
-
+      
             <td class="action-buttons">
-              <a href="/faktura/{{ f.filnavn }}"
+      
+              <a href="{{ url_for('faktura.view_faktura', faktura_id=f.id) }}"
                  target="_blank"
                  class="icon-btn">
                  👁 Vis
               </a>
-
-              <a href="{{ url_for('faktura.download_faktura', faktura_id=f.id) }}">
+      
+              <a href="{{ url_for('faktura.download_faktura', faktura_id=f.id) }}"
                  class="icon-btn">
                  ⬇ Last ned
               </a>
+      
             </td>
-
+      
           </tr>
           {% endfor %}
         {% else %}
