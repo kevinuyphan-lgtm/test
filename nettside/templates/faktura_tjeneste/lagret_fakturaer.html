@@ -34,17 +34,28 @@
 
 
   <!-- FILTER / SEARCH BAR -->
-  <div class="table-controls">
-    <input type="text" id="searchInput" placeholder="Søk etter faktura..." class="search-input">
+<form method="GET" class="table-controls">
 
-    <select id="sortSelect" class="sort-select">
-      <option value="dato_desc">Nyeste først</option>
-      <option value="dato_asc">Eldste først</option>
-      <option value="navn_asc">Navn A → Å</option>
-      <option value="navn_desc">Navn Å → A</option>
-    </select>
-  </div>
+  <input type="text"
+         name="search"
+         value="{{ search }}"
+         placeholder="Søk etter faktura..."
+         class="search-input">
 
+  <select name="sort"
+          class="sort-select"
+          onchange="this.form.submit()">
+
+    <option value="dato_desc" {% if sort == "dato_desc" %}selected{% endif %}>Nyeste først</option>
+    <option value="dato_asc" {% if sort == "dato_asc" %}selected{% endif %}>Eldste først</option>
+    <option value="navn_asc" {% if sort == "navn_asc" %}selected{% endif %}>Navn A → Å</option>
+    <option value="navn_desc" {% if sort == "navn_desc" %}selected{% endif %}>Navn Å → A</option>
+
+  </select>
+
+  <button type="submit" class="secondary-btn small-btn">Søk</button>
+
+</form>
 
   <!-- TABLE LIST VIEW -->
   <div class="invoice-table-wrapper">
