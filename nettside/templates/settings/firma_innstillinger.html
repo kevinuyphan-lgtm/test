@@ -3,107 +3,112 @@
 {% block head %}
 <title>Firma-innstillinger</title>
 
-<link rel="stylesheet" href="{{ url_for('static', filename='base/style_base.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='base/style_sidebar.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='settings/style_settings.css') }}">
 {% endblock %}
 
 {% block body %}
-<div class="layout">
 
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <h2 class="brand">InvoicePro</h2>
-      <span class="brand-sub">Dashboard</span>
-    </div>
+<div class="main-content settings-page">
 
-    <nav class="sidebar-nav">
-      <a class="sidebar-link" href="{{ url_for('services.tjenester') }}">➕ Ny faktura</a>
-      <a class="sidebar-link" href="{{ url_for('faktura.faktura_arkiv', status='utkast') }}">📄 Faktura</a>
-      <a class="sidebar-link" href="{{ url_for('kunde.kundeliste') }}">👥 Kunder</a>
-      <a class="sidebar-link active" href="{{ url_for('faktura.firma_innstillinger') }}">⚙️ Firma</a>
-    </nav>
-  </aside>
-
-  <div class="main-content">
-    <div class="settings-wrapper">
-
-      <div class="settings-header">
-        <h1>Firma-innstillinger</h1>
-        <p>Disse opplysningene brukes automatisk på alle fakturaer.</p>
-      </div>
-
-      <form method="POST" class="settings-form">
-
-        <div class="card">
-
-          <div class="grid-2">
-
-            <div class="form-group">
-              <label>Firmanavn *</label>
-              <input type="text" name="firmanavn"
-                     value="{{ sender.firmanavn if sender else '' }}" required>
-            </div>
-
-            <div class="form-group">
-              <label>Organisasjonsnummer</label>
-              <input type="text" name="orgnr"
-                     value="{{ sender.orgnr if sender else '' }}">
-            </div>
-
-            <div class="form-group full">
-              <label>Adresse</label>
-              <input type="text" name="adresse"
-                     value="{{ sender.adresse if sender else '' }}">
-            </div>
-
-            <div class="form-group">
-              <label>Bank</label>
-              <input type="text" name="bank"
-                     value="{{ sender.bank if sender else '' }}">
-            </div>
-
-            <div class="form-group">
-              <label>Telefon</label>
-              <input type="text" name="telefon"
-                     value="{{ sender.telefon if sender else '' }}">
-            </div>
-
-            <div class="form-group">
-              <label>IBAN</label>
-              <input type="text" name="iban"
-                     value="{{ sender.iban if sender else '' }}">
-            </div>
-
-            <div class="form-group">
-              <label>SWIFT / BIC</label>
-              <input type="text" name="swift"
-                     value="{{ sender.swift if sender else '' }}">
-            </div>
-
-            <div class="form-group">
-              <label>Vår referanse</label>
-              <input type="text" name="referanse"
-                     value="{{ sender.referanse if sender else '' }}">
-            </div>
-
-            <div class="form-group">
-              <label>KID</label>
-              <input type="text" name="kid"
-                     value="{{ sender.kid if sender else '' }}">
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="submit-bar">
-          <button type="submit" class="primary-btn">Lagre endringer</button>
-        </div>
-
-      </form>
-
+  <!-- HEADER -->
+  <div class="settings-top">
+    <div>
+      <h1>Firma-innstillinger</h1>
+      <p class="settings-sub">
+        Disse opplysningene brukes automatisk på alle fakturaer du oppretter.
+      </p>
     </div>
   </div>
+
+  <form method="POST" class="settings-form">
+
+    <!-- === GRUNNLEGGENDE INFO === -->
+    <div class="settings-card">
+      <div class="card-header">
+        <h2>Grunnleggende informasjon</h2>
+        <p>Offisiell informasjon om selskapet ditt.</p>
+      </div>
+
+      <div class="card-body grid-2">
+
+        <div class="form-group">
+          <label>Firmanavn *</label>
+          <input type="text" name="firmanavn"
+                 value="{{ sender.firmanavn if sender else '' }}" required>
+        </div>
+
+        <div class="form-group">
+          <label>Organisasjonsnummer</label>
+          <input type="text" name="orgnr"
+                 value="{{ sender.orgnr if sender else '' }}">
+        </div>
+
+        <div class="form-group full">
+          <label>Adresse</label>
+          <input type="text" name="adresse"
+                 value="{{ sender.adresse if sender else '' }}">
+        </div>
+
+        <div class="form-group">
+          <label>Telefon</label>
+          <input type="text" name="telefon"
+                 value="{{ sender.telefon if sender else '' }}">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- === BANK & BETALING === -->
+    <div class="settings-card">
+      <div class="card-header">
+        <h2>Bank & betaling</h2>
+        <p>Disse opplysningene vises på fakturaen slik at kunden kan betale.</p>
+      </div>
+
+      <div class="card-body grid-2">
+
+        <div class="form-group">
+          <label>Bank</label>
+          <input type="text" name="bank"
+                 value="{{ sender.bank if sender else '' }}">
+        </div>
+
+        <div class="form-group">
+          <label>IBAN</label>
+          <input type="text" name="iban"
+                 value="{{ sender.iban if sender else '' }}">
+        </div>
+
+        <div class="form-group">
+          <label>SWIFT / BIC</label>
+          <input type="text" name="swift"
+                 value="{{ sender.swift if sender else '' }}">
+        </div>
+
+        <div class="form-group">
+          <label>KID</label>
+          <input type="text" name="kid"
+                 value="{{ sender.kid if sender else '' }}">
+        </div>
+
+        <div class="form-group full">
+          <label>Vår referanse</label>
+          <input type="text" name="referanse"
+                 value="{{ sender.referanse if sender else '' }}">
+        </div>
+
+      </div>
+    </div>
+
+    <!-- === SAVE BAR === -->
+    <div class="save-bar">
+      <button type="submit" class="primary-btn large">
+        Lagre endringer
+      </button>
+    </div>
+
+  </form>
+
 </div>
+
 {% endblock %}
