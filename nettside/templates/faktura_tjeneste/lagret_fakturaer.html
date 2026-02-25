@@ -136,46 +136,49 @@
 
   <!-- SMART PAGINATION -->
   <div class="pagination">
-
+  
     {% if pagination.has_prev %}
-      <a href="{{ url_for('faktura.lagret_fakturaer',
+      <a href="{{ url_for('faktura.faktura_arkiv',
+                          status=current_status,
                           page=1,
                           search=search,
                           sort=sort,
                           per_page=per_page) }}">«</a>
     {% endif %}
-
+  
     {% set start = pagination.page - 2 %}
     {% set end = pagination.page + 2 %}
-
+  
     {% if start < 1 %}
       {% set start = 1 %}
     {% endif %}
-
+  
     {% if end > pagination.pages %}
       {% set end = pagination.pages %}
     {% endif %}
-
+  
     {% for p in range(start, end + 1) %}
       {% if p == pagination.page %}
         <span class="active-page">{{ p }}</span>
       {% else %}
-        <a href="{{ url_for('faktura.lagret_fakturaer',
+        <a href="{{ url_for('faktura.faktura_arkiv',
+                            status=current_status,
                             page=p,
                             search=search,
                             sort=sort,
                             per_page=per_page) }}">{{ p }}</a>
       {% endif %}
     {% endfor %}
-
+  
     {% if pagination.has_next %}
-      <a href="{{ url_for('faktura.lagret_fakturaer',
+      <a href="{{ url_for('faktura.faktura_arkiv',
+                          status=current_status,
                           page=pagination.pages,
                           search=search,
                           sort=sort,
                           per_page=per_page) }}">»</a>
     {% endif %}
-
+  
   </div>
 
 </div>
