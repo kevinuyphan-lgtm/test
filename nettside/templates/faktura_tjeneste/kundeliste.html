@@ -1,152 +1,143 @@
-{% extends "base/base.html" %}
+{% extends "base/base_faktura.html" %}
 
 {% block head %}
 <title>Kundeliste</title>
+
 <link rel="stylesheet" href="{{ url_for('static', filename='base/style_base.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='base/style_sidebar.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='faktura_tjeneste/style_kundeliste.css') }}">
-<script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}"></script>
-<script src="{{ url_for('static', filename='javascript/kundeliste-java.js') }}"></script>
+
+<script src="{{ url_for('static', filename='javascript/sidebar-java.js') }}" defer></script>
+<script src="{{ url_for('static', filename='javascript/kundeliste-java.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
-<div class="layout">
+<div class="main-content">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <h2 class="brand">InvoicePro</h2>
-      <span class="brand-sub">Dashboard</span>
+  <!-- HEADER -->
+  <div class="page-header">
+    <div>
+      <h1>Kundeliste</h1>
+      <p class="subtitle">Administrer dine registrerte kunder</p>
     </div>
+  </div>
 
-    <nav class="sidebar-nav">
-      <a class="sidebar-link" href="{{ url_for('services.tjenester') }}">➕ Ny faktura</a>
+  <!-- SEARCH + BUTTON -->
+  <div class="table-controls">
+    <input type="text" id="searchInput" placeholder="Søk etter kunde..." class="search-input">
+    <button id="newKundeBtn" class="primary-btn">+ Ny kunde</button>
+  </div>
 
-      <div class="sidebar-group">
-        <button class="sidebar-toggle dropdown-btn" type="button">📄 Faktura <i>›</i></button>
-        <div class="sidebar-submenu">
-          <a href="{{ url_for('faktura.lagret_fakturaer') }}">Ubetalte</a>
-          <a href="{{ url_for('faktura.sendte') }}">Sendte</a>
-          <a href="{{ url_for('faktura.betalt') }}">Betalt</a>
-        </div>
+  <!-- TABLE -->
+  <div class="invoice-table-wrapper">
+
+    {% if kunder|length == 0 %}
+      <div class="empty-message">
+        Du har ikke registrert noen kunder ennå.
       </div>
+    {% else %}
+      <table class="invoice-table" id="kundeTable">
+        <thead>
+          <tr>
+            <th>Navn</th>
+            <th>Adresse</th>
+            <th>Org.nr</th>
+            <th>Referanse</th>
+            <th>Handling</th>
+          </tr>
+        </thead>
 
-      <a class="sidebar-link active" href="{{ url_for('kunde.kundeliste') }}">👥 Kunder</a>
-      <a class="sidebar-link" href="#">📦 Produkter</a>
-      <a class="sidebar-link" href="#">📊 Rapporter</a>
-      <a class="sidebar-link" href="#">💲 Transaksjoner</a>
-    </nav>
-  </aside>
+        <tbody>
+          {% for kunde in kunder %}
+          <tr 
+            class="kunde-row"
+            data-id="{{ kunde.id }}"
+            data-navn="{{ kunde.navn }}"
+            data-firma="{{ kunde.firmanavn if kunde.firmanavn else '' }}"
+            data-adresse="{{ kunde.adresse }}"
+            data-orgnr="{{ kunde.orgnr }}"
+            data-referanse="{{ kunde.referanse }}"
+            data-telefon="{{ kunde.telefon if kunde.telefon else '' }}"
+            data-epost="{{ kunde.epost if kunde.epost else '' }}"
+          >
+            <td>{{ kunde.navn }}</td>
+            <td>{{ kunde.adresse }}</td>
+            <td>{{ kunde.orgnr }}</td>
+            <td>{{ kunde.referanse }}</td>
 
-  <!-- HOVEDINNHOLD -->
-  <div class="main-content">
-    <div class="container">
-      <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Søk etter kunde...">
-        <button id="newKundeBtn" class="new-btn">+ Ny kunde</button>
-      </div>
-
-      <div class="table-card" id="tableCard">
-        {% if kunder|length == 0 %}
-          <p class="no-data" id="noData">Du har ikke registrert noen kunder ennå.</p>
-        {% else %}
-          <table class="data-table" id="kundeTable">
-            <thead>
-              <tr>
-                <th>Navn</th>
-                <th>Adresse</th>
-                <th>Org.nr</th>
-                <th>Referanse</th>
-                <th>Handling</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for kunde in kunder %}
-              <tr 
-                class="kunde-row"
-                data-id="{{ kunde.id }}"
-                data-navn="{{ kunde.navn }}"
-                data-firma="{{ kunde.firmanavn if kunde.firmanavn else '' }}"
-                data-adresse="{{ kunde.adresse }}"
-                data-orgnr="{{ kunde.orgnr }}"
-                data-referanse="{{ kunde.referanse }}"
-                data-telefon="{{ kunde.telefon if kunde.telefon else '' }}"
-                data-epost="{{ kunde.epost if kunde.epost else '' }}"
-              >
-                <td data-field="navn">{{ kunde.navn }}</td>
-                <td data-field="adresse">{{ kunde.adresse }}</td>
-                <td data-field="orgnr">{{ kunde.orgnr }}</td>
-                <td data-field="referanse">{{ kunde.referanse }}</td>
-                <td class="action-cell">
-                  <img src="{{ url_for('static', filename='bilder/edit.jpeg') }}" class="edit-icon" title="Rediger">
-                  <button class="delete-btn" title="Slett">
-                    <svg class="trash-icon" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M9 3h6l1 2h4v2H4V5h4l1-2zM7 9h2v9H7V9zm4 0h2v9h-2V9zm4 0h2v9h-2V9z"/>
-                    </svg>
-                  </button>
-
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        {% endif %}
-      </div>
-    </div>
+            <td class="action-buttons">
+              <button class="icon-btn edit-btn" title="Rediger">✏️</button>
+              <button class="icon-btn delete-btn" title="Slett">🗑</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
   </div>
 
 </div>
 
-<!-- POPUP NY/EDIT KUNDE -->
-<div class="popup-overlay" id="popup">
-  <div class="popup-box">
+
+<!-- POPUP NY / REDIGER -->
+<div class="modal-overlay" id="popup">
+  <div class="modal-box">
     <h2 id="popupTitle">Ny Kunde</h2>
 
     <div class="popup-field">
-      <label for="popupNavn">Navn:</label>
+      <label for="popupNavn">Navn</label>
       <input type="text" id="popupNavn">
     </div>
+
     <div class="popup-field">
-      <label for="popupFirma">Firma:</label>
+      <label for="popupFirma">Firma</label>
       <input type="text" id="popupFirma">
     </div>
+
     <div class="popup-field">
-      <label for="popupAdresse">Adresse:</label>
+      <label for="popupAdresse">Adresse</label>
       <input type="text" id="popupAdresse">
     </div>
+
     <div class="popup-field">
-      <label for="popupOrgnr">Org.nr:</label>
+      <label for="popupOrgnr">Org.nr</label>
       <input type="text" id="popupOrgnr">
     </div>
+
     <div class="popup-field">
-      <label for="popupReferanse">Referanse:</label>
+      <label for="popupReferanse">Referanse</label>
       <input type="text" id="popupReferanse">
     </div>
+
     <div class="popup-field">
-      <label for="popupTelefon">Telefon:</label>
+      <label for="popupTelefon">Telefon</label>
       <input type="text" id="popupTelefon">
     </div>
+
     <div class="popup-field">
-      <label for="popupEpost">E-post:</label>
+      <label for="popupEpost">E-post</label>
       <input type="email" id="popupEpost">
     </div>
 
-    <div class="popup-actions">
-      <button id="cancelPopupBtn">Avbryt</button>
-      <button id="saveChanges" disabled>Lagre</button>
+    <div class="modal-actions">
+      <button id="cancelPopupBtn" class="secondary-btn">Avbryt</button>
+      <button id="saveChanges" class="primary-btn" disabled>Lagre</button>
     </div>
   </div>
 </div>
 
+
 <!-- POPUP SLETT -->
-<div class="popup-overlay" id="deletePopup">
-  <div class="popup-box">
+<div class="modal-overlay" id="deletePopup">
+  <div class="modal-box">
     <h2>Bekreft sletting</h2>
     <p>Er du sikker på at du vil slette denne kunden?</p>
-    <div class="popup-buttons">
-      <button id="cancelDelete" class="cancel-delete">Avbryt</button>
-      <button id="confirmDelete" class="delete-confirm">Bekreft</button>
+
+    <div class="modal-actions">
+      <button id="cancelDelete" class="secondary-btn">Avbryt</button>
+      <button id="confirmDelete" class="primary-btn">Bekreft</button>
     </div>
   </div>
 </div>
+
 {% endblock %}
