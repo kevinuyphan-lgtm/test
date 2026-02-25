@@ -5,23 +5,33 @@
   </div>
 
   <nav class="sidebar-nav">
+
     <a class="sidebar-link {% if request.endpoint == 'services.tjenester' %}active{% endif %}"
        href="{{ url_for('services.tjenester') }}">
       ➕ Ny faktura
     </a>
 
     <div class="sidebar-group">
+
       <button class="sidebar-toggle" type="button">📄 Faktura</button>
+
       <div class="sidebar-submenu">
-        <a href="{{ url_for('faktura.lagret_fakturaer') }}">
+
+        <a class="{% if current_status == 'utkast' %}active{% endif %}"
+           href="{{ url_for('faktura.faktura_arkiv', status='utkast') }}">
           Ubetalte
         </a>
-        <a href="{{ url_for('faktura.sendte') }}">
+
+        <a class="{% if current_status == 'sendt' %}active{% endif %}"
+           href="{{ url_for('faktura.faktura_arkiv', status='sendt') }}">
           Sendte
         </a>
-        <a href="{{ url_for('faktura.betalt') }}">
+
+        <a class="{% if current_status == 'betalt' %}active{% endif %}"
+           href="{{ url_for('faktura.faktura_arkiv', status='betalt') }}">
           Betalt
         </a>
+
       </div>
     </div>
 
@@ -34,5 +44,6 @@
        href="{{ url_for('faktura.firma_innstillinger') }}">
       ⚙️ Firma-innstillinger
     </a>
+
   </nav>
 </aside>
