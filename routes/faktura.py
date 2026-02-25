@@ -17,6 +17,7 @@ from generate_pdf import generate_invoice_pdf
 from system.utils.mailer import send_email
 from datetime import datetime, timedelta
 import os
+import re
 from system.config import Config
 
 
@@ -82,16 +83,11 @@ def generate_invoice():
         flash("Du må sette opp firma-innstillinger først.", "error")
         return redirect(url_for("faktura.firma_innstillinger"))
 
-    # -----------------------------------
-    # TRYGG FAKTURANUMMER ØKNING
-    # -----------------------------------
+    # Trygg fakturanummer
+    fakturanummer = user.faktura_teller
     user.faktura_teller += 1
-    db.session.flush()
-    fakturanummer = user.faktura_teller - 1
 
-    # -----------------------------------
-    # DATOER
-    # -----------------------------------
+    # Datoer
     invoice_date_str = request.form.get("invoice_date")
 
     try:
@@ -106,9 +102,7 @@ def generate_invoice():
 
     due_date = invoice_date + timedelta(days=days_to_due)
 
-    # -----------------------------------
-    # PRODUKTER
-    # -----------------------------------
+    # Produkter
     navn_liste = request.form.getlist("produkt_navn[]")
     antall_liste = request.form.getlist("produkt_antall[]")
     pris_liste = request.form.getlist("produkt_pris[]")
@@ -118,7 +112,6 @@ def generate_invoice():
 
     for i in range(len(navn_liste)):
         navn = navn_liste[i].strip()
-
         if not navn:
             continue
 
@@ -145,9 +138,7 @@ def generate_invoice():
         flash("Du må legge til minst ett produkt.", "error")
         return redirect(url_for("services.tjenester"))
 
-    # -----------------------------------
-    # FIRMA DATA
-    # -----------------------------------
+    # Firma data
     vårt_firma = {
         "navn": sender.firmanavn,
         "orgnr": sender.orgnr,
@@ -172,9 +163,7 @@ def generate_invoice():
         "vårt_firma": vårt_firma,
     }
 
-    # -----------------------------------
-    # GENERER PDF
-    # -----------------------------------
+    # Generer PDF
     pdf_buffer = generate_invoice_pdf(invoice_data)
 
     user_folder = os.path.join(Config.PDF_FOLDER, f"user_{user.id}")
@@ -209,7 +198,7 @@ def faktura_arkiv(status):
     if not user:
         return redirect(url_for("auth.login"))
 
-    allowed_statuses = ["utkast", "sendt", "betalt"]
+    allowed_statuses = {"utkast", "sendt", "betalt"}
 
     if status not in allowed_statuses:
         return redirect(url_for("faktura.faktura_arkiv", status="utkast"))
@@ -281,6 +270,30 @@ def download_faktura(faktura_id):
 
 
 # ---------------------------------------------------
+# VIEW PDF INLINE
+# ---------------------------------------------------
+@faktura_bp.route("/view/<int:faktura_id>")
+def view_faktura(faktura_id):
+
+    user = current_user()
+    if not user:
+        return redirect(url_for("auth.login"))
+
+    faktura = Faktura.query.filter_by(
+        id=faktura_id,
+        user_id=user.id
+    ).first_or_404()
+
+    user_folder = os.path.join(Config.PDF_FOLDER, f"user_{user.id}")
+
+    return send_from_directory(
+        user_folder,
+        faktura.filnavn,
+        as_attachment=False
+    )
+
+
+# ---------------------------------------------------
 # SEND VIA EMAIL (AJAX)
 # ---------------------------------------------------
 @faktura_bp.route("/send-ajax", methods=["POST"])
@@ -297,6 +310,12 @@ def send_faktura_ajax():
     if not faktura_ids or not emails:
         return jsonify({"success": False}), 400
 
+    EMAIL_REGEX = r"[^@]+@[^@]+\.[^@]+"
+    emails = [e for e in emails if re.match(EMAIL_REGEX, e)]
+
+    if not emails:
+        return jsonify({"success": False}), 400
+
     fakturaer = Faktura.query.filter(
         Faktura.id.in_(faktura_ids),
         Faktura.user_id == user.id
@@ -311,15 +330,20 @@ def send_faktura_ajax():
         if not os.path.exists(filepath):
             continue
 
-        send_email(
-            subject=f"Faktura {f.filnavn}",
-            to_email=", ".join(emails),
-            html_content=f"<p>Hei! Her er faktura {f.filnavn}</p>",
-            attachments=[filepath],
-        )
+        try:
+            send_email(
+                subject=f"Faktura {f.filnavn}",
+                to_email=", ".join(emails),
+                html_content=f"<p>Hei! Her er faktura {f.filnavn}</p>",
+                attachments=[filepath],
+            )
 
-        f.status = "sendt"
-        sent_files.append(f.filnavn)
+            f.status = "sendt"
+            sent_files.append(f.filnavn)
+
+        except Exception as e:
+            print("Email error:", e)
+            continue
 
     db.session.commit()
 
