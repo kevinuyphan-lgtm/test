@@ -1,3 +1,7 @@
+body {
+  background: red !important;
+}
+
 /* === PAGE WRAPPER === */
 .settings-wrapper {
   max-width: 880px;
