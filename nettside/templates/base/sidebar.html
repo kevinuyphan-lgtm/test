@@ -17,17 +17,17 @@
 
       <div class="sidebar-submenu">
 
-        <a class="{% if current_status == 'utkast' %}active{% endif %}"
+        <a class="{% if current_status is defined and current_status == 'utkast' %}active{% endif %}"
            href="{{ url_for('faktura.faktura_arkiv', status='utkast') }}">
           Ubetalte
         </a>
 
-        <a class="{% if current_status == 'sendt' %}active{% endif %}"
+        <a class="{% if current_status is defined and current_status == 'sendt' %}active{% endif %}"
            href="{{ url_for('faktura.faktura_arkiv', status='sendt') }}">
           Sendte
         </a>
 
-        <a class="{% if current_status == 'betalt' %}active{% endif %}"
+        <a class="{% if current_status is defined and current_status == 'betalt' %}active{% endif %}"
            href="{{ url_for('faktura.faktura_arkiv', status='betalt') }}">
           Betalt
         </a>
