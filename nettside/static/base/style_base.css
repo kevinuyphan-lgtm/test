@@ -293,3 +293,30 @@ main {
     flex: 1;
     padding-top: calc(75px + 12px*2); /* logo + navbar padding */
 }
+
+/* ============================= */
+/* DASHBOARD LAYOUT */
+/* ============================= */
+
+.layout {
+  display: flex;
+  min-height: calc(100vh - 100px); /* navbar space */
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  padding-top: 30px;
+}
+
+/* MAIN CONTENT AREA */
+
+.layout > *:not(.sidebar) {
+  flex: 1;
+  padding: 50px 60px;
+  background: #f6f8fb;
+}
