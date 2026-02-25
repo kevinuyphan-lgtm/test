@@ -1,31 +1,28 @@
-{% extends "base/base.html" %}
+{% extends "base/base_faktura.html" %}
 
 {% block head %}
 <title>Firma-innstillinger</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='base/style_base.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='base/style_sidebar.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='settings/style_settings.css') }}">
 {% endblock %}
 
 {% block body %}
+<div class="main-content">
+  <div class="settings-wrapper">
 
-<div class="settings-page">
-
-  <div class="settings-container">
-
-    <!-- HEADER -->
-    <div class="settings-top">
+    <div class="settings-header">
       <h1>Firma-innstillinger</h1>
-      <p class="settings-sub">
-        Disse opplysningene brukes automatisk på alle fakturaer du oppretter.
-      </p>
+      <p>Disse opplysningene brukes automatisk på alle fakturaer.</p>
     </div>
 
     <form method="POST" class="settings-form">
 
       <!-- GRUNNLEGGENDE INFO -->
-      <div class="settings-card">
+      <section class="form-card">
         <div class="card-header">
           <h2>Grunnleggende informasjon</h2>
-          <p>Offisiell informasjon om selskapet ditt.</p>
         </div>
 
         <div class="grid-2">
@@ -55,13 +52,12 @@
           </div>
 
         </div>
-      </div>
+      </section>
 
       <!-- BANK & BETALING -->
-      <div class="settings-card">
+      <section class="form-card">
         <div class="card-header">
           <h2>Bank & betaling</h2>
-          <p>Disse opplysningene vises på fakturaen slik at kunden kan betale.</p>
         </div>
 
         <div class="grid-2">
@@ -79,7 +75,7 @@
           </div>
 
           <div class="form-group">
-            <label>SWIFT / BIC</label>
+            <label>SWIFT</label>
             <input type="text" name="swift"
                    value="{{ sender.swift if sender else '' }}">
           </div>
@@ -97,10 +93,9 @@
           </div>
 
         </div>
-      </div>
+      </section>
 
-      <!-- SAVE -->
-      <div class="save-bar">
+      <div class="submit-bar">
         <button type="submit" class="primary-btn">
           Lagre endringer
         </button>
@@ -110,5 +105,4 @@
 
   </div>
 </div>
-
 {% endblock %}
