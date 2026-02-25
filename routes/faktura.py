@@ -208,40 +208,42 @@ def generate_invoice():
 # ---------------------------------------------------
 @faktura_bp.route("/lagret")
 def lagret_fakturaer():
+
     user = current_user()
     if not user:
         return redirect(url_for("auth.login"))
 
-    fakturaer = (
-        Faktura.query
-        .filter_by(user_id=user.id, status="utkast")
-        .order_by(Faktura.dato.desc())
-        .all()
+    page = request.args.get("page", 1, type=int)
+    search = request.args.get("search", "")
+    sort = request.args.get("sort", "dato_desc")
+
+    query = Faktura.query.filter_by(
+        user_id=user.id,
+        status="utkast"
     )
+
+    # 🔎 SEARCH
+    if search:
+        query = query.filter(Faktura.filnavn.ilike(f"%{search}%"))
+
+    # 🔀 SORT
+    if sort == "dato_asc":
+        query = query.order_by(Faktura.dato.asc())
+    elif sort == "navn_asc":
+        query = query.order_by(Faktura.filnavn.asc())
+    elif sort == "navn_desc":
+        query = query.order_by(Faktura.filnavn.desc())
+    else:
+        query = query.order_by(Faktura.dato.desc())
+
+    pagination = query.paginate(page=page, per_page=15)
 
     return render_template(
         "faktura_tjeneste/lagret_fakturaer.html",
-        fakturaer=fakturaer
-    )
-
-@faktura_bp.route("/view/<int:faktura_id>")
-def view_faktura(faktura_id):
-
-    user = current_user()
-    if not user:
-        return redirect(url_for("auth.login"))
-
-    faktura = Faktura.query.get_or_404(faktura_id)
-
-    if faktura.user_id != user.id:
-        return redirect(url_for("faktura.lagret_fakturaer"))
-
-    user_folder = os.path.join(Config.PDF_FOLDER, f"user_{user.id}")
-
-    return send_from_directory(
-        user_folder,
-        faktura.filnavn,
-        as_attachment=False
+        fakturaer=pagination.items,
+        pagination=pagination,
+        search=search,
+        sort=sort
     )
 
 @faktura_bp.route("/sendte")
