@@ -344,3 +344,35 @@ html {
     flex-direction: column;
   }
 }
+
+/* ================================
+   TOAST NOTIFICATIONS
+================================ */
+
+.toast {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 5000;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast-success {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+}
+
+.toast-error {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+}
