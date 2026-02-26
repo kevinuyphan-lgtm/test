@@ -266,4 +266,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   });
 
+/* =====================================
+   SEARCH FUNCTION
+===================================== */
+
+const searchInput = document.getElementById("searchInput");
+const table = document.getElementById("kundeTable");
+
+searchInput?.addEventListener("input", () => {
+
+  const searchValue = searchInput.value.toLowerCase().trim();
+
+  if (!table) return;
+
+  const rows = table.querySelectorAll("tbody tr");
+
+  rows.forEach(row => {
+
+    const textContent = row.textContent.toLowerCase();
+
+    if (textContent.includes(searchValue)) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+
+  });
+
+});
+  
 });
