@@ -25,7 +25,7 @@
   <!-- SEARCH + BUTTON -->
   <div class="table-controls">
     <input type="text" id="searchInput" placeholder="Søk etter kunde..." class="search-input">
-    <button id="newKundeBtn" class="cta-btn">
+    <button type="button" id="newKundeBtn" class="cta-btn">
       <span class="plus">+</span>
       <span>Ny kunde</span>
     </button>
@@ -69,8 +69,8 @@
             <td>{{ kunde.referanse }}</td>
 
             <td class="action-buttons">
-              <button class="icon-btn edit-btn" title="Rediger">✏️</button>
-              <button class="icon-btn delete-btn" title="Slett">🗑</button>
+              <button type="button" class="icon-btn edit-btn" title="Rediger">✏️</button>
+              <button type="button" class="icon-btn delete-btn" title="Slett">🗑</button>
             </td>
           </tr>
           {% endfor %}
@@ -82,61 +82,90 @@
 </div>
 
 
-<!-- DRAWER NY / REDIGER -->
+<!-- ============================= -->
+<!-- DRAWER -->
+<!-- ============================= -->
+
 <div class="drawer-overlay" id="drawerOverlay">
-  <div class="drawer" id="drawer">
+  <div class="drawer">
 
     <!-- HEADER -->
     <div class="drawer-header">
       <h2 id="popupTitle">Ny kunde</h2>
-      <button id="closeDrawer" class="close-btn">✕</button>
+      <button type="button" id="closeDrawer" class="close-btn">✕</button>
     </div>
 
     <!-- CONTENT -->
     <div class="drawer-content">
 
-      <div class="popup-field">
-        <label for="popupNavn">Navn</label>
-        <input type="text" id="popupNavn">
+      <!-- FORM SECTION -->
+      <div id="formSection">
+
+        <div class="popup-field">
+          <label for="popupNavn">Navn</label>
+          <input type="text" id="popupNavn">
+        </div>
+
+        <div class="popup-field">
+          <label for="popupFirma">Firma</label>
+          <input type="text" id="popupFirma">
+        </div>
+
+        <div class="popup-field">
+          <label for="popupAdresse">Adresse</label>
+          <input type="text" id="popupAdresse">
+        </div>
+
+        <div class="popup-field">
+          <label for="popupOrgnr">Org.nr</label>
+          <input type="text" id="popupOrgnr">
+        </div>
+
+        <div class="popup-field">
+          <label for="popupReferanse">Referanse</label>
+          <input type="text" id="popupReferanse">
+        </div>
+
+        <div class="popup-field">
+          <label for="popupTelefon">Telefon</label>
+          <input type="text" id="popupTelefon">
+        </div>
+
+        <div class="popup-field">
+          <label for="popupEpost">E-post</label>
+          <input type="email" id="popupEpost">
+        </div>
+
       </div>
 
-      <div class="popup-field">
-        <label for="popupFirma">Firma</label>
-        <input type="text" id="popupFirma">
-      </div>
+      <!-- DELETE SECTION -->
+      <div id="deleteSection" style="display:none;">
 
-      <div class="popup-field">
-        <label for="popupAdresse">Adresse</label>
-        <input type="text" id="popupAdresse">
-      </div>
+        <div class="delete-confirmation">
+          <p class="delete-title">Er du sikker på at du vil slette denne kunden?</p>
 
-      <div class="popup-field">
-        <label for="popupOrgnr">Org.nr</label>
-        <input type="text" id="popupOrgnr">
-      </div>
+          <div class="delete-info" id="deleteCustomerInfo">
+            <!-- Fylles via JS -->
+          </div>
 
-      <div class="popup-field">
-        <label for="popupReferanse">Referanse</label>
-        <input type="text" id="popupReferanse">
-      </div>
+          <p class="delete-warning">
+            Denne handlingen kan ikke angres.
+          </p>
+        </div>
 
-      <div class="popup-field">
-        <label for="popupTelefon">Telefon</label>
-        <input type="text" id="popupTelefon">
-      </div>
-
-      <div class="popup-field">
-        <label for="popupEpost">E-post</label>
-        <input type="email" id="popupEpost">
       </div>
 
     </div>
 
     <!-- FOOTER -->
-    <div class="drawer-footer" id="drawerFooter">
-      <button id="cancelPopupBtn" class="secondary-btn">Avbryt</button>
-      <button id="deleteConfirmBtn" class="danger-btn" style="display:none;">Slett</button>
-      <button id="saveChanges" class="primary-btn" disabled>Lagre</button>
+    <div class="drawer-footer">
+      <button type="button" id="cancelPopupBtn" class="secondary-btn">Avbryt</button>
+      <button type="button" id="deleteConfirmBtn" class="danger-btn" style="display:none;">
+        Slett kunde
+      </button>
+      <button type="button" id="saveChanges" class="primary-btn" disabled>
+        Lagre
+      </button>
     </div>
 
   </div>
