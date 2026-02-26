@@ -172,11 +172,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Fyll inn info
       deleteCustomerInfo.innerHTML = `
-        <strong>${row.dataset.navn}</strong><br>
-        Org.nr: ${row.dataset.orgnr || "-"}<br>
-        Adresse: ${row.dataset.adresse || "-"}
+        <strong>${row.dataset.navn || "-"}</strong>
+        ${row.dataset.firma ? `<div>Firma: ${row.dataset.firma}</div>` : ""}
+        <div>Org.nr: ${row.dataset.orgnr || "-"}</div>
+        <div>Adresse: ${row.dataset.adresse || "-"}</div>
+        ${row.dataset.referanse ? `<div>Referanse: ${row.dataset.referanse}</div>` : ""}
+        ${row.dataset.telefon ? `<div>Telefon: ${row.dataset.telefon}</div>` : ""}
+        ${row.dataset.epost ? `<div>E-post: ${row.dataset.epost}</div>` : ""}
       `;
-
       saveChanges.style.display = "none";
       deleteConfirmBtn.style.display = "inline-block";
 
