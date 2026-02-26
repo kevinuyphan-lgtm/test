@@ -82,50 +82,62 @@
 </div>
 
 
-<!-- POPUP NY / REDIGER -->
-<div class="modal-overlay" id="popup">
-  <div class="modal-box">
-    <h2 id="popupTitle">Ny Kunde</h2>
+<!-- DRAWER NY / REDIGER -->
+<div class="drawer-overlay" id="drawerOverlay">
+  <div class="drawer" id="drawer">
 
-    <div class="popup-field">
-      <label for="popupNavn">Navn</label>
-      <input type="text" id="popupNavn">
+    <!-- HEADER -->
+    <div class="drawer-header">
+      <h2 id="popupTitle">Ny kunde</h2>
+      <button id="closeDrawer" class="close-btn">✕</button>
     </div>
 
-    <div class="popup-field">
-      <label for="popupFirma">Firma</label>
-      <input type="text" id="popupFirma">
+    <!-- CONTENT -->
+    <div class="drawer-content">
+
+      <div class="popup-field">
+        <label for="popupNavn">Navn</label>
+        <input type="text" id="popupNavn">
+      </div>
+
+      <div class="popup-field">
+        <label for="popupFirma">Firma</label>
+        <input type="text" id="popupFirma">
+      </div>
+
+      <div class="popup-field">
+        <label for="popupAdresse">Adresse</label>
+        <input type="text" id="popupAdresse">
+      </div>
+
+      <div class="popup-field">
+        <label for="popupOrgnr">Org.nr</label>
+        <input type="text" id="popupOrgnr">
+      </div>
+
+      <div class="popup-field">
+        <label for="popupReferanse">Referanse</label>
+        <input type="text" id="popupReferanse">
+      </div>
+
+      <div class="popup-field">
+        <label for="popupTelefon">Telefon</label>
+        <input type="text" id="popupTelefon">
+      </div>
+
+      <div class="popup-field">
+        <label for="popupEpost">E-post</label>
+        <input type="email" id="popupEpost">
+      </div>
+
     </div>
 
-    <div class="popup-field">
-      <label for="popupAdresse">Adresse</label>
-      <input type="text" id="popupAdresse">
-    </div>
-
-    <div class="popup-field">
-      <label for="popupOrgnr">Org.nr</label>
-      <input type="text" id="popupOrgnr">
-    </div>
-
-    <div class="popup-field">
-      <label for="popupReferanse">Referanse</label>
-      <input type="text" id="popupReferanse">
-    </div>
-
-    <div class="popup-field">
-      <label for="popupTelefon">Telefon</label>
-      <input type="text" id="popupTelefon">
-    </div>
-
-    <div class="popup-field">
-      <label for="popupEpost">E-post</label>
-      <input type="email" id="popupEpost">
-    </div>
-
-    <div class="modal-actions">
+    <!-- FOOTER -->
+    <div class="drawer-footer">
       <button id="cancelPopupBtn" class="secondary-btn">Avbryt</button>
       <button id="saveChanges" class="primary-btn" disabled>Lagre</button>
     </div>
+
   </div>
 </div>
 
