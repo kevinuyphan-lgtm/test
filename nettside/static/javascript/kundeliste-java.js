@@ -28,18 +28,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function openPopup() {
     popup.style.display = "flex";
+    document.body.style.overflow = "hidden";
   }
 
   function closePopup() {
     popup.style.display = "none";
+    document.body.style.overflow = "";
   }
 
   function openDeletePopup() {
     deletePopup.style.display = "flex";
+    document.body.style.overflow = "hidden";
   }
 
   function closeDeletePopup() {
     deletePopup.style.display = "none";
+    document.body.style.overflow = "";
   }
 
   function resetForm() {
@@ -55,12 +59,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function validateForm() {
-    const allFilled = Object.values(inputs).every(
-      i => i.value.trim() !== ""
+    const requiredFields = ["navn", "adresse", "orgnr"];
+    const valid = requiredFields.every(
+      key => inputs[key].value.trim() !== ""
     );
 
-    saveChanges.disabled = !allFilled;
-    saveChanges.classList.toggle("active", allFilled);
+    saveChanges.disabled = !valid;
+    saveChanges.classList.toggle("active", valid);
   }
 
   Object.values(inputs).forEach(input => {
@@ -74,53 +79,69 @@ document.addEventListener("DOMContentLoaded", () => {
   newKundeBtn?.addEventListener("click", () => {
     editMode = false;
     currentKundeId = null;
-    popupTitle.textContent = "Ny Kunde";
+    popupTitle.textContent = "Ny kunde";
     resetForm();
     openPopup();
+    inputs.navn.focus();
   });
 
   cancelPopup?.addEventListener("click", closePopup);
 
   /* -----------------------------
-     REDIGER (EVENT DELEGATION)
+     EVENT DELEGATION (EDIT + DELETE)
   ----------------------------- */
 
   document.addEventListener("click", (e) => {
-    const editBtn = e.target.closest(".edit-icon");
-    if (!editBtn) return;
 
-    const row = editBtn.closest("tr");
-    if (!row) return;
+    /* -------- REDIGER -------- */
+    const editBtn = e.target.closest(".edit-btn");
+    if (editBtn) {
+      const row = editBtn.closest(".kunde-row");
+      if (!row) return;
 
-    editMode = true;
-    currentKundeId = row.dataset.id;
-    popupTitle.textContent = "Rediger Kunde";
+      editMode = true;
+      currentKundeId = row.dataset.id;
+      popupTitle.textContent = "Rediger kunde";
 
-    inputs.navn.value = row.dataset.navn || "";
-    inputs.firma.value = row.dataset.firma || "";
-    inputs.adresse.value = row.dataset.adresse || "";
-    inputs.orgnr.value = row.dataset.orgnr || "";
-    inputs.referanse.value = row.dataset.referanse || "";
-    inputs.telefon.value = row.dataset.telefon || "";
-    inputs.epost.value = row.dataset.epost || "";
+      inputs.navn.value = row.dataset.navn || "";
+      inputs.firma.value = row.dataset.firma || "";
+      inputs.adresse.value = row.dataset.adresse || "";
+      inputs.orgnr.value = row.dataset.orgnr || "";
+      inputs.referanse.value = row.dataset.referanse || "";
+      inputs.telefon.value = row.dataset.telefon || "";
+      inputs.epost.value = row.dataset.epost || "";
 
-    validateForm();
-    openPopup();
+      validateForm();
+      openPopup();
+      inputs.navn.focus();
+      return;
+    }
+
+    /* -------- SLETT -------- */
+    const deleteBtn = e.target.closest(".delete-btn");
+    if (deleteBtn) {
+      const row = deleteBtn.closest(".kunde-row");
+      if (!row) return;
+
+      currentKundeId = row.dataset.id;
+      openDeletePopup();
+      return;
+    }
+
+    /* -------- LUKK VED OVERLAY-KLIKK -------- */
+    if (e.target === popup) closePopup();
+    if (e.target === deletePopup) closeDeletePopup();
   });
 
   /* -----------------------------
-     SLETT (EVENT DELEGATION)
+     ESC LUKKING
   ----------------------------- */
 
-  document.addEventListener("click", (e) => {
-    const deleteBtn = e.target.closest(".delete-btn");
-    if (!deleteBtn) return;
-
-    const row = deleteBtn.closest("tr");
-    if (!row) return;
-
-    currentKundeId = row.dataset.id;
-    openDeletePopup();
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closePopup();
+      closeDeletePopup();
+    }
   });
 
   cancelDelete?.addEventListener("click", closeDeletePopup);
@@ -130,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ----------------------------- */
 
   saveChanges?.addEventListener("click", async () => {
+
     if (saveChanges.disabled) return;
 
     const data = collectData();
@@ -139,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       saveChanges.disabled = true;
+      saveChanges.textContent = "Lagrer...";
 
       const response = await fetch(url, {
         method: "POST",
@@ -153,13 +176,16 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         alert(result.message || "Noe gikk galt");
         saveChanges.disabled = false;
+        saveChanges.textContent = "Lagre";
       }
 
     } catch (error) {
       console.error("Serverfeil:", error);
       alert("Serverfeil");
       saveChanges.disabled = false;
+      saveChanges.textContent = "Lagre";
     }
+
   });
 
   /* -----------------------------
@@ -167,6 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
   ----------------------------- */
 
   confirmDelete?.addEventListener("click", async () => {
+
     if (!currentKundeId) return;
 
     try {
@@ -186,6 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Serverfeil:", error);
       alert("Serverfeil");
     }
+
   });
 
 });
