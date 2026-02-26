@@ -395,3 +395,18 @@ body.modal-open {
   }
 
 }
+
+.danger-btn {
+  padding: 12px 22px;
+  border-radius: 10px;
+  border: none;
+  background: #e53935;
+  color: #ffffff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.danger-btn:hover {
+  background: #c62828;
+}
