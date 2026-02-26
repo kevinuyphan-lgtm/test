@@ -14,6 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeDrawerBtn = document.getElementById("closeDrawer");
   const newKundeBtn = document.getElementById("newKundeBtn");
 
+  const formSection = document.getElementById("formSection");
+  const deleteSection = document.getElementById("deleteSection");
+  const deleteCustomerInfo = document.getElementById("deleteCustomerInfo");
+
   let editMode = false;
   let currentKundeId = null;
 
@@ -40,9 +44,15 @@ document.addEventListener("DOMContentLoaded", () => {
     drawerOverlay.classList.remove("active");
     document.body.classList.remove("modal-open");
 
-    // Reset footer state
+    // Reset UI state
+    formSection.style.display = "block";
+    deleteSection.style.display = "none";
+
     saveChanges.style.display = "inline-block";
     deleteConfirmBtn.style.display = "none";
+
+    deleteConfirmBtn.disabled = false;
+    deleteConfirmBtn.textContent = "Slett kunde";
   }
 
   cancelPopup?.addEventListener("click", closeDrawer);
@@ -89,12 +99,16 @@ document.addEventListener("DOMContentLoaded", () => {
   ===================================== */
 
   newKundeBtn?.addEventListener("click", () => {
+
     editMode = false;
     currentKundeId = null;
 
     popupTitle.textContent = "Ny kunde";
 
     resetForm();
+
+    formSection.style.display = "block";
+    deleteSection.style.display = "none";
 
     deleteConfirmBtn.style.display = "none";
     saveChanges.style.display = "inline-block";
@@ -104,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =====================================
-     EVENT DELEGATION (EDIT + DELETE)
+     EVENT DELEGATION
   ===================================== */
 
   document.addEventListener("click", (e) => {
@@ -130,6 +144,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       validateForm();
 
+      formSection.style.display = "block";
+      deleteSection.style.display = "none";
+
       deleteConfirmBtn.style.display = "none";
       saveChanges.style.display = "inline-block";
 
@@ -149,7 +166,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
       popupTitle.textContent = "Slett kunde";
 
-      resetForm();
+      // Bytt view
+      formSection.style.display = "none";
+      deleteSection.style.display = "block";
+
+      // Fyll inn info
+      deleteCustomerInfo.innerHTML = `
+        <strong>${row.dataset.navn}</strong><br>
+        Org.nr: ${row.dataset.orgnr || "-"}<br>
+        Adresse: ${row.dataset.adresse || "-"}
+      `;
 
       saveChanges.style.display = "none";
       deleteConfirmBtn.style.display = "inline-block";
@@ -204,7 +230,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =====================================
-     DELETE CONFIRM (DRAWER)
+     DELETE CONFIRM
   ===================================== */
 
   deleteConfirmBtn?.addEventListener("click", async () => {
@@ -212,7 +238,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!currentKundeId) return;
 
     deleteConfirmBtn.disabled = true;
-    const originalText = deleteConfirmBtn.textContent;
     deleteConfirmBtn.textContent = "Sletter...";
 
     try {
@@ -227,13 +252,13 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         alert(result.message || "Kunne ikke slette");
         deleteConfirmBtn.disabled = false;
-        deleteConfirmBtn.textContent = originalText;
+        deleteConfirmBtn.textContent = "Slett kunde";
       }
 
     } catch (error) {
       alert("Serverfeil");
       deleteConfirmBtn.disabled = false;
-      deleteConfirmBtn.textContent = originalText;
+      deleteConfirmBtn.textContent = "Slett kunde";
     }
 
   });
