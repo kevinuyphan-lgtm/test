@@ -410,3 +410,42 @@ body.modal-open {
 .danger-btn:hover {
   background: #c62828;
 }
+
+/* =====================================
+   DELETE CONFIRMATION SECTION
+===================================== */
+
+.delete-confirmation {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.delete-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.delete-info {
+  padding: 16px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.delete-info strong {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 4px;
+  color: #111827;
+}
+
+.delete-warning {
+  font-size: 13px;
+  color: #dc2626;
+  font-weight: 500;
+}
