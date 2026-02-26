@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  const popup = document.getElementById("popup");
+  const drawerOverlay = document.getElementById("drawerOverlay");
   const deletePopup = document.getElementById("deletePopup");
+
   const popupTitle = document.getElementById("popupTitle");
   const saveChanges = document.getElementById("saveChanges");
   const cancelPopup = document.getElementById("cancelPopupBtn");
+  const closeDrawerBtn = document.getElementById("closeDrawer");
+
   const confirmDelete = document.getElementById("confirmDelete");
   const cancelDelete = document.getElementById("cancelDelete");
   const newKundeBtn = document.getElementById("newKundeBtn");
@@ -22,34 +25,37 @@ document.addEventListener("DOMContentLoaded", () => {
     epost: document.getElementById("popupEpost"),
   };
 
-  /* -----------------------------
-     HELPERS
-  ----------------------------- */
+  /* =====================================
+     DRAWER CONTROL
+  ===================================== */
 
-  function openPopup() {
-    popup.style.display = "flex";
-    document.body.style.overflow = "hidden";
+  function openDrawer() {
+    drawerOverlay.classList.add("active");
+    document.body.classList.add("modal-open");
   }
 
-  function closePopup() {
-    popup.style.display = "none";
-    document.body.style.overflow = "";
+  function closeDrawer() {
+    drawerOverlay.classList.remove("active");
+    document.body.classList.remove("modal-open");
   }
 
   function openDeletePopup() {
     deletePopup.style.display = "flex";
-    document.body.style.overflow = "hidden";
+    document.body.classList.add("modal-open");
   }
 
   function closeDeletePopup() {
     deletePopup.style.display = "none";
-    document.body.style.overflow = "";
+    document.body.classList.remove("modal-open");
   }
+
+  /* =====================================
+     FORM HELPERS
+  ===================================== */
 
   function resetForm() {
     Object.values(inputs).forEach(i => i.value = "");
     saveChanges.disabled = true;
-    saveChanges.classList.remove("active");
   }
 
   function collectData() {
@@ -65,31 +71,35 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     saveChanges.disabled = !valid;
-    saveChanges.classList.toggle("active", valid);
   }
 
   Object.values(inputs).forEach(input => {
     input.addEventListener("input", validateForm);
   });
 
-  /* -----------------------------
+  /* =====================================
      NY KUNDE
-  ----------------------------- */
+  ===================================== */
 
   newKundeBtn?.addEventListener("click", () => {
     editMode = false;
     currentKundeId = null;
     popupTitle.textContent = "Ny kunde";
     resetForm();
-    openPopup();
+    openDrawer();
     inputs.navn.focus();
   });
 
-  cancelPopup?.addEventListener("click", closePopup);
+  cancelPopup?.addEventListener("click", closeDrawer);
+  closeDrawerBtn?.addEventListener("click", closeDrawer);
 
-  /* -----------------------------
+  drawerOverlay?.addEventListener("click", (e) => {
+    if (e.target === drawerOverlay) closeDrawer();
+  });
+
+  /* =====================================
      EVENT DELEGATION (EDIT + DELETE)
-  ----------------------------- */
+  ===================================== */
 
   document.addEventListener("click", (e) => {
 
@@ -112,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
       inputs.epost.value = row.dataset.epost || "";
 
       validateForm();
-      openPopup();
+      openDrawer();
       inputs.navn.focus();
       return;
     }
@@ -128,27 +138,24 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    /* -------- LUKK VED OVERLAY-KLIKK -------- */
-    if (e.target === popup) closePopup();
-    if (e.target === deletePopup) closeDeletePopup();
   });
 
-  /* -----------------------------
-     ESC LUKKING
-  ----------------------------- */
+  /* =====================================
+     ESC CLOSE
+  ===================================== */
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      closePopup();
+      closeDrawer();
       closeDeletePopup();
     }
   });
 
   cancelDelete?.addEventListener("click", closeDeletePopup);
 
-  /* -----------------------------
-     LAGRE
-  ----------------------------- */
+  /* =====================================
+     SAVE
+  ===================================== */
 
   saveChanges?.addEventListener("click", async () => {
 
@@ -161,6 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       saveChanges.disabled = true;
+      const originalText = saveChanges.textContent;
       saveChanges.textContent = "Lagrer...";
 
       const response = await fetch(url, {
@@ -176,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         alert(result.message || "Noe gikk galt");
         saveChanges.disabled = false;
-        saveChanges.textContent = "Lagre";
+        saveChanges.textContent = originalText;
       }
 
     } catch (error) {
@@ -188,9 +196,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   });
 
-  /* -----------------------------
-     BEKREFT SLETT
-  ----------------------------- */
+  /* =====================================
+     DELETE CONFIRM
+  ===================================== */
 
   confirmDelete?.addEventListener("click", async () => {
 
