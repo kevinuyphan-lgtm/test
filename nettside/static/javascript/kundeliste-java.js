@@ -1,15 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  const drawerOverlay = document.getElementById("drawerOverlay");
-  const deletePopup = document.getElementById("deletePopup");
+  /* =====================================
+     ELEMENTS
+  ===================================== */
 
+  const drawerOverlay = document.getElementById("drawerOverlay");
   const popupTitle = document.getElementById("popupTitle");
+
   const saveChanges = document.getElementById("saveChanges");
+  const deleteConfirmBtn = document.getElementById("deleteConfirmBtn");
+
   const cancelPopup = document.getElementById("cancelPopupBtn");
   const closeDrawerBtn = document.getElementById("closeDrawer");
-
-  const confirmDelete = document.getElementById("confirmDelete");
-  const cancelDelete = document.getElementById("cancelDelete");
   const newKundeBtn = document.getElementById("newKundeBtn");
 
   let editMode = false;
@@ -37,17 +39,22 @@ document.addEventListener("DOMContentLoaded", () => {
   function closeDrawer() {
     drawerOverlay.classList.remove("active");
     document.body.classList.remove("modal-open");
+
+    // Reset footer state
+    saveChanges.style.display = "inline-block";
+    deleteConfirmBtn.style.display = "none";
   }
 
-  function openDeletePopup() {
-    deletePopup.style.display = "flex";
-    document.body.classList.add("modal-open");
-  }
+  cancelPopup?.addEventListener("click", closeDrawer);
+  closeDrawerBtn?.addEventListener("click", closeDrawer);
 
-  function closeDeletePopup() {
-    deletePopup.style.display = "none";
-    document.body.classList.remove("modal-open");
-  }
+  drawerOverlay?.addEventListener("click", (e) => {
+    if (e.target === drawerOverlay) closeDrawer();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeDrawer();
+  });
 
   /* =====================================
      FORM HELPERS
@@ -78,23 +85,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =====================================
-     NY KUNDE
+     NEW CUSTOMER
   ===================================== */
 
   newKundeBtn?.addEventListener("click", () => {
     editMode = false;
     currentKundeId = null;
+
     popupTitle.textContent = "Ny kunde";
+
     resetForm();
+
+    deleteConfirmBtn.style.display = "none";
+    saveChanges.style.display = "inline-block";
+
     openDrawer();
     inputs.navn.focus();
-  });
-
-  cancelPopup?.addEventListener("click", closeDrawer);
-  closeDrawerBtn?.addEventListener("click", closeDrawer);
-
-  drawerOverlay?.addEventListener("click", (e) => {
-    if (e.target === drawerOverlay) closeDrawer();
   });
 
   /* =====================================
@@ -103,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("click", (e) => {
 
-    /* -------- REDIGER -------- */
+    /* -------- EDIT -------- */
     const editBtn = e.target.closest(".edit-btn");
     if (editBtn) {
       const row = editBtn.closest(".kunde-row");
@@ -111,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       editMode = true;
       currentKundeId = row.dataset.id;
+
       popupTitle.textContent = "Rediger kunde";
 
       inputs.navn.value = row.dataset.navn || "";
@@ -122,36 +129,36 @@ document.addEventListener("DOMContentLoaded", () => {
       inputs.epost.value = row.dataset.epost || "";
 
       validateForm();
+
+      deleteConfirmBtn.style.display = "none";
+      saveChanges.style.display = "inline-block";
+
       openDrawer();
       inputs.navn.focus();
       return;
     }
 
-    /* -------- SLETT -------- */
+    /* -------- DELETE -------- */
     const deleteBtn = e.target.closest(".delete-btn");
     if (deleteBtn) {
       const row = deleteBtn.closest(".kunde-row");
       if (!row) return;
 
+      editMode = false;
       currentKundeId = row.dataset.id;
-      openDeletePopup();
+
+      popupTitle.textContent = "Slett kunde";
+
+      resetForm();
+
+      saveChanges.style.display = "none";
+      deleteConfirmBtn.style.display = "inline-block";
+
+      openDrawer();
       return;
     }
 
   });
-
-  /* =====================================
-     ESC CLOSE
-  ===================================== */
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      closeDrawer();
-      closeDeletePopup();
-    }
-  });
-
-  cancelDelete?.addEventListener("click", closeDeletePopup);
 
   /* =====================================
      SAVE
@@ -166,9 +173,10 @@ document.addEventListener("DOMContentLoaded", () => {
       ? `/update-kunde/${currentKundeId}`
       : `/add-kunde`;
 
+    const originalText = saveChanges.textContent;
+
     try {
       saveChanges.disabled = true;
-      const originalText = saveChanges.textContent;
       saveChanges.textContent = "Lagrer...";
 
       const response = await fetch(url, {
@@ -188,21 +196,24 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
     } catch (error) {
-      console.error("Serverfeil:", error);
       alert("Serverfeil");
       saveChanges.disabled = false;
-      saveChanges.textContent = "Lagre";
+      saveChanges.textContent = originalText;
     }
 
   });
 
   /* =====================================
-     DELETE CONFIRM
+     DELETE CONFIRM (DRAWER)
   ===================================== */
 
-  confirmDelete?.addEventListener("click", async () => {
+  deleteConfirmBtn?.addEventListener("click", async () => {
 
     if (!currentKundeId) return;
+
+    deleteConfirmBtn.disabled = true;
+    const originalText = deleteConfirmBtn.textContent;
+    deleteConfirmBtn.textContent = "Sletter...";
 
     try {
       const response = await fetch(`/delete-kunde/${currentKundeId}`, {
@@ -215,11 +226,14 @@ document.addEventListener("DOMContentLoaded", () => {
         location.reload();
       } else {
         alert(result.message || "Kunne ikke slette");
+        deleteConfirmBtn.disabled = false;
+        deleteConfirmBtn.textContent = originalText;
       }
 
     } catch (error) {
-      console.error("Serverfeil:", error);
       alert("Serverfeil");
+      deleteConfirmBtn.disabled = false;
+      deleteConfirmBtn.textContent = originalText;
     }
 
   });
