@@ -1,198 +1,173 @@
 /* =====================================
-   MAIN LAYOUT
+   BASE LAYOUT
 ===================================== */
+
 .main-content {
   flex: 1;
-  padding: 70px 60px;
-  background: #f8fafc;
+  padding: 80px 70px;
+  background: #f9fbff;
   min-height: 100vh;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
+/* =====================================
+   HEADER
+===================================== */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 50px;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: #6b7280;
 }
 
 /* =====================================
    SEARCH + ACTION BAR
 ===================================== */
-.search-container {
+
+.table-controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 45px;
   gap: 25px;
+  margin-bottom: 35px;
   flex-wrap: wrap;
 }
 
-.search-container input {
+.search-input {
   flex: 1;
-  max-width: 450px;
-  padding: 15px 20px;
-  border-radius: 16px;
-  border: 1px solid #e6edf5;
+  max-width: 420px;
+  padding: 15px 18px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
   font-size: 14px;
   background: #ffffff;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
-.search-container input:focus {
+.search-input:focus {
   outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 4px rgba(74,144,226,0.15);
-}
-
-/* Primary Add Button */
-.new-btn {
-  padding: 13px 26px;
-  border-radius: 40px;
-  border: none;
-  background: linear-gradient(135deg, #4a90e2, #357abd);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.new-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 30px rgba(74,144,226,0.35);
+  border-color: #4c7ef3;
+  box-shadow: 0 0 0 4px rgba(76, 126, 243, 0.12);
 }
 
 /* =====================================
-   TABLE CARD
+   TABLE WRAPPER
 ===================================== */
-.table-card {
+
+.invoice-table-wrapper {
   background: #ffffff;
-  border-radius: 28px;
-  padding: 40px;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.06);
-  border: 1px solid #eef3f8;
+  border-radius: 22px;
+  border: 1px solid #eef2f7;
+  padding: 35px;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.05);
   overflow-x: auto;
 }
 
 /* =====================================
    TABLE
 ===================================== */
-.data-table {
+
+.invoice-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
   font-size: 14px;
 }
 
-/* Sticky header */
-.data-table thead th {
-  position: sticky;
-  top: 0;
-  background: #f9fbff;
-  z-index: 2;
-}
-
-.data-table th {
-  padding: 18px 20px;
+/* HEADER */
+.invoice-table thead th {
   text-align: left;
+  padding: 16px 0;
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.8px;
   color: #64748b;
+  border-bottom: 1px solid #eef2f7;
 }
 
-.data-table td {
-  padding: 22px 20px;
-  border-top: 1px solid #edf2f7;
+/* BODY */
+.invoice-table td {
+  padding: 22px 0;
+  border-bottom: 1px solid #f1f5f9;
   color: #334155;
   font-weight: 500;
 }
 
-.data-table tbody tr {
-  transition: all 0.25s ease;
+/* ROW HOVER – subtle */
+.invoice-table tbody tr {
+  transition: background 0.2s ease;
 }
 
-.data-table tbody tr:hover {
-  background: #f4f9ff;
-  transform: scale(1.005);
+.invoice-table tbody tr:hover {
+  background: #f8fbff;
 }
 
 /* =====================================
    ACTION BUTTONS
 ===================================== */
-.action-cell {
+
+.action-buttons {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
-/* EDIT */
-.edit-icon {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: all 0.25s ease;
-}
-
-.edit-icon:hover {
-  opacity: 1;
-  transform: scale(1.25);
-}
-
-/* DELETE – Glass Premium */
-.delete-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 16px;
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   border: none;
-  background: #fff5f5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #f3f4f6;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  font-size: 14px;
 }
 
-.delete-btn .trash-icon {
-  width: 20px;
-  height: 20px;
-  fill: #e53935;
-  transition: 0.3s ease;
-  pointer-events: none;
+.icon-btn:hover {
+  background: #e5e7eb;
+}
+
+/* Delete variant */
+.delete-btn {
+  background: #fef2f2;
 }
 
 .delete-btn:hover {
-  background: #e53935;
-  transform: scale(1.12);
-  box-shadow: 0 12px 25px rgba(229,57,53,0.35);
-}
-
-.delete-btn:hover .trash-icon {
-  fill: #ffffff;
-}
-
-.delete-btn:active {
-  transform: scale(0.95);
+  background: #fee2e2;
 }
 
 /* =====================================
    EMPTY STATE
 ===================================== */
-.no-data {
+
+.empty-message {
   text-align: center;
-  padding: 70px;
+  padding: 70px 0;
   color: #94a3b8;
   font-size: 15px;
 }
 
 /* =====================================
-   POPUP OVERLAY
+   MODAL OVERLAY
 ===================================== */
-.popup-overlay {
+
+.modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15,23,42,0.7);
-  backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
   display: none;
   justify-content: center;
   align-items: center;
@@ -200,130 +175,130 @@
 }
 
 /* =====================================
-   POPUP BOX
+   MODAL BOX
 ===================================== */
-.popup-box {
+
+.modal-box {
   background: #ffffff;
-  width: 550px;
+  width: 560px;
   max-width: 95%;
-  padding: 40px;
-  border-radius: 28px;
+  padding: 45px;
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
-  box-shadow: 0 40px 90px rgba(0,0,0,0.25);
-  animation: popupFade 0.3s ease;
+  gap: 24px;
+  box-shadow: 0 40px 90px rgba(15, 23, 42, 0.15);
+  animation: modalFade 0.25s ease;
 }
 
-@keyframes popupFade {
-  from { transform: translateY(25px); opacity: 0; }
+@keyframes modalFade {
+  from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* INPUTS */
+.modal-box h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* =====================================
+   POPUP INPUTS
+===================================== */
+
+.popup-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .popup-field label {
   font-size: 13px;
   font-weight: 500;
-  color: #64748b;
+  color: #4b5563;
 }
 
 .popup-field input {
-  padding: 14px 18px;
-  border: 1px solid #e6edf5;
-  border-radius: 16px;
+  padding: 15px 18px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
   font-size: 14px;
-  transition: all 0.3s ease;
+  background: #f9fafb;
+  transition: all 0.2s ease;
 }
 
 .popup-field input:focus {
   outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 4px rgba(74,144,226,0.15);
+  background: #ffffff;
+  border-color: #4c7ef3;
+  box-shadow: 0 0 0 4px rgba(76, 126, 243, 0.12);
 }
 
-/* POPUP BUTTONS */
-.popup-actions {
+/* =====================================
+   MODAL ACTIONS
+===================================== */
+
+.modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 16px;
-  margin-top: 15px;
+  gap: 14px;
+  margin-top: 10px;
 }
 
-/* SAVE */
-#saveChanges {
-  padding: 13px 26px;
-  border-radius: 16px;
-  border: none;
-  background: #cbd5e1;
-  color: white;
-  cursor: not-allowed;
-  transition: 0.3s ease;
-}
-
-#saveChanges.active {
-  background: linear-gradient(135deg, #4a90e2, #357abd);
-  cursor: pointer;
-}
-
-#saveChanges.active:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(74,144,226,0.3);
-}
-
-/* CANCEL */
-#cancelPopupBtn,
-.cancel-delete {
+.secondary-btn {
   padding: 13px 24px;
-  border-radius: 16px;
+  border-radius: 14px;
   border: none;
   background: #eef2f7;
   cursor: pointer;
-  transition: 0.25s ease;
+  transition: 0.2s ease;
 }
 
-#cancelPopupBtn:hover,
-.cancel-delete:hover {
+.secondary-btn:hover {
   background: #e2e8f0;
 }
 
-/* DELETE CONFIRM */
-.delete-confirm {
-  background: #e53935;
-  color: white;
+.primary-btn {
+  padding: 14px 28px;
+  border-radius: 14px;
   border: none;
-  padding: 13px 26px;
-  border-radius: 16px;
+  background: linear-gradient(135deg, #4c7ef3, #3764d6);
+  color: #ffffff;
+  font-weight: 500;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: all 0.25s ease;
+  box-shadow: 0 14px 35px rgba(76, 126, 243, 0.25);
 }
 
-.delete-confirm:hover {
-  background: #c62828;
+.primary-btn:hover {
   transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(76, 126, 243, 0.3);
 }
 
 /* =====================================
    RESPONSIVE
 ===================================== */
-@media (max-width: 768px) {
+
+@media (max-width: 900px) {
+
   .main-content {
-    padding: 40px 25px;
+    padding: 50px 25px;
   }
 
-  .search-container {
+  .table-controls {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .search-container input {
+  .search-input {
     max-width: 100%;
   }
 
-  .new-btn {
-    width: 100%;
+  .invoice-table-wrapper {
+    padding: 25px;
   }
 
-  .table-card {
-    padding: 25px;
+  .modal-box {
+    padding: 30px;
   }
 }
