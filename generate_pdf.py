@@ -193,7 +193,7 @@ def generate_invoice_pdf(invoice_data):
     pdf.set_font("Arial", "B", 12)
     pdf.cell(60, 7, vf.navn)
     pdf.cell(60, 7, vf.addresse)
-    pdf.cell(0, 7, vf.navn_på_bank, ln=True, align="R")
+    pdf.cell(0, 7, f"Bankkonto: {vf.navn_på_bank}", ln=True, align="R")
 
     pdf.set_font("Arial", "", 12)
     pdf.cell(60, 7, f"Org.nr: {vf.orgnr}")
