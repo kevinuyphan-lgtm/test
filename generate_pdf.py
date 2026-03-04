@@ -181,7 +181,7 @@ def generate_invoice_pdf(invoice_data):
     pdf.set_font("Arial", "B", 14)
     pdf.cell(0, 10, f"Å betale: {format_currency(total_sum)} kr", ln=True, align="R")
 
-    pdf.ln(5)
+    pdf.ln(100)
     pdf.line(25, pdf.get_y(), 185, pdf.get_y())
     pdf.ln(8)
 
