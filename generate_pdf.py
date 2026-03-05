@@ -80,21 +80,18 @@ def generate_invoice_pdf(invoice_data):
     # -----------------------
     # HEADER
     # -----------------------
-
+    
     pdf.set_font("Arial", "B", 14)
     pdf.cell(100, 7, vf.navn)
     pdf.cell(0, 7, f"Fakturadato: {fakturadato}", ln=True, align="R")
-
+    
     pdf.set_font("Arial", "", 12)
     pdf.cell(100, 7, vf.addresse)
-    pdf.cell(0, 7, f"Forfallsdato: {forfallsdato}", ln=True, align="R")
-
+    pdf.cell(0, 7, "", ln=True)
+    
     pdf.cell(100, 7, f"Tlf: {vf.telefon}")
-    pdf.cell(0, 7, f"Org.nr.: {vf.orgnr}", ln=True, align="R")
-
-    pdf.cell(100, 7, "")
-    pdf.cell(0, 7, f"Kundenr: {kundenummer}", ln=True, align="R")
-
+    pdf.cell(0, 7, "", ln=True)
+    
     pdf.ln(5)
     pdf.line(25, pdf.get_y(), 185, pdf.get_y())
     pdf.ln(10)
@@ -102,27 +99,31 @@ def generate_invoice_pdf(invoice_data):
     # -----------------------
     # FAKTURERT TIL
     # -----------------------
-
+    
     klient = Klientens_firma(
         invoice_data.get("firmanavn"),
         invoice_data.get("firmaadresse"),
         invoice_data.get("orgnr"),
         invoice_data.get("referanse"),
     )
-
+    
     pdf.set_font("Arial", "", 12)
-    pdf.cell(0, 7, "Fakturert til:", ln=True)
-
+    pdf.cell(100, 7, "Fakturert til:")
+    pdf.cell(0, 7, f"Forfallsdato: {forfallsdato}", ln=True, align="R")
+    
     pdf.set_font("Arial", "B", 12)
-    pdf.cell(0, 7, klient.firmanavn, ln=True)
-
+    pdf.cell(100, 7, klient.firmanavn)
+    pdf.cell(0, 7, f"Org.nr.: {vf.orgnr}", ln=True, align="R")
+    
     pdf.set_font("Arial", "", 12)
-    pdf.cell(0, 7, klient.firmaadresse, ln=True)
-    pdf.cell(0, 7, f"Deres ref.: {klient.referanse}", ln=True)
-
+    pdf.cell(100, 7, klient.firmaadresse)
+    pdf.cell(0, 7, f"Kundenr: {kundenummer}", ln=True, align="R")
+    
+    pdf.cell(100, 7, f"Deres ref.: {klient.referanse}", ln=True)
+    
     if kommentar:
-        pdf.cell(0, 7, kommentar, ln=True)
-
+        pdf.cell(100, 7, kommentar, ln=True)
+    
     pdf.ln(10)
 
     # -----------------------
@@ -265,5 +266,5 @@ def generate_invoice_pdf(invoice_data):
     pdf.cell(60, 7, "")
     pdf.cell(0, 7, f"KID: {vf.kid}", ln=True, align="R")
 
-    pdf_bytes = pdf.output(dest="S").encode("latin-1")
+    pdf_bytes = pdf.output(dest="S")
     return BytesIO(pdf_bytes)
