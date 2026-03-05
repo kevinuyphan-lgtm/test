@@ -122,7 +122,7 @@ def generate_invoice_pdf(invoice_data):
     pdf.cell(0, 7, f"Kundenr: {kundenummer}", ln=True, align="R")
     
     if kommentar:
-        pdf.cell(100, 7, kommentar, ln=True)
+        pdf.cell(100, 7, f"Kommentar: {kommentar}", ln=True)
     
     pdf.ln(10)
 
