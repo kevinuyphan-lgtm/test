@@ -116,30 +116,30 @@ function createProductRow() {
   const row = document.createElement("div");
   row.className = "produkt-row product-card";
 
-  row.innerHTML = `
-    <input type="text" name="produkt_navn[]" placeholder="Produkt" required>
-
-    <input type="number" name="produkt_antall[]" placeholder="Antall" min="1" value="1" required>
-
-    <input type="number" name="produkt_pris[]" placeholder="Pris" step="0.01" min="0" required>
-
-    <div class="mva-group">
-      <div class="mva-row">
-        <button type="button" class="mva-chip" data-value="0">0%</button>
-        <button type="button" class="mva-chip" data-value="12">12%</button>
-      </div>
-      <div class="mva-row">
-        <button type="button" class="mva-chip" data-value="15">15%</button>
-        <button type="button" class="mva-chip active" data-value="25">25%</button>
-      </div>
-      <input type="hidden" name="produkt_mva[]" value="25">
-    </div>
-
-    <button type="button" class="remove-product-btn">Fjern</button>
-  `;
+   row.innerHTML = `
+       <input type="text" name="navn[]" placeholder="Produkt" required>
+   
+       <input type="number" name="antall[]" placeholder="Antall" min="1" value="1" required>
+   
+       <input type="number" name="pris[]" placeholder="Pris" step="0.01" min="0" required>
+   
+       <div class="mva-group">
+         <div class="mva-row">
+           <button type="button" class="mva-chip" data-value="0">0%</button>
+           <button type="button" class="mva-chip" data-value="12">12%</button>
+         </div>
+         <div class="mva-row">
+           <button type="button" class="mva-chip" data-value="15">15%</button>
+           <button type="button" class="mva-chip active" data-value="25">25%</button>
+         </div>
+         <input type="hidden" name="mva[]" value="25">
+       </div>
+   
+       <button type="button" class="remove-product-btn">Fjern</button>
+   `;
 
   const chips = row.querySelectorAll(".mva-chip");
-  const hiddenInput = row.querySelector("input[name='produkt_mva[]']");
+   const hiddenInput = row.querySelector("input[name='mva[]']");
 
   chips.forEach(chip => {
     chip.addEventListener("click", () => {
