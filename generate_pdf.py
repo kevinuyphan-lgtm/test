@@ -31,10 +31,10 @@ def safe_int(value, default=0):
 # =========================
 
 class Klientens_firma:
-    def __init__(self, firmanavn, firmaadresse, orgnr, referanse):
+    def __init__(self, firmanavn, firmaadresse, ordernr, referanse):
         self.firmanavn = firmanavn or ""
         self.firmaadresse = firmaadresse or ""
-        self.orgnr = orgnr or ""
+        self.ordernr = ordernr or ""
         self.referanse = referanse or ""
 
 
