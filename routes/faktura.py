@@ -19,6 +19,9 @@ from datetime import datetime, timedelta
 import os
 import re
 from system.config import Config
+import random
+import string
+from system.models import Kunde
 
 
 faktura_bp = Blueprint("faktura", __name__)
@@ -31,6 +34,10 @@ def current_user():
     uid = session.get("user_id")
     return Bruker.query.get(uid) if uid else None
 
+def generate_order_number():
+    letters = ''.join(random.choices(string.ascii_uppercase, k=3))
+    numbers = ''.join(random.choices(string.digits, k=5))
+    return f"ORD-{letters}-{numbers}"
 
 # ---------------------------------------------------
 # FIRMA INNSTILLINGER
@@ -83,11 +90,27 @@ def generate_invoice():
         flash("Du må sette opp firma-innstillinger først.", "error")
         return redirect(url_for("faktura.firma_innstillinger"))
 
-    # Trygg fakturanummer
+    # -------------------------------
+    # Fakturanummer + ordernummer
+    # -------------------------------
     fakturanummer = user.faktura_teller
     user.faktura_teller += 1
 
+    ordernummer = generate_order_number()
+
+    # -------------------------------
+    # Kunde
+    # -------------------------------
+    firmanavn = request.form.get("firmanavn")
+
+    kunde = Kunde.query.filter_by(
+        navn=firmanavn,
+        user_id=user.id
+    ).first()
+
+    # -------------------------------
     # Datoer
+    # -------------------------------
     invoice_date_str = request.form.get("invoice_date")
 
     try:
@@ -102,15 +125,18 @@ def generate_invoice():
 
     due_date = invoice_date + timedelta(days=days_to_due)
 
-    # Produkter
-    navn_liste = request.form.getlist("produkt_navn[]")
-    antall_liste = request.form.getlist("produkt_antall[]")
-    pris_liste = request.form.getlist("produkt_pris[]")
-    mva_liste = request.form.getlist("produkt_mva[]")
+    # -------------------------------
+    # Produkter (FIXED NAMES)
+    # -------------------------------
+    navn_liste = request.form.getlist("navn[]")
+    antall_liste = request.form.getlist("antall[]")
+    pris_liste = request.form.getlist("pris[]")
+    mva_liste = request.form.getlist("mva[]")
 
     produkter = []
 
     for i in range(len(navn_liste)):
+
         navn = navn_liste[i].strip()
         if not navn:
             continue
@@ -138,7 +164,9 @@ def generate_invoice():
         flash("Du må legge til minst ett produkt.", "error")
         return redirect(url_for("services.tjenester"))
 
+    # -------------------------------
     # Firma data
+    # -------------------------------
     vårt_firma = {
         "navn": sender.firmanavn,
         "orgnr": sender.orgnr,
@@ -151,19 +179,31 @@ def generate_invoice():
         "KID": sender.kid,
     }
 
+    # -------------------------------
+    # Data til PDF
+    # -------------------------------
     invoice_data = {
+
         "invoice_number": fakturanummer,
+        "ordernr": ordernummer,
+        "kundenummer": kunde.id if kunde else "",
+
         "firmanavn": request.form.get("firmanavn"),
         "firmaadresse": request.form.get("firmaadresse"),
-        "orgnr": request.form.get("orgnr"),
         "referanse": request.form.get("referanse"),
+
+        "kommentar": request.form.get("kommentar"),
+
         "invoice_date": invoice_date.strftime("%d.%m.%Y"),
         "due_date": due_date.strftime("%d.%m.%Y"),
+
         "produkter": produkter,
         "vårt_firma": vårt_firma,
     }
 
+    # -------------------------------
     # Generer PDF
+    # -------------------------------
     pdf_buffer = generate_invoice_pdf(invoice_data)
 
     user_folder = os.path.join(Config.PDF_FOLDER, f"user_{user.id}")
@@ -175,8 +215,21 @@ def generate_invoice():
     with open(filepath, "wb") as f:
         f.write(pdf_buffer.getbuffer())
 
+    # -------------------------------
+    # Lagre i database
+    # -------------------------------
     faktura = Faktura(
+
+        faktura_nummer=fakturanummer,
+        order_nummer=ordernummer,
+
         filnavn=filename,
+
+        kunde_id=kunde.id if kunde else None,
+        forfallsdato=due_date,
+
+        kommentar=request.form.get("kommentar"),
+
         user_id=user.id,
         status="utkast",
     )
@@ -185,9 +238,12 @@ def generate_invoice():
     db.session.commit()
 
     pdf_buffer.seek(0)
-    return send_file(pdf_buffer, as_attachment=True, download_name=filename)
 
-
+    return send_file(
+        pdf_buffer,
+        as_attachment=True,
+        download_name=filename
+    )
 # ---------------------------------------------------
 # GENERISK ARKIV
 # ---------------------------------------------------
