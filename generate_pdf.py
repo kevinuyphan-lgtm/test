@@ -102,7 +102,7 @@ def generate_invoice_pdf(invoice_data):
     klient = Klientens_firma(
         invoice_data.get("firmanavn"),
         invoice_data.get("firmaadresse"),
-        invoice_data.get("orgnr"),
+        invoice_data.get("ordernr"),
         invoice_data.get("referanse"),
     )
     
