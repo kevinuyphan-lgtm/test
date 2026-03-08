@@ -140,17 +140,16 @@ def generate_invoice_pdf(invoice_data):
     # -----------------------
     # PRODUKTTABELL
     # -----------------------
-
     pdf.set_font("Arial", "B", 12)
-    pdf.cell(90, 8, "Beskrivelse")
-    pdf.cell(25, 8, "Antall", 0, 0, "C")
-    pdf.cell(30, 8, "Pris", 0, 0, "R")
+
+    pdf.cell(70, 8, "Beskrivelse")
+    pdf.cell(20, 8, "Antall", 0, 0, "C")
+    pdf.cell(25, 8, "Pris", 0, 0, "R")
+    pdf.cell(35, 8, "Sum eks. mva", 0, 0, "R")
     pdf.cell(0, 8, "Sum inkl. mva", 0, 1, "R")
 
     pdf.line(25, pdf.get_y(), 185, pdf.get_y())
     pdf.ln(3)
-
-    pdf.set_font("Arial", "", 12)
 
     produkter = invoice_data.get("produkter") or []
 
@@ -169,9 +168,10 @@ def generate_invoice_pdf(invoice_data):
         mva_belop = round(produkt.sum * (mva_sats / 100), 2)
         linje_total = round(produkt.sum + mva_belop, 2)
 
-        pdf.cell(90, 8, produkt.navn)
-        pdf.cell(25, 8, str(produkt.antall), 0, 0, "C")
-        pdf.cell(30, 8, format_currency(produkt.pris), 0, 0, "R")
+        pdf.cell(70, 8, produkt.navn)
+        pdf.cell(20, 8, str(produkt.antall), 0, 0, "C")
+        pdf.cell(25, 8, format_currency(produkt.pris), 0, 0, "R")            
+        pdf.cell(35, 8, format_currency(produkt.sum), 0, 0, "R")
         pdf.cell(0, 8, format_currency(linje_total), 0, 1, "R")
 
         total_ex_mva += produkt.sum
