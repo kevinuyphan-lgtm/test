@@ -116,7 +116,7 @@ def generate_invoice_pdf(invoice_data):
     
     pdf.set_font("Arial", "", 12)
     pdf.cell(100, 7, klient.firmaadresse)
-    pdf.cell(0, 7, f"Order nr.: {vf.orgnr}", ln=True, align="R")
+    pdf.cell(0, 7, f"Order nr.: {vf.ordernr}", ln=True, align="R")
 
     pdf.cell(100, 7, f"Deres ref.: {klient.referanse}")
     pdf.cell(0, 7, f"Kundenr: {kundenummer}", ln=True, align="R")
