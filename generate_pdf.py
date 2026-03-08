@@ -266,5 +266,5 @@ def generate_invoice_pdf(invoice_data):
     pdf.cell(60, 7, "")
     pdf.cell(0, 7, f"KID: {vf.kid}", ln=True, align="R")
 
-    pdf_bytes = pdf.output(dest="S")
+    pdf_bytes = pdf.output(dest="S").encode("latin-1")
     return BytesIO(pdf_bytes)
