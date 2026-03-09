@@ -112,6 +112,38 @@
   box-shadow: 0 0 0 3px rgba(74,144,226,0.15);
 }
 
+.form-group textarea,
+.textarea-field {
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 110px;
+  transition: all 0.25s ease;
+}
+
+.form-group textarea:hover {
+  background: #ffffff;
+  border-color: #dbe3ec;
+}
+
+.form-group textarea:focus,
+.textarea-field:focus {
+  outline: none;
+  border-color: #4a90e2;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(74,144,226,0.15);
+}
+
+.form-group textarea::placeholder {
+  color: #9ca3af;
+}
+
 /* =====================================
    PRODUCTS – PREMIUM VERSION
 ===================================== */
