@@ -78,30 +78,32 @@ updateDueFromDays();
 
 const firmanavnInput = document.getElementById("firmanavn");
 const adresseInput = document.getElementById("firmaadresse");
-const orgnrInput = document.getElementById("orgnr");
 const referanseInput = document.getElementById("referanse");
 const datalist = document.getElementById("kunder_list");
 
 if (firmanavnInput && datalist) {
 
-  function fillCustomerData(selectedName) {
-    const options = Array.from(datalist.options);
-    const match = options.find(opt => opt.value === selectedName);
+   function fillCustomerData(selectedName) {
+     const options = Array.from(datalist.options);
+     const match = options.find(opt => opt.value === selectedName);
+   
+     if (match) {
+       if (adresseInput) {
+         adresseInput.value = match.dataset.adresse || "";
+       }
+   
+       if (referanseInput) {
+         referanseInput.value = match.dataset.referanse || "";
+       }
+     } else {
+       if (adresseInput) adresseInput.value = "";
+       if (referanseInput) referanseInput.value = "";
+     }
+   }
 
-    if (match) {
-      adresseInput.value = match.dataset.adresse || "";
-      orgnrInput.value = match.dataset.orgnr || "";
-      referanseInput.value = match.dataset.referanse || "";
-    }
-  }
-
-  firmanavnInput.addEventListener("change", () => {
-    fillCustomerData(firmanavnInput.value);
-  });
-
-  firmanavnInput.addEventListener("input", () => {
-    fillCustomerData(firmanavnInput.value);
-  });
+   firmanavnInput.addEventListener("input", () => {
+     fillCustomerData(firmanavnInput.value);
+   });
 }
 
 /* ===============================
