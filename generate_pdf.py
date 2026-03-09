@@ -76,23 +76,22 @@ def generate_invoice_pdf(invoice_data):
     fakturanummer = invoice_data.get("invoice_number", "")
     kundenummer = invoice_data.get("kundenummer", "")
     kommentar = invoice_data.get("kommentar", "")
-
+    
     # -----------------------
     # HEADER
     # -----------------------
     
     pdf.set_font("Arial", "B", 14)
-    pdf.cell(100, 7, vf.navn)
+    pdf.cell(0, 7, vf.navn, ln=True)
     
     pdf.set_font("Arial", "", 12)
-    pdf.cell(100, 7, vf.addresse)
-    pdf.cell(0, 7, "", ln=True)
-    
-    pdf.cell(100, 7, f"Tlf: {vf.telefon}")
-    pdf.cell(0, 7, "", ln=True)
+    pdf.cell(0, 7, vf.addresse, ln=True)
+    pdf.cell(0, 7, f"Tlf: {vf.telefon}", ln=True)
     
     pdf.ln(5)
+    
     pdf.line(25, pdf.get_y(), 185, pdf.get_y())
+    
     pdf.ln(10)
 
     # -----------------------
@@ -249,22 +248,33 @@ def generate_invoice_pdf(invoice_data):
     pdf.ln(8)
 
     pdf.set_font("Arial", "B", 12)
-    pdf.cell(60, 7, vf.navn)
-    pdf.cell(60, 7, vf.addresse)
-    pdf.cell(0, 7, vf.navn_på_bank, ln=True, align="R")
-
+    
+    left_w = 60
+    mid_w = 60
+    bank_label = 30
+    bank_value = 40
+    
+    pdf.cell(left_w, 7, vf.navn)
+    pdf.cell(mid_w, 7, vf.addresse)
+    pdf.cell(bank_label, 7, "Bank konto:")
+    pdf.cell(bank_value, 7, vf.navn_på_bank, ln=True)
+    
     pdf.set_font("Arial", "", 12)
-    pdf.cell(60, 7, f"Org.nr: {vf.orgnr}")
-    pdf.cell(60, 7, f"Tlf: {vf.telefon}")
-    pdf.cell(0, 7, f"IBAN: {vf.iban}", ln=True, align="R")
-
-    pdf.cell(60, 7, "Foretaksregisteret")
-    pdf.cell(60, 7, "")
-    pdf.cell(0, 7, f"SWIFT/BIC: {vf.swift_bic}", ln=True, align="R")
-
-    pdf.cell(60, 7, f"Vår ref.: {vf.vår_referanse}")
-    pdf.cell(60, 7, "")
-    pdf.cell(0, 7, f"KID: {vf.kid}", ln=True, align="R")
+    
+    pdf.cell(left_w, 7, f"Org.nr: {vf.orgnr}")
+    pdf.cell(mid_w, 7, f"Tlf: {vf.telefon}")
+    pdf.cell(bank_label, 7, "IBAN:")
+    pdf.cell(bank_value, 7, vf.iban, ln=True)
+    
+    pdf.cell(left_w, 7, "Foretaksregisteret")
+    pdf.cell(mid_w, 7, "")
+    pdf.cell(bank_label, 7, "SWIFT/BIC:")
+    pdf.cell(bank_value, 7, vf.swift_bic, ln=True)
+    
+    pdf.cell(left_w, 7, f"Vår ref.: {vf.vår_referanse}")
+    pdf.cell(mid_w, 7, "")
+    pdf.cell(bank_label, 7, "KID:")
+    pdf.cell(bank_value, 7, vf.kid, ln=True)
 
     pdf_bytes = pdf.output(dest="S")
     return BytesIO(pdf_bytes)
