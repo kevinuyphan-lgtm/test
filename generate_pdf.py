@@ -121,7 +121,8 @@ def generate_invoice_pdf(invoice_data):
     pdf.cell(0, 7, f"Kundenr: {kundenummer}", ln=True, align="R")
     
     if kommentar:
-        pdf.cell(100, 7, f"Kommentar: {kommentar}", ln=True)
+        pdf.multi_cell(100, 7, f"Kommentar: {kommentar}")
+        pdf.ln(1)
     
     pdf.ln(10)
 
@@ -227,7 +228,7 @@ def generate_invoice_pdf(invoice_data):
             pdf.cell(value_width, 7, f"{format_currency(mva_belop)} kr", 0, 1, "R")
 
     pdf.ln(2)
-    pdf.line(110, pdf.get_y(), 185, pdf.get_y())
+    pdf.line(120, pdf.get_y(), 185, pdf.get_y())
     pdf.ln(2)
 
     pdf.set_font("Arial", "B", 14)
@@ -240,7 +241,8 @@ def generate_invoice_pdf(invoice_data):
 
     footer_height = 36
     bottom_margin = 15
-
+    
+    pdf.set_auto_page_break(False)
     footer_y = pdf.h - bottom_margin - footer_height
     pdf.set_y(footer_y)
 
@@ -250,8 +252,8 @@ def generate_invoice_pdf(invoice_data):
     pdf.set_font("Arial", "B", 12)
     
     left_w = 60
-    mid_w = 60
-    bank_label = 30
+    mid_w = 70
+    bank_label = 25
     bank_value = 40
     
     start_y = pdf.get_y()
