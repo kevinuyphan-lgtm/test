@@ -255,7 +255,14 @@ def generate_invoice_pdf(invoice_data):
     bank_value = 40
     
     pdf.cell(left_w, 7, vf.navn)
-    pdf.cell(mid_w, 7, vf.addresse)
+    
+    x_current = pdf.get_x()
+    y_current = pdf.get_y()
+    
+    pdf.multi_cell(mid_w, 7, vf.addresse)
+    
+    pdf.set_xy(x_current + mid_w, y_current)
+    
     pdf.cell(bank_label, 7, "Bank konto:")
     pdf.cell(bank_value, 7, vf.navn_på_bank, ln=True)
     
