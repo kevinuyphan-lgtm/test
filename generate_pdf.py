@@ -254,17 +254,26 @@ def generate_invoice_pdf(invoice_data):
     bank_label = 30
     bank_value = 40
     
+    start_y = pdf.get_y()
+    
+    # kolonne 1
+    pdf.set_xy(25, start_y)
     pdf.cell(left_w, 7, vf.navn)
     
-    x_current = pdf.get_x()
-    y_current = pdf.get_y()
+    # kolonne 2 (adresse som kan wrappe)
+    x_mid = pdf.get_x()
+    y_mid = pdf.get_y()
     
     pdf.multi_cell(mid_w, 7, vf.addresse)
     
-    pdf.set_xy(x_current + mid_w, y_current)
+    adresse_hoyde = pdf.get_y() - y_mid
     
+    # kolonne 3
+    pdf.set_xy(25 + left_w + mid_w, start_y)
     pdf.cell(bank_label, 7, "Bank konto:")
-    pdf.cell(bank_value, 7, vf.navn_på_bank, ln=True)
+    pdf.cell(bank_value, 7, vf.navn_på_bank)
+    
+    pdf.ln(max(7, adresse_hoyde))
     
     pdf.set_font("Arial", "", 12)
     
