@@ -218,40 +218,56 @@ def generate_invoice_pdf(invoice_data):
     # =========================
     # FOOTER
     # =========================
-
+    
     footer_y = pdf.h - 45
     pdf.set_y(footer_y)
-
+    
     pdf.set_draw_color(180,180,180)
     pdf.line(25,pdf.get_y(),185,pdf.get_y())
     pdf.set_draw_color(0,0,0)
-
+    
     pdf.ln(8)
-
-    col1 = 65
-    col2 = 60
-    col3 = 60
-
+    
     pdf.set_font("Arial","B",11)
-
+    
+    firma_lines = [
+        firma.navn,
+        f"Org.nr: {firma.orgnr}",
+        f"Adresse: {firma.adresse}"
+    ]
+    
+    # finn lengste tekst i firma-kolonnen
+    max_width = max(pdf.get_string_width(line) for line in firma_lines)
+    
+    # legg til litt padding
+    col1 = max_width + 10
+    
+    # resten av siden
+    page_width = 185 - 25
+    remaining = page_width - col1
+    
+    col2 = remaining * 0.4
+    col3 = remaining * 0.6
+    
+    # headers
     pdf.cell(col1,6,"Firma")
     pdf.cell(col2,6,"Kontakt")
     pdf.cell(col3,6,"Betalingsinformasjon",ln=True)
-
+    
     pdf.set_font("Arial","",11)
-
+    
     pdf.cell(col1,6,firma.navn)
     pdf.cell(col2,6,f"Tlf: {firma.telefon}")
     pdf.cell(col3,6,f"Bank: {firma.bank}",ln=True)
-
+    
     pdf.cell(col1,6,f"Org.nr: {firma.orgnr}")
     pdf.cell(col2,6,"")
     pdf.cell(col3,6,f"IBAN: {firma.iban}",ln=True)
-
+    
     pdf.cell(col1,6,f"Adresse: {firma.adresse}")
     pdf.cell(col2,6,f"Vår ref: {firma.referanse}")
     pdf.cell(col3,6,f"SWIFT: {firma.swift}",ln=True)
-
+    
     pdf.cell(col1,6,"")
     pdf.cell(col2,6,"")
     pdf.cell(col3,6,f"KID: {firma.kid}",ln=True)
