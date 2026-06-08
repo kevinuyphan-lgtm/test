@@ -49,7 +49,7 @@ nav {
 #TALL { font-size: 3.5rem; font-weight: 800; color: var(--gold); text-decoration: none; letter-spacing: -.02em; }
 #PRO  { font-size: 3.5em;  font-weight: 800; color: var(--blue); text-decoration: none; letter-spacing: -.02em; }
 
-.logo { height: 225px; padding-top: 35px; margin-right: 200px; }
+.logo { height: 200px; padding-top: 35px; margin-right: 200px; }
 
 .nav-logo { font-size: 2.5rem; font-weight: 800; color: var(--blue); text-decoration: none; letter-spacing: -.02em; }
 .nav-logo span { color: var(--blue-light); }
