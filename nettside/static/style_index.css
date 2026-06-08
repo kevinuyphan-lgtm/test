@@ -43,6 +43,20 @@ nav {
   height: 80px;
 }
 
+.nav-logo-text {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -.02em;
+}
+.nav-logo-sr {
+  color: var(--blue);
+  background: var(--blue-pale);
+  padding: .2rem .5rem;
+  border-radius: 6px;
+  margin-right: .3rem;
+}
+
 .nav-brand { display: flex; align-items: center; text-decoration: none; }
 .nav-logo-img {
   height: 60px;
