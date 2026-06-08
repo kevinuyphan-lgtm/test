@@ -1,195 +1,222 @@
+{% extends "base/base.html" %}
 {% block head %}
-<title>Protall Regnskap AS – Din regnskapsfører</title>
+<title>Stororegnskap AS – Din regnskapsfører</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="{{ url_for('static', filename='style_index.css') }}">
 {% endblock %}
 {% block body %}
 
-<!-- NAV -->
 <nav>
-  <img src="{{ url_for('static', filename='bilder/logo.png') }}" class="logo">
+  <a href="/" class="nav-brand">
+    <img src="{{ url_for('static', filename='bilder/logo.png') }}" class="nav-logo-img" alt="Stororegnskap logo">
+  </a>
   <ul class="nav-links">
     <li><a href="#tjenester">Tjenester</a></li>
     <li><a href="#om-oss">Om oss</a></li>
     <li><a href="#kontakt" class="nav-cta">Kontakt oss</a></li>
   </ul>
+  <button class="nav-hamburger" onclick="toggleMenu()">&#9776;</button>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
-  <div class="hero-text">
-    <div class="hero-badge">Autorisert regnskapsfører</div>
-    <h1>Fokuser på <span>verdiskapningen</span> — regnskapet ordner vi</h1>
-    <p class="hero-sub">Protall Regnskap AS leverer pålitelig og presis regnskapsføring for norske bedrifter. Vi tar oss av tallene, så du kan bruke tiden på det som betyr noe.</p>
-    <div class="hero-btns">
-      <a href="#kontakt" class="btn btn-white">Få et uforpliktende tilbud</a>
-      <a href="#tjenester" class="btn btn-ghost">Se tjenester →</a>
-    </div>
-  </div>
-  <div class="hero-card">
-    <div class="card-white">
-      <h3>Hvorfor velge oss?</h3>
-      <div class="stat-row">
-        <div class="stat-item"><div class="num">200+</div><div class="lbl">Fornøyde kunder</div></div>
-        <div class="stat-item"><div class="num">15 år</div><div class="lbl">Erfaring</div></div>
-        <div class="stat-item"><div class="num">100%</div><div class="lbl">Digitalt</div></div>
-        <div class="stat-item"><div class="num">Fast</div><div class="lbl">Pris</div></div>
+  <div class="hero-bg-shape"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Autorisert regnskapsfører
       </div>
-      <ul class="card-checklist">
-        <li>Autoriserte regnskapsførere</li>
-        <li>Personlig kontaktperson</li>
-        <li>Alltid oppdatert på regelverket</li>
-        <li>Transparent prissetting</li>
-      </ul>
+      <h1>Fokuser på <span class="hero-highlight">veksten</span> —<br>vi tar regnskapet</h1>
+      <p class="hero-sub">Stororegnskap AS leverer pålitelig og presis regnskapsføring for norske bedrifter. Vi tar oss av tallene så du kan bruke tiden på det som betyr noe.</p>
+      <div class="hero-btns">
+        <a href="#kontakt" class="btn btn-primary">Få gratis tilbud</a>
+        <a href="#tjenester" class="btn btn-outline">Se tjenester →</a>
+      </div>
+      <div class="hero-trust">
+        <span>✓ Ingen bindingstid</span>
+        <span>✓ Svar innen 24 timer</span>
+        <span>✓ Fast pris</span>
+      </div>
+    </div>
+    <div class="hero-card-wrap">
+      <div class="hero-card">
+        <div class="hero-card-header">
+          <span class="card-tag">Hvorfor velge oss?</span>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-item">
+            <div class="stat-num">200+</div>
+            <div class="stat-lbl">Fornøyde kunder</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">15 år</div>
+            <div class="stat-lbl">Erfaring</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">100%</div>
+            <div class="stat-lbl">Digitalt</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">Fast</div>
+            <div class="stat-lbl">Pris</div>
+          </div>
+        </div>
+        <ul class="card-list">
+          <li><span class="check">✓</span> Autoriserte regnskapsførere</li>
+          <li><span class="check">✓</span> Personlig kontaktperson</li>
+          <li><span class="check">✓</span> Alltid oppdatert på regelverket</li>
+          <li><span class="check">✓</span> Transparent prissetting</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- TRUST STRIP -->
-<div class="trust-strip">
+<div class="trust-bar">
   <span class="trust-label">Vi jobber med</span>
   <div class="trust-logos">
-    <span class="trust-logo">Tripletex</span>
-    <span class="trust-logo">24SevenOffice</span>
-    <span class="trust-logo">Visma</span>
-    <span class="trust-logo">PowerOffice</span>
-    <span class="trust-logo">DNB Regnskap</span>
+    <span>Tripletex</span>
+    <span>24SevenOffice</span>
+    <span>Visma</span>
+    <span>PowerOffice</span>
+    <span>DNB Regnskap</span>
   </div>
 </div>
 
-<!-- TJENESTER -->
-<section class="section services" id="tjenester">
-  <div class="section-center">
+<section class="section" id="tjenester">
+  <div class="section-head">
     <span class="eyebrow">Hva vi tilbyr</span>
     <h2>Alt du trenger innen regnskap</h2>
-    <p>Vi tilbyr et komplett spekter av regnskapstjenester — skreddersydd etter din bedrifts behov.</p>
+    <p>Skreddersydde regnskapstjenester for norske bedrifter — uansett størrelse.</p>
   </div>
   <div class="services-grid">
     <div class="svc-card">
-      <div class="svc-icon">📒</div>
+      <div class="svc-icon-wrap"><span>📒</span></div>
       <h3>Løpende bokføring</h3>
-      <p>Vi holder regnskapet ditt oppdatert gjennom hele året — nøyaktig, effektivt og alltid i henhold til gjeldende regler.</p>
-      <a href="#kontakt" class="svc-link">Les mer →</a>
+      <p>Vi holder regnskapet ditt oppdatert gjennom hele året — nøyaktig og alltid i henhold til gjeldende regler.</p>
+      <a href="#kontakt" class="svc-link">Kom i gang →</a>
     </div>
     <div class="svc-card">
-      <div class="svc-icon">📊</div>
+      <div class="svc-icon-wrap"><span>📊</span></div>
       <h3>Årsregnskap</h3>
       <p>Utarbeidelse av årsregnskap og næringsoppgave som oppfyller alle krav fra Regnskapsloven og Skatteetaten.</p>
-      <a href="#kontakt" class="svc-link">Les mer →</a>
+      <a href="#kontakt" class="svc-link">Kom i gang →</a>
     </div>
     <div class="svc-card">
-      <div class="svc-icon">💰</div>
+      <div class="svc-icon-wrap"><span>💰</span></div>
       <h3>Lønn & HR</h3>
-      <p>Lønnskjøring, feriepenger, skattetrekk og innrapportering til myndighetene — vi tar hånd om hele prosessen.</p>
-      <a href="#kontakt" class="svc-link">Les mer →</a>
+      <p>Lønnskjøring, feriepenger, skattetrekk og innrapportering — vi tar hånd om hele prosessen.</p>
+      <a href="#kontakt" class="svc-link">Kom i gang →</a>
     </div>
     <div class="svc-card">
-      <div class="svc-icon">📑</div>
+      <div class="svc-icon-wrap"><span>📑</span></div>
       <h3>MVA & skatt</h3>
-      <p>Riktig og rettidig innlevering av MVA-meldinger og skattemeldinger, slik at du unngår gebyrer og problemer.</p>
-      <a href="#kontakt" class="svc-link">Les mer →</a>
+      <p>Riktig og rettidig innlevering av MVA-meldinger og skattemeldinger, slik at du unngår gebyrer.</p>
+      <a href="#kontakt" class="svc-link">Kom i gang →</a>
     </div>
     <div class="svc-card">
-      <div class="svc-icon">🏢</div>
+      <div class="svc-icon-wrap"><span>🏢</span></div>
       <h3>Stiftelse av selskap</h3>
-      <p>Hjelp med å etablere AS, ENK eller ANS — vi guider deg gjennom hele prosessen fra start til ferdig registrering.</p>
-      <a href="#kontakt" class="svc-link">Les mer →</a>
+      <p>Hjelp med å etablere AS, ENK eller ANS — vi guider deg gjennom hele prosessen fra start til ferdig.</p>
+      <a href="#kontakt" class="svc-link">Kom i gang →</a>
     </div>
     <div class="svc-card">
-      <div class="svc-icon">📈</div>
+      <div class="svc-icon-wrap"><span>📈</span></div>
       <h3>Rådgivning</h3>
-      <p>Strategisk regnskapsrådgivning og budsjettering som gir deg bedre kontroll over din økonomi og fremtid.</p>
-      <a href="#kontakt" class="svc-link">Les mer →</a>
+      <p>Strategisk regnskapsrådgivning og budsjettering som gir deg bedre kontroll over din økonomi.</p>
+      <a href="#kontakt" class="svc-link">Kom i gang →</a>
     </div>
   </div>
 </section>
 
-<!-- OM OSS -->
-<section class="section about" id="om-oss">
-  <div>
+<section class="about-section" id="om-oss">
+  <div class="about-text">
     <span class="eyebrow">Hvem er vi</span>
     <h2>Et erfarent team med hjerte for din bedrift</h2>
-    <p>Protall Regnskap AS ble grunnlagt med ett mål: å gjøre profesjonell regnskapsføring tilgjengelig og forståelig for alle norske bedrifter — uansett størrelse.</p>
+    <p>Stororegnskap AS ble grunnlagt med ett mål: å gjøre profesjonell regnskapsføring tilgjengelig og forståelig for alle norske bedrifter.</p>
     <ul class="value-list">
       <li>
         <div class="value-icon">🔒</div>
-        <div class="value-text"><strong>Trygghet</strong><span>Du kan alltid stole på at tallene er korrekte og frister overholdes.</span></div>
+        <div><strong>Trygghet</strong><span>Du kan alltid stole på at tallene er korrekte og frister overholdes.</span></div>
       </li>
       <li>
         <div class="value-icon">🎯</div>
-        <div class="value-text"><strong>Presisjon</strong><span>Nøyaktighet i hvert bilag, hvert kvartal, hvert år.</span></div>
+        <div><strong>Presisjon</strong><span>Nøyaktighet i hvert bilag, hvert kvartal, hvert år.</span></div>
       </li>
       <li>
         <div class="value-icon">📞</div>
-        <div class="value-text"><strong>Tilgjengelighet</strong><span>Vi er alltid tilgjengelige for spørsmål og råd — på telefon eller e-post.</span></div>
+        <div><strong>Tilgjengelighet</strong><span>Vi er alltid tilgjengelige for spørsmål og råd.</span></div>
       </li>
       <li>
         <div class="value-icon">🤝</div>
-        <div class="value-text"><strong>Partnerskap</strong><span>Vi ser oss som din langsiktige forretningspartner, ikke bare leverandør.</span></div>
+        <div><strong>Partnerskap</strong><span>Vi ser oss som din langsiktige forretningspartner.</span></div>
       </li>
     </ul>
   </div>
-  <div>
-    <div class="about-img-block">
-      <div class="about-stat-big">
-        <div class="big-num">15+</div>
-        <div class="big-lbl">År med erfaring innen regnskap</div>
-      </div>
-      <div class="about-mini-stats">
-        <div class="mini-stat"><div class="mn">200+</div><div class="ml">Fornøyde kunder</div></div>
-        <div class="mini-stat"><div class="mn">100%</div><div class="ml">Digital løsning</div></div>
-        <div class="mini-stat"><div class="mn">Fast</div><div class="ml">Forutsigbar pris</div></div>
-        <div class="mini-stat"><div class="mn">Alltid</div><div class="ml">Tilgjengelig</div></div>
-      </div>
-      <p style="font-size:.82rem;color:var(--ink-soft);text-align:center;padding:.5rem 0;">
-        Autoriserte regnskapsførere · Skybaserte systemer · Transparent prissetting
-      </p>
+  <div class="about-stats">
+    <div class="big-stat">
+      <div class="big-num">15+</div>
+      <div class="big-lbl">År med erfaring</div>
     </div>
+    <div class="mini-grid">
+      <div class="mini-stat"><div class="mn">200+</div><div class="ml">Kunder</div></div>
+      <div class="mini-stat"><div class="mn">100%</div><div class="ml">Digitalt</div></div>
+      <div class="mini-stat"><div class="mn">Fast</div><div class="ml">Pris</div></div>
+      <div class="mini-stat"><div class="mn">Alltid</div><div class="ml">Tilgjengelig</div></div>
+    </div>
+    <p class="about-tagline">Autoriserte regnskapsførere · Skybaserte systemer · Transparent prissetting</p>
   </div>
 </section>
 
-<!-- CTA BANNER -->
-<section class="cta-banner">
-  <div style="position:relative;z-index:1;">
+<section class="cta-section">
+  <div class="cta-inner">
     <h2>Klar for å få orden på regnskapet?</h2>
-    <p>Ta kontakt med oss for en uforpliktende samtale — vi finner den beste løsningen for din bedrift.</p>
-    <a href="#kontakt" class="btn-cta">Ta kontakt i dag →</a>
+    <p>Ta kontakt for en uforpliktende samtale — vi finner den beste løsningen for din bedrift.</p>
+    <a href="#kontakt" class="btn btn-primary btn-lg">Ta kontakt i dag →</a>
   </div>
 </section>
 
-<!-- KONTAKT -->
-<section class="section contact" id="kontakt">
-  <div class="contact-grid">
+<section class="section contact-section" id="kontakt">
+  <div class="contact-wrap">
     <div class="contact-info">
       <span class="eyebrow">Ta kontakt</span>
       <h2>La oss snakke om din bedrift</h2>
-      <p>Fyll ut skjemaet, så tar vi kontakt innen én virkedag med et uforpliktende tilbud.</p>
-      <div class="contact-detail">
+      <p>Fyll ut skjemaet, så tar vi kontakt innen én virkedag.</p>
+      <div class="contact-items">
         <div class="contact-item">
-          <div class="contact-icon">📞</div>
-          <div><strong>Telefon</strong><a href="tel:+4700000000">+47 000 00 000</a></div>
+          <div class="c-icon">📞</div>
+          <div>
+            <strong>Telefon</strong>
+            <a href="tel:+4700000000">+47 000 00 000</a>
+          </div>
         </div>
         <div class="contact-item">
-          <div class="contact-icon">✉️</div>
-          <div><strong>E-post</strong><a href="mailto:kontakt@ptregnskap.no">kontakt@ptregnskap.no</a></div>
+          <div class="c-icon">✉️</div>
+          <div>
+            <strong>E-post</strong>
+            <a href="mailto:kontakt@stororegnskap.no">kontakt@stororegnskap.no</a>
+          </div>
         </div>
         <div class="contact-item">
-          <div class="contact-icon">📍</div>
-          <div><strong>Adresse</strong><span>Oslo, Norge</span></div>
+          <div class="c-icon">📍</div>
+          <div>
+            <strong>Adresse</strong>
+            <span>Oslo, Norge</span>
+          </div>
         </div>
       </div>
     </div>
     <div class="contact-form-box">
       <h3>Send oss en henvendelse</h3>
       <div class="form-grid">
-        <div class="fg"><label for="navn">Navn</label><input type="text" id="navn" placeholder="Ola Nordmann" /></div>
-        <div class="fg"><label for="epost">E-post</label><input type="email" id="epost" placeholder="ola@bedrift.no" /></div>
-        <div class="fg"><label for="tlf">Telefon</label><input type="tel" id="tlf" placeholder="+47 000 00 000" /></div>
+        <div class="fg"><label>Navn</label><input type="text" placeholder="Ola Nordmann" /></div>
+        <div class="fg"><label>E-post</label><input type="email" placeholder="ola@bedrift.no" /></div>
+        <div class="fg"><label>Telefon</label><input type="tel" placeholder="+47 000 00 000" /></div>
         <div class="fg">
-          <label for="tjeneste">Tjeneste</label>
-          <select id="tjeneste">
+          <label>Tjeneste</label>
+          <select>
             <option value="">Velg tjeneste…</option>
             <option>Løpende bokføring</option>
             <option>Årsregnskap</option>
@@ -200,20 +227,19 @@
             <option>Annet</option>
           </select>
         </div>
-        <div class="fg full"><label for="melding">Melding</label><textarea id="melding" placeholder="Fortell oss litt om din bedrift og hva du trenger hjelp med…"></textarea></div>
-        <div class="form-send">
-          <button class="btn-form" onclick="window.location='mailto:kontakt@ptregnskap.no'">Send henvendelse</button>
+        <div class="fg full"><label>Melding</label><textarea placeholder="Fortell oss litt om din bedrift og hva du trenger hjelp med…"></textarea></div>
+        <div class="fg full">
+          <button class="btn btn-primary btn-block" onclick="window.location='mailto:kontakt@stororegnskap.no'">Send henvendelse</button>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
-      <div class="logo">STORO REGNSKAP <span></span></div>
+      <img src="{{ url_for('static', filename='bilder/logo.png') }}" alt="Stororegnskap" class="footer-logo">
       <p>Autorisert regnskapsfirma med skreddersydde løsninger for norske bedrifter.</p>
     </div>
     <div class="footer-col">
@@ -237,23 +263,26 @@
     <div class="footer-col">
       <h4>Kontakt</h4>
       <ul>
-        <li><a href="tel:+4700000000">+47 000 00 000</a></li>
-        <li><a href="mailto:kontakt@ptregnskap.no">kontakt@stororegnskap.no</a></li>
-        <li><a>Oslo, Norge</a></li>
+        <li><a href="tel:+4700000000">+47 458 54 777</a></li>
+        <li><a href="mailto:kontakt@stororegnskap.no">post@stororegnskap.no</a></li>
+        <li><span>Oslo, Norge</span></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2025 STORO REGNSKAP AS. Alle rettigheter forbeholdt.</p>
-    <p>Org.nr: 000 000 000</p>
+    <p>© 2025 Stororegnskap AS. Alle rettigheter forbeholdt.</p>
+    <p>Org.nr: 937586868</p>
   </div>
 </footer>
 
 {% if session.user_id %}
-    <p>Logget inn som <strong>{{ session.user_name }}</strong></p>
-    <a href="/logout">Logg ut</a>
-{% else %}
-    <a href="/login">Logg inn</a>
+  <p style="text-align:center;padding:1rem;">Logget inn som <strong>{{ session.user_name }}</strong> · <a href="/logout">Logg ut</a></p>
 {% endif %}
+
+<script>
+function toggleMenu() {
+  document.querySelector('.nav-links').classList.toggle('open');
+}
+</script>
 
 {% endblock %}
