@@ -30,7 +30,7 @@ body {
 
 /* NAV */
 nav {
-  position: sticky;
+  position: relative; /* var: sticky */
   top: 0;
   z-index: 100;
   border-bottom: 1px solid var(--border);
@@ -38,7 +38,12 @@ nav {
   align-items: center;
   justify-content: space-between;
   padding: 0 5vw;
-  height: 180px;
+  height: 180px; /* var: 180px */
+}
+
+.nav-logo-img {
+  height: 160px; /* var: 180px */
+  width: auto;
 }
 
 .nav-logo-text {
@@ -56,10 +61,6 @@ nav {
 }
 
 .nav-brand { display: flex; align-items: center; text-decoration: none; }
-.nav-logo-img {
-  height: 180px;
-  width: auto;
-}
 
 .nav-links {
   display: flex;
@@ -130,12 +131,13 @@ nav {
 .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #6ee7b7; }
 
 .hero h3 {
-  font-size: clamp(2.2rem, 4vw, 3.6rem);
+  font-size: clamp(1.6rem, 3vw, 2.6rem); /* var: clamp(2.2rem, 4vw, 3.6rem) */
   font-weight: 900;
   line-height: 1.08;
   letter-spacing: -.03em;
   margin-bottom: 1.2rem;
 }
+
 .hero-highlight {
   background: linear-gradient(90deg, #93c5fd, #bfdbfe);
   -webkit-background-clip: text;
@@ -313,8 +315,32 @@ input::placeholder, textarea::placeholder { color: #d1d5db; }
 textarea { resize: vertical; min-height: 110px; }
 
 /* FOOTER */
-footer { background: #0a0a0a; color: rgba(255,255,255,.45); padding: 4rem 5vw 2rem; }
-.footer-inner { display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+footer {
+  background: #0a0a0a;
+  color: rgba(255,255,255,.45);
+  padding: 4rem 5vw 2rem;
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .footer-inner {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
 .footer-logo { height: 40px; width: auto; filter: brightness(0) invert(1); opacity: .7; margin-bottom: .8rem; }
 .footer-brand p { font-size: .8rem; max-width: 26ch; line-height: 1.6; }
 .footer-col h4 { font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.55); margin-bottom: .9rem; }
