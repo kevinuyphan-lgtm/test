@@ -33,7 +33,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20rem;
+  gap: 4rem;
   padding: 0 5vw;
   border-bottom: 1px solid var(--border);
   height: 180px;
@@ -49,12 +49,12 @@ nav {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   list-style: none;
 }
 
 .nav-links a {
-  font-size: 1.3rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--ink-soft);
   text-decoration: none;
