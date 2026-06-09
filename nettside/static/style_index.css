@@ -30,13 +30,12 @@ body {
 
 /* NAV */
 nav {
-  position: relative;
-  z-index: 100;
-  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 4rem;
   padding: 0 5vw;
+  border-bottom: 1px solid var(--border);
   height: 180px;
 }
 
