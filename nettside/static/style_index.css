@@ -30,33 +30,22 @@ body {
 
 /* NAV */
 nav {
-  position: relative;
-  top: 0;
-  z-index: 100;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* var: center */
-  gap: 0; /* fjern gap */
-  padding: 0 2vw;
-  height: 180px;
+  padding: 0 5vw;
+  height: 90px; /* mindre navbar */
 }
 
 .nav-logo-img {
-  height: 150px;
+  height: 70px; /* mindre logo */
   width: auto;
 }
 
 .nav-links {
-  display: flex;
-  align-items: center;
-  gap: 3rem; /* større mellomrom mellom knappene */
-  list-style: none;
+  gap: 2rem; /* tettere mellom lenker */
 }
 
 .nav-links a {
-  font-size: 1.05rem; /* større tekst */
-  font-weight: 600;   /* litt fetere */
+  font-size: 1rem;
+  font-weight: 600;
   color: var(--ink-soft);
   text-decoration: none;
   transition: color .2s;
@@ -133,7 +122,7 @@ nav {
 .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #6ee7b7; }
 
 .hero h3 {
-  font-size: clamp(1.6rem, 3vw, 2.6rem); /* var: clamp(2.2rem, 4vw, 3.6rem) */
+  font-size: clamp(2rem, 3.5vw, 3.2rem); /* større hero-tekst */
   font-weight: 900;
   line-height: 1.08;
   letter-spacing: -.03em;
