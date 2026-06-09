@@ -39,11 +39,11 @@ nav {
   justify-content: center; /* sentrerer alt */
   gap: 3rem; /* mellomrom mellom logo og lenker */
   padding: 0 5vw;
-  height: 100px;
+  height: 180px;
 }
 
 .nav-logo-img {
-  height: 80px;
+  height: 150px;
   width: auto;
 }
 
