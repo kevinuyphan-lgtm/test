@@ -37,13 +37,13 @@ nav {
   align-items: center;
   justify-content: space-between;
   padding: 0 5vw;
-  height: 90px;
+  height: 180px;
 }
 
 .nav-brand { display: flex; align-items: center; text-decoration: none; }
 
 .nav-logo-img {
-  height: 70px;
+  height: 150px;
   width: auto;
 }
 
@@ -55,7 +55,7 @@ nav {
 }
 
 .nav-links a {
-  font-size: 1rem;
+  font-size: 2rem;
   font-weight: 600;
   color: var(--ink-soft);
   text-decoration: none;
