@@ -37,8 +37,8 @@ nav {
   display: flex;
   align-items: center;
   justify-content: space-between; /* var: center */
-  gap: 0; /* fjern gap */
-  padding: 0 5vw;
+  gap: 2; /* fjern gap */
+  padding: 0 2vw;
   height: 180px;
 }
 
