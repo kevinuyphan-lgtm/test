@@ -25,28 +25,33 @@ body {
   background: var(--white);
   line-height: 1.6;
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;@media (max-width: 640px)
+  -webkit-font-smoothing: antialiased;
 }
 
+/* NAV */
 nav {
   position: relative;
-  top: 0;
   z-index: 100;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 5vw;
-  height: 180px;
+  height: 90px;
 }
 
+.nav-brand { display: flex; align-items: center; text-decoration: none; }
+
 .nav-logo-img {
-  height: 150px; /* mindre logo */
+  height: 70px;
   width: auto;
 }
 
 .nav-links {
-  gap: 2rem; /* tettere mellom lenker */
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  list-style: none;
 }
 
 .nav-links a {
@@ -56,22 +61,6 @@ nav {
   text-decoration: none;
   transition: color .2s;
 }
-
-.nav-logo-text {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--ink);
-  letter-spacing: -.02em;
-}
-.nav-logo-sr {
-  color: var(--blue);
-  background: var(--blue-pale);
-  padding: .2rem .5rem;
-  border-radius: 6px;
-  margin-right: .3rem;
-}
-
-.nav-brand { display: flex; align-items: center; text-decoration: none; }
 .nav-links a:hover { color: var(--blue); }
 
 .nav-cta {
@@ -356,7 +345,7 @@ footer {
   .fg.full { grid-column: auto; }
 }
 @media (max-width: 640px) {
-  nav .nav-links { display: none; position: absolute; top: 72px; left: 0; right: 0; background: white; flex-direction: column; padding: 1.5rem 5vw; border-bottom: 1px solid var(--border); gap: 1.2rem; }
+  nav .nav-links { display: none; position: absolute; top: 90px; left: 0; right: 0; background: white; flex-direction: column; padding: 1.5rem 5vw; border-bottom: 1px solid var(--border); gap: 1.2rem; }
   nav .nav-links.open { display: flex; }
   .nav-hamburger { display: block; }
 }
