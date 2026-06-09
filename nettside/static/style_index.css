@@ -116,7 +116,7 @@ nav {
 .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #6ee7b7; }
 
 .hero h3 {
-  font-size: clamp(2rem, 3.5vw, 3.2rem); /* større hero-tekst */
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
   font-weight: 900;
   line-height: 1.08;
   letter-spacing: -.03em;
