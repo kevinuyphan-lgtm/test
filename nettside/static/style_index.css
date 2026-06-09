@@ -30,20 +30,36 @@ body {
 
 /* NAV */
 nav {
-  position: relative; /* var: sticky */
+  position: relative;
   top: 0;
   z-index: 100;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center; /* sentrerer alt */
+  gap: 6rem; /* mellomrom mellom logo og lenker */
   padding: 0 5vw;
-  height: 180px; /* var: 180px */
+  height: 100px;
 }
 
 .nav-logo-img {
-  height: 160px; /* var: 180px */
+  height: 80px;
   width: auto;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 3rem; /* større mellomrom mellom knappene */
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 1.05rem; /* større tekst */
+  font-weight: 600;   /* litt fetere */
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: color .2s;
 }
 
 .nav-logo-text {
@@ -61,20 +77,6 @@ nav {
 }
 
 .nav-brand { display: flex; align-items: center; text-decoration: none; }
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-  list-style: none;
-}
-.nav-links a {
-  font-size: .9rem;
-  font-weight: 500;
-  color: var(--ink-soft);
-  text-decoration: none;
-  transition: color .2s;
-}
 .nav-links a:hover { color: var(--blue); }
 
 .nav-cta {
