@@ -25,17 +25,23 @@ body {
   background: var(--white);
   line-height: 1.6;
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;@media (max-width: 640px)
 }
 
-/* NAV */
 nav {
+  position: relative;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 0 5vw;
-  height: 90px; /* mindre navbar */
+  height: 180px;
 }
 
 .nav-logo-img {
-  height: 70px; /* mindre logo */
+  height: 150px; /* mindre logo */
   width: auto;
 }
 
