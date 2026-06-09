@@ -36,8 +36,8 @@ nav {
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  justify-content: center; /* sentrerer alt */
-  gap: 3rem; /* mellomrom mellom logo og lenker */
+  justify-content: space-between; /* var: center */
+  gap: 0; /* fjern gap */
   padding: 0 5vw;
   height: 180px;
 }
