@@ -37,7 +37,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center; /* sentrerer alt */
-  gap: 6rem; /* mellomrom mellom logo og lenker */
+  gap: 3rem; /* mellomrom mellom logo og lenker */
   padding: 0 5vw;
   height: 100px;
 }
