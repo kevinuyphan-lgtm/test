@@ -33,7 +33,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12rem;
+  gap: 20rem;
   padding: 0 5vw;
   border-bottom: 1px solid var(--border);
   height: 180px;
